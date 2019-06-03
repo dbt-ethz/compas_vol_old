@@ -11,13 +11,13 @@ class Torus(object):
         return l2 - self.r
 
 if __name__ == "__main__":
-    t = Torus(15,8)
-    for y in range(-30,30):
+    t = Torus(9,5)
+    for y in range(-15,15):
         s = ''
-        for x in range(-60,60):
+        for x in range(-30,30):
             d = t.get_distance(x*0.5,y,0)
             if d<0:
                 s += 'x'
             else:
-                s += '-'
+                s += '·'
         print(s)

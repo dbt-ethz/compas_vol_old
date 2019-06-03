@@ -22,13 +22,13 @@ class Box(object):
             return corner
 
 if __name__ == "__main__":
-    b = Box(50,40,30,15)
-    for y in range(-30,30):
+    b = Box(25,20,15,7)
+    for y in range(-15,15):
         s = ''
-        for x in range(-60,60):
+        for x in range(-30,30):
             d = b.get_distance(x*0.5,y,0)
             if d<0:
                 s += 'x'
             else:
-                s += '-'
+                s += '·'
         print(s)

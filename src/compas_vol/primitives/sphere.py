@@ -8,6 +8,13 @@ class Sphere(object):
         return math.sqrt(x*x + y*y + z*z) -self.r
 
 if __name__ == "__main__":
-    s = Sphere(2.4)
-    d = s.get_distance(1,2,3)
-    print(d)
+    sp = Sphere(10.5)
+    for y in range(-15,15):
+        s = ''
+        for x in range(-30,30):
+            d = sp.get_distance(x*0.5,y,0)
+            if d<0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)

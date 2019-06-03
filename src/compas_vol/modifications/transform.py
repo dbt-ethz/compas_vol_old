@@ -1,3 +1,5 @@
+from compas.geometry import matrix_from_translation
+
 class Transform(object):
     def __init__(self,obj=None, matrix=None):
         self.o = obj

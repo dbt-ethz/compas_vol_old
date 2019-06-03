@@ -12,5 +12,12 @@ class Plane(object):
 
 if __name__ == "__main__":
     p = Plane(1,2,3,4)
-    d = p.get_distance(4,3,2)
-    print(d)
+    for y in range(-15,15):
+        s = ''
+        for x in range(-30,30):
+            d = p.get_distance(x*0.5,y,0)
+            if d<0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)

@@ -17,8 +17,19 @@ class Shell(object):
         return abs(do + (self.s-0.5)*self.d)-self.d/2.0
 
 if __name__ == "__main__":
-    from compas_vol.primitives import Box
-    b = Box(3,4,5)
-    s = Shell(b, d=0.6, s=0.75)
-    d = s.get_distance(2,3,4)
-    print(d)
+    from compas_vol.primitives import Sphere, Box
+    from compas_vol.combinations import Union
+    
+    s = Sphere(9)
+    b = Box(25,10,10)
+    u = Union(s,b)
+    sh = Shell(u,2.5,0.5)
+    for y in range(-15,15):
+        s = ''
+        for x in range(-30,30):
+            d = sh.get_distance(x*0.5,y,0)
+            if d<0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)

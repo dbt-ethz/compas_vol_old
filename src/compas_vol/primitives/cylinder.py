@@ -11,4 +11,13 @@ class Cylinder(object):
         return d
 
 if __name__ == "__main__":
-    pass
+    c = Cylinder(10,5)
+    for y in range(-15,15):
+        s = ''
+        for x in range(-30,30):
+            d = c.get_distance(x*0.5,y,0)
+            if d<0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)
