@@ -9,6 +9,10 @@ class Intersection(object):
         ds = [o.get_distance(x,y,z) for o in self.objs]
         return max(ds)
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == "__main__":
     from compas_vol.primitives import Sphere, Box
     s = Sphere(9)

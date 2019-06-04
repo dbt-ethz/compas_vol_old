@@ -16,6 +16,10 @@ class Shell(object):
         do = self.o.get_distance(x,y,z)
         return abs(do + (self.s-0.5)*self.d)-self.d/2.0
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == "__main__":
     from compas_vol.primitives import Sphere, Box
     from compas_vol.combinations import Union

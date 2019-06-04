@@ -10,6 +10,10 @@ class Blend(object):
         e = max(self.r - abs(da-db), 0)
         return min(da,db) - e*e*0.25/self.r
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == "__main__":
     from compas_vol.primitives import Sphere, Box
     s = Sphere(9)

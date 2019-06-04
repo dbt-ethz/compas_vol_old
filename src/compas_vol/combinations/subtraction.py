@@ -8,6 +8,10 @@ class Subtraction(object):
         db = self.b.get_distance(x,y,z)
         return max(da, -db)
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == "__main__":
     from compas_vol.primitives import Sphere, Box
     s = Sphere(9)
