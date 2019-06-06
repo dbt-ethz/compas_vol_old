@@ -1,9 +1,31 @@
 import math
 
 class Sphere(object):
+
+    #@classmethod
+    #def from_centre_and_radius(cls,frame,rad):
+    #    pass
+
     def __init__(self,radius=1.0):
-        self.r = radius
+        self._r = radius
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def r(self):
+        """float: The radius of the sphere."""
+        return self._r
+
+    @r.setter
+    def r(self, r):
+        self._r = float(r)
     
+    # ==========================================================================
+    # distance function
+    # ==========================================================================
+
     def get_distance(self,x,y,z):
         return math.sqrt(x*x + y*y + z*z) -self.r
 
