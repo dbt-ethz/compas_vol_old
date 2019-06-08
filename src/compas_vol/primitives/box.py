@@ -1,14 +1,34 @@
 import math
 
 class Box(object):
+    """A box is defined by a length, width and height and an optional edge fillet radius.
+    Attributes
+    ----------
+    plane: :class:`compas.geometry.Plane`
+        The plane of the circle.
+    length: float
+        The length of the box (x).
+    width: float
+        The width of the box (y).
+    height: float
+        The height of the box (z):
+    radius: float
+        The radius of the edge fillet.
+    Examples
+    --------
+    >>> from compas_vol.primitives import Box
+    >>> box = Box(2,4,5)
     """
-    this is the class to create a box
-    """
+
     def __init__(self,length=3.0,width=2.0,height=1.0,radius=0.0):
-        self._l = length
-        self._w = width
-        self._h = height
-        self._r = radius
+        self._l = None
+        self._w = None
+        self._h = None
+        self._r = None
+        self.l = length
+        self.w = width
+        self.h = height
+        self.r = radius
 
     @classmethod
     def box_from_edge(cls,edge):
