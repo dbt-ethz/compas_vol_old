@@ -1,5 +1,5 @@
-from compas.geometry import matrix_from_translation
 from compas.geometry.xforms import Transformation
+from compas.geometry import Point
 
 class Transform(object):
     def __init__(self,obj=None, matrix=None):
@@ -7,7 +7,10 @@ class Transform(object):
         self.m = matrix
     
     def get_distance(self,x,y,z):
-        return 0
+        p = Point(x,y,z)
+        i = self.m.inverse()
+        p.transform(i)
+        return self.o.get_distance(p.x,p.y,p.z)
 
 # ==============================================================================
 # Main
@@ -15,7 +18,18 @@ class Transform(object):
 
 if __name__ == "__main__":
     from compas_vol.primitives import Box
-    b = Box()
-    t = Transform(b)
-    d = t.get_distance(1,2,3)
-    print(d)
+    from compas.geometry import Frame
+
+    b = Box(25,20,15,7)
+    f1 = Frame([1, 1, 1], [0.68, 0.68, 0.27], [-0.67, 0.73, -0.15])
+    T = Transformation.from_frame(f1)
+    t = Transform(b,T)
+    for y in range(-15,15):
+        s = ''
+        for x in range(-30,30):
+            d = t.get_distance(x*0.5,-y,0)
+            if d<0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)
