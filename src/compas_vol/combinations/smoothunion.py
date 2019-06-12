@@ -1,4 +1,4 @@
-class Blend(object):
+class SmoothUnion(object):
     def __init__(self, a=None, b=None, r=1.0):
         self.a = a
         self.b = b
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     from compas_vol.primitives import Sphere, Box
     s = Sphere(9)
     b = Box(25,10,10)
-    u = Blend(s,b,2.0)
+    u = SmoothUnion(s,b,2.0)
     for y in range(-15,15):
         s = ''
         for x in range(-30,30):
