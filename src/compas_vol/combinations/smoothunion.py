@@ -4,11 +4,19 @@ class SmoothUnion(object):
         self.b = b
         self.r = r
     
-    def get_distance(self,x,y,z):
+    def get_distance_(self,x,y,z):
         da = self.a.get_distance(x,y,z)
         db = self.b.get_distance(x,y,z)
         e = max(self.r - abs(da-db), 0)
         return min(da,db) - e*e*0.25/self.r
+    
+    def get_distance(self,x,y,z):
+        da = self.a.get_distance(x,y,z)
+        db = self.b.get_distance(x,y,z)
+        k = self.r
+        h = min(max( 0.5+0.5*(db-da)/k ,0),1)
+        return (db*(1-h) + h*da) - k*h*(1-h)
+
 
 # ==============================================================================
 # Main
