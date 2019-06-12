@@ -1,0 +1,2 @@
+class GDF(object):
+    pass

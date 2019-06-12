@@ -11,6 +11,16 @@ class Cone(object):
         d = max(dxy*cos(theta) - abs(z)*sin(theta), z-self._h, -z)
         return d
 
+'''
+IQ
+float sdCone( vec3 p, vec2 c )
+{
+    // c must be normalized
+    float q = length(p.xy);
+    return dot(c,vec2(q,p.z));
+}
+'''
+
 # ==============================================================================
 # Main
 # ==============================================================================
@@ -20,7 +30,7 @@ if __name__ == "__main__":
     for y in range(-15,15):
         s = ''
         for x in range(-30,30):
-            d = c.get_distance(x*0.5,y,4.5)
+            d = c.get_distance(x*0.5,y,2.5)
             if d<0:
                 s += 'x'
             else:

@@ -1,0 +1,2 @@
+class SmoothIntersection(object):
+    pass
