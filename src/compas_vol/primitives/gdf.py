@@ -19,3 +19,48 @@ class GDF(object):
     gdfvecs.append(Vector(-va, va, va))
     gdfvecs.append(Vector( va,-va, va))
     gdfvecs.append(Vector( va, va,-va))
+
+    gdfvecs.append(Vector(  0, vb, vc))
+    gdfvecs.append(Vector(  0,-vb, vc))
+    gdfvecs.append(Vector( vc,  0, vb))
+    gdfvecs.append(Vector(-vc,  0, vb))
+    gdfvecs.append(Vector( vb, vc,  0))
+    gdfvecs.append(Vector(-vb, vc,  0))
+
+    gdfvecs.append(Vector(  0, vd, ve))
+    gdfvecs.append(Vector(  0,-vd, ve))
+    gdfvecs.append(Vector( ve,  0, vd))
+    gdfvecs.append(Vector(-ve,  0, vd))
+    gdfvecs.append(Vector( vd, ve,  0))
+    gdfvecs.append(Vector(-vd, ve,  0))
+
+    gdfvecs.append(Vector(0,0,1))
+    gdfvecs.append(Vector( 0.943,0,     -0.333))
+    gdfvecs.append(Vector(-0.471, 0.816,-0.333))
+    gdfvecs.append(Vector(-0.471,-0.816,-0.333))
+
+    for v in gdfvecs:
+        v.unitize()
+    
+    ranges = {}
+    ranges['octahedron']   = ( 3, 6)
+    ranges['dodacehedron'] = (13,18)
+    ranges['icosahedron']  = ( 3,12)
+
+    def __init__(self):
+        pass
+    
+    # ==========================================================================
+    # distance function
+    # ==========================================================================
+
+    def get_distance(self,x,y,z):
+        return self.gdfvecs[0]
+    
+# ==============================================================================
+# Main
+# ==============================================================================
+
+if __name__ == "__main__":
+    gdf = GDF()
+    print(gdf.get_distance(1,2,3))
