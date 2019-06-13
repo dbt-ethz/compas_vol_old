@@ -20,7 +20,7 @@ if __name__ == "__main__":
     from compas_vol.primitives import Sphere, Box
     s = Sphere(9)
     b = Box(25,10,10)
-    u = SmoothSubtraction(s,b,0.25)
+    u = SmoothSubtraction(s,b,1.5)
     for y in range(-15,15):
         s = ''
         for x in range(-30,30):
