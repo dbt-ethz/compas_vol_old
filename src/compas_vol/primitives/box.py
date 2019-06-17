@@ -79,11 +79,11 @@ class Box(object):
     # distance function
     # ==========================================================================
 
-    def get_distance(self,x,y,z):
-        dx = abs(x) - (self._l/2.0 - self._r)
-        dy = abs(y) - (self._w/2.0 - self._r)
-        dz = abs(z) - (self._h/2.0 - self._r)
-        inside = max(dx, max(dy,dz)) - self._r
+    def get_distance(self, x,y,z):
+        dx = abs(x) - (self._l / 2.0 - self._r)
+        dy = abs(y) - (self._w / 2.0 - self._r)
+        dz = abs(z) - (self._h / 2.0 - self._r)
+        inside = max(dx, max(dy, dz)) - self._r
         dx = max(dx,0)
         dy = max(dy,0)
         dz = max(dz,0)
