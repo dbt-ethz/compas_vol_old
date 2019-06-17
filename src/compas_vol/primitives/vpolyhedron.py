@@ -1,0 +1,1 @@
+# platonic solids: create intersection of planes from faces (centroid)
