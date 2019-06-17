@@ -46,6 +46,8 @@ class GDF(object):
     ranges['octahedron']   = ( 3, 6)
     ranges['dodacehedron'] = (13,18)
     ranges['icosahedron']  = ( 3,12)
+    ranges['truncated_octahedron'] = (0,6)
+    ranges['truncated_icosahedron'] = (0,6)
 
     def __init__(self):
         pass
