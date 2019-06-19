@@ -1,12 +1,15 @@
 from compas.geometry._primitives import Plane, Point
+# modify to distance_point_plane_signed!
+from compas.geometry.distance import distance_point_plane
 
 
 class VolPlane(object):
     def __init__(self, plane):
         self.plane = plane
-    
+
     def get_distance(self, point):
-        return point.distance_to_plane(self.plane)
+        # modify to distance_point_plane_signed!
+        return distance_point_plane(point, self.plane)
 
 
 if __name__ == "__main__":
