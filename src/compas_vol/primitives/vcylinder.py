@@ -3,6 +3,9 @@ from compas.geometry import Cylinder
 from compas.geometry import distance_point_point_xy
 
 
+__all__ = ['VolCylinder']
+
+
 class VolCylinder(object):
     def __init__(self, cylinder):
         self.cylinder = cylinder

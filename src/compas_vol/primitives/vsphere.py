@@ -2,6 +2,9 @@ from compas.geometry import Point
 from compas.geometry import Sphere
 
 
+__all__ = ['VolSphere']
+
+
 class VolSphere(object):
     def __init__(self, sphere):
         self.sphere = sphere

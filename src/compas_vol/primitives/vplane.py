@@ -3,6 +3,9 @@ from compas.geometry._primitives import Plane, Point
 from compas.geometry.distance import distance_point_plane
 
 
+__all__ = ['VolPlane']
+
+
 class VolPlane(object):
     def __init__(self, plane):
         self.plane = plane

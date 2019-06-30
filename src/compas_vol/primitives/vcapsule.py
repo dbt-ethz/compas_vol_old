@@ -1,6 +1,9 @@
 from compas.geometry.distance import closest_point_on_segment
 
 
+__all__ = ['VolCapsule']
+
+
 class VolCapsule(object):
     def __init__(self, segment, radius):
         self.segment = segment

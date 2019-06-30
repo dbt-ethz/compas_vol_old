@@ -5,6 +5,8 @@ from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import Transformation
 
+__all__ = ['VolBox']
+
 
 class VolBox(object):
     def __init__(self, box, radius=0.0):

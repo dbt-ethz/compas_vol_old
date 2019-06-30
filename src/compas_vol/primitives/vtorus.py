@@ -4,6 +4,9 @@ from compas.geometry import distance_point_point_xy
 from math import sqrt
 
 
+__all__ = ['VolTorus']
+
+
 class VolTorus(object):
     def __init__(self, torus):
         self.torus = torus
