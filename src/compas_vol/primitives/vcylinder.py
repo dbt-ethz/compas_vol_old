@@ -1,5 +1,5 @@
 from compas.geometry import Point
-from compas.geometry import Cylinder
+# from compas.geometry import Cylinder
 from compas.geometry import distance_point_point_xy
 
 
