@@ -1,30 +1,32 @@
-from math import pi,sin,cos
+from math import pi, sin, cos
+
 
 class TPMS(object):
-    def __init__(self,tpmstype='Gyroid',wavelength=1.0):
+    def __init__(self, tpmstype='Gyroid', wavelength=1.0):
         self._t = tpmstype
-        self._wl = None
-        self.wl = wavelength
-        self._factor = self.wl/pi
+        self._wavelength = None
+        self.wavelength = wavelength
+        self._factor = self.wavelength/pi
 
     # ==========================================================================
     # descriptors
     # ==========================================================================
 
     @property
-    def wl(self):
+    def wavelength(self):
         """float: The wavelength of the TPMS."""
-        return self._wl
+        return self._wavelength
 
-    @wl.setter
-    def wl(self, wl):
-        self._wl = float(wl)
-    
+    @wavelength.setter
+    def wavelength(self, wavelength):
+        self._wavelength = float(wavelength)
+
     # ==========================================================================
     # distance function
     # ==========================================================================
-    
-    def get_distance(self,x,y,z):
+
+    def get_distance(self, point):
+        x, y, z = point
         px = x/self._factor
         py = y/self._factor
         pz = z/self._factor
@@ -40,18 +42,20 @@ class TPMS(object):
                 sin(px) * cos(py) * cos(pz) +
                 cos(px) * sin(py) * cos(pz) +
                 cos(px) * cos(py) * sin(pz)
-                )
+            )
 
         return d
 
 
 if __name__ == "__main__":
-    b = TPMS(tpmstype='Gyroid',wavelength=5)
-    for y in range(-15,15):
+    from compas.geometry import Point
+
+    b = TPMS(tpmstype='Diamond', wavelength=5)
+    for y in range(-15, 15):
         s = ''
-        for x in range(-30,30):
-            d = b.get_distance(x*0.5,y,1.25)
-            if d<0:
+        for x in range(-30, 30):
+            d = b.get_distance(Point(x*0.5, y, 1.))
+            if d < 0:
                 s += 'x'
             else:
                 s += '·'
