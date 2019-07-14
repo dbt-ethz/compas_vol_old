@@ -1,6 +1,8 @@
-from .blend import *
 from .intersection import *
 from .morph import *
+from .smoothintersection import *
+from .smoothsubtraction import *
+from .smoothunion import *
 from .subtraction import *
 from .union import *
 
