@@ -25,9 +25,10 @@ class Box(object):
         self.p = p
 
     def get_distance_np(self, x, y, z):
-        d = np.sqrt((x - self.c[0])**2 +
-                    (y - self.c[1])**2 +
-                    (z - self.c[2])**2) - self.r
+        dx = np.abs(x) - (self.a / 2.0 - self.r)
+        dy = np.abs(y) - (self.b / 2.0 - self.r)
+        dz = np.abs(z) - (self.c / 2.0 - self.r)
+        d = np.maximum(dx, np.maximum(dy, dz))
         return d
 
 
@@ -64,8 +65,9 @@ if __name__ == "__main__":
     # d = np.sqrt(x**2 + y**2 + z**2) - 10
     t1 = Sphere(10, [-4, -3, -2])
     t2 = Sphere(12, [4, 5, 6])
+    t3 = Box(25, 20, 15, 0, [3, 4, 5])
 
-    u = Intersection(t1, t2)
+    u = Union(t1, t3)
     d = u.get_distance_np(x, y, z)
 
     verts, faces, normals, values = marching_cubes_lewiner(d, 0.0)

@@ -14,13 +14,17 @@ vb = VolBox(b, 4.)
 # g = np.vectorize(b.get_distance)
 # m = np.fromfunction(g, (64, 64, 64))
 
-m = np.empty((30, 30, 30))
-for i in range(30):
-    for j in range(30):
-        for k in range(30):
-            x = k-15.
-            y = j-15.
-            z = i-15.
+num = 30
+lb = -15.0
+ub =  15.0
+fact = (ub-lb)/(num-1)
+m = np.empty((num, num, num))
+for i in range(num):
+    for j in range(num):
+        for k in range(num):
+            x = lb + k*fact
+            y = lb + j*fact
+            z = lb + i*fact
             v = vb.get_distance(Point(x, y, z))
             m[k, j, i] = v
 

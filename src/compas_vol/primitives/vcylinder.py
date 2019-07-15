@@ -16,6 +16,14 @@ class VolCylinder(object):
         d = max(d, abs(point.z) - self.cylinder.height / 2.0)
         return d
 
+    def get_distance_numpy(self, x, y, z):
+        import numpy as np
+
+        d = np.sqrt((x - self.cylinder.center.x)**2 +
+                    (y - self.cylinder.center.y)**2) - self.cylinder.radius
+        out = np.maximum(d, np.abs(z) - self.cylinder.height / 2.0)
+        return out
+
 
 if __name__ == "__main__":
     from compas.geometry import Circle, Plane
