@@ -8,6 +8,13 @@ class Subtraction(object):
         db = self.b.get_distance(point)
         return max(da, -db)
 
+    def get_distance_numpy(self, x, y, z):
+        import numpy as np
+
+        da = self.objs[0].get_distance_numpy(x, y, z)
+        db = self.objs[1].get_distance_numpy(x, y, z)
+        return np.maximum(da, -db)
+
 # ==============================================================================
 # Main
 # ==============================================================================

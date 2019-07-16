@@ -47,15 +47,20 @@ class VolBox(object):
 
     def get_distance_numpy(self, x, y, z):
         import numpy as np
-        dx = np.abs(x) - (self.box.xsize / 2.0 - self.radius)
-        dy = np.abs(y) - (self.box.ysize / 2.0 - self.radius)
-        dz = np.abs(z) - (self.box.zsize / 2.0 - self.radius)
+        from compas.geometry import matrix_from_frame
+
+        m = matrix_from_frame(self.box.frame)
+        print(m)
+
+        dx = np.abs(x-self.box.frame.point.x) - (self.box.xsize / 2.0 - self.radius)
+        dy = np.abs(y-self.box.frame.point.y) - (self.box.ysize / 2.0 - self.radius)
+        dz = np.abs(z-self.box.frame.point.z) - (self.box.zsize / 2.0 - self.radius)
         inside = np.maximum(dx, np.maximum(dy, dz)) - self.radius
         dx = np.maximum(dx, 0)
         dy = np.maximum(dy, 0)
         dz = np.maximum(dz, 0)
 
-        out = np.where(inside + self.radius < 0, inside,
+        out = np.where((inside + self.radius) < 0, inside,
                        np.sqrt(dx**2 + dy**2 + dz**2) - self.radius)
         return out
 
@@ -64,13 +69,13 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    box = Box(Frame(Point(3, 2, 0), [1, 0.2, 0.1], [-0.1, 1, 0.1]), 25, 20, 15)
-    vb = VolBox(box, 5.0)
+    box = Box(Frame(Point(3, 2, 0), [1, 0.2, 0.1], [-0.1, 1, 0.1]), 15, 10, 15)
+    vb = VolBox(box, 3.0)
 
     x, y, z = np.ogrid[-15:15:50j, -15:15:50j, -15:15:50j]
     d = vb.get_distance_numpy(x, y, z)
-    plt.imshow(d[:, :, 25])
-    plt.colorbar()
+    plt.imshow(abs(d[:, :, 25].T), cmap='RdBu') # transpose because numpy indexing is 1)row 2) column instead of x y
+    # plt.colorbar()
     plt.show()
 
     # for y in range(-15, 15):

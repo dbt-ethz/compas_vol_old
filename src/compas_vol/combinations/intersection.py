@@ -9,6 +9,16 @@ class Intersection(object):
         ds = [o.get_distance(point) for o in self.objs]
         return max(ds)
 
+    def get_distance_numpy(self, x, y, z):
+        import numpy as np
+
+        # da = self.objs[0].get_distance_numpy(x, y, z)
+        # db = self.objs[1].get_distance_numpy(x, y, z)
+        # return np.maximum(da, db)
+        
+        d = np.maximum.reduce(self.objs)
+        return d
+
 # ==============================================================================
 # Main
 # ==============================================================================
