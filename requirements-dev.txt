@@ -5,4 +5,7 @@ bumpversion>=0.5
 check-manifest>=0.36
 pytest>=3.2
 twine
+flake8
+isort
+pylint
 -e .
