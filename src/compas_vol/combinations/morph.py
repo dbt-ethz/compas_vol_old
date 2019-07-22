@@ -7,7 +7,12 @@ class Morph(object):
     def get_distance(self, point):
         da = self.a.get_distance(point)
         db = self.b.get_distance(point)
-        return (1.0-self.f)*da + self.f*db
+        return (1.0 - self.f) * da + self.f * db
+
+    def get_distance_numpy(self, x, y, z):
+        da = self.a.get_distance_numpy(x, y, z)
+        db = self.b.get_distance_numpy(x, y, z)
+        return (1.0 - self.f) * da + self.f * db
 
 # ==============================================================================
 # Main

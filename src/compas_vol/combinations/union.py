@@ -16,10 +16,10 @@ class Union(object):
         # db = self.objs[1].get_distance_numpy(x, y, z)
         # return np.minimum(da, db)
 
-        d = np.minimum.reduce(self.objs)
+        distances = ([o.get_distance_numpy(x, y, z) for o in self.objs])
+        return np.minimum.reduce((distances))
         # alternative:
-        # d = np.asarray(objs).min(axis=0)
-        return d
+        # d = np.asarray([o.get_distance_numpy(x, y, z) for o in self.objs]).min(axis=0)
 
 # ==============================================================================
 # Main

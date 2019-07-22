@@ -11,6 +11,9 @@ class Heart(object):
                      (x**2 + 9*y**2/4 + z**2-1)**3)
         return res
 
+    def get_distance_numpy(self, x, y, z):
+        return 0
+
 
 if __name__ == "__main__":
     h = Heart(30)
