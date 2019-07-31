@@ -1,5 +1,5 @@
 from compas.geometry import Point
-# from compas.geometry import Cylinder
+from compas.geometry import Cylinder
 from compas.geometry import distance_point_point_xy
 
 
@@ -18,6 +18,12 @@ class VolCylinder(object):
 
     def get_distance_numpy(self, x, y, z):
         import numpy as np
+        from compas.geometry import matrix_from_frame, inverse
+
+        m = matrix_from_frame(self.box.frame)
+        mi = inverse(m)
+        p = np.array([x, y, z, 1])
+        xt, yt, zt, _ = np.dot(mi, p)
 
         d = np.sqrt((x - self.cylinder.center.x)**2 +
                     (y - self.cylinder.center.y)**2) - self.cylinder.radius
