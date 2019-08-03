@@ -12,7 +12,8 @@ class VolBox(object):
     def __init__(self, box, radius=0.0):
         self._box = None
         self.box = box
-        self.radius = float(radius)
+        self._radius = None
+        self.radius = radius
 
     @property
     def box(self):
@@ -23,6 +24,14 @@ class VolBox(object):
         if not isinstance(box, Box):
             raise ValueError
         self._box = box
+
+    @property
+    def radius(self):
+        return self._radius
+
+    @radius.setter
+    def radius(self, radius):
+        self._radius = float(radius)
 
     def get_distance(self, point):
         x, y, z = point

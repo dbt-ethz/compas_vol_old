@@ -6,7 +6,18 @@ __all__ = ['VolSphere']
 
 class VolSphere(object):
     def __init__(self, sphere):
+        self._sphere = None
         self.sphere = sphere
+
+    @property
+    def sphere(self):
+        return self._sphere
+
+    @sphere.setter
+    def sphere(self, sphere):
+        if not isinstance(sphere, Sphere):
+            raise ValueError
+        self._sphere = sphere
 
     def get_distance(self, point):
         d = point.distance_to_point(self.sphere.center)

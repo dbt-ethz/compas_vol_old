@@ -5,16 +5,15 @@ class Union(object):
         else:
             self.objs = [a, b]
 
+    def add_object(self, o):
+        self.objs.append(o)
+
     def get_distance(self, point):
         ds = [o.get_distance(point) for o in self.objs]
         return min(ds)
 
     def get_distance_numpy(self, x, y, z):
         import numpy as np
-
-        # da = self.objs[0].get_distance_numpy(x, y, z)
-        # db = self.objs[1].get_distance_numpy(x, y, z)
-        # return np.minimum(da, db)
 
         distances = ([o.get_distance_numpy(x, y, z) for o in self.objs])
         return np.minimum.reduce((distances))

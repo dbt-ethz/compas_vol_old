@@ -13,6 +13,8 @@ def d(x, y, z, m):
 
 
 if __name__ == "__main__":
+    # also check global_coords_numpy from geometry.transformations.helpers
+
     z, y, x = np.ogrid[-1:1:4j, -1:1:5j, -1:1:6j]
     m = np.array([[0.9428, -0.3335], [0.3335, 0.9428]])
     b = np.array([[0.9428, -0.3335,  0.0000,  0.8850],
