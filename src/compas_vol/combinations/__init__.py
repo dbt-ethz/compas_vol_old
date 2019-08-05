@@ -1,3 +1,15 @@
+"""
+********************************************************************************
+compas_vol.combinations
+********************************************************************************
+
+.. currentmodule:: compas_vol.combinations
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+"""
 from .intersection import *
 from .morph import *
 from .smoothintersection import *

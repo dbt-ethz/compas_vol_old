@@ -1,3 +1,15 @@
+"""
+********************************************************************************
+compas_vol.modifications
+********************************************************************************
+
+.. currentmodule:: compas_vol.modifications
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+"""
 from .overlay import *
 from .shell import *
 from .twist import *

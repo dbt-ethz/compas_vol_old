@@ -58,6 +58,7 @@ class VolCylinder(object):
 # ==============================================================================
 
 if __name__ == "__main__":
+
     from compas.geometry import Circle, Plane
     import numpy as np
     import matplotlib.pyplot as plt

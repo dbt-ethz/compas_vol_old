@@ -1,21 +1,24 @@
 """
 ********************************************************************************
-primitives
+compas_vol.primitives
 ********************************************************************************
+
 .. currentmodule:: compas_vol.primitives
+
 Classes
 =======
-Subheading
-----------
+
 .. autosummary::
     :toctree: generated/
     :nosignatures:
+
     VolBox
     VolSphere
     VolCylinder
     VolTorus
     VolCapsule
     VolCone
+
 """
 
 from __future__ import absolute_import
