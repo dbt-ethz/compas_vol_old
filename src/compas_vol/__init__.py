@@ -9,7 +9,11 @@ compas_vol
 .. toctree::
     :maxdepth: 1
 
-
+    compas_vol.primitives
+    compas_vol.combinations
+    compas_vol.modifications
+    compas_vol.microstructures
+    compas_vol.analysis
 """
 
 from __future__ import print_function
