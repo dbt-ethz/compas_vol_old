@@ -5,6 +5,21 @@ __all__ = ['VolSphere']
 
 
 class VolSphere(object):
+    """A volumetric sphere is defined by a base sphere from `compas.geometry`.
+
+    Parameters
+    ----------
+    sphere : :class:`compas.geometry.Sphere`
+        The base sphere.
+
+    Examples
+    --------
+    >>> from compas.geometry import Point
+    >>> from compas.geometry import Sphere
+    >>> from compas_vol.primitives import VolSphere
+    >>> cs = Sphere(Point(1, 1, 1), 5)
+    >>> vs = VolSphere(cs)
+    """
     def __init__(self, sphere):
         self._sphere = None
         self.sphere = sphere

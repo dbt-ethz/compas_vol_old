@@ -9,6 +9,26 @@ __all__ = ['VolBox']
 
 
 class VolBox(object):
+    """A volumetric box is defined by a box and an optional fillet radius.
+
+    The center of the volumetric box is positioned at the origin of the
+    coordinate system defined by the frame. The box is axis-aligned to the frame.
+
+    Parameters
+    ----------
+    box : :class:`compas.geometry.Box`
+        The base box.
+    radius : float
+        The filletting radius along the edges, default=0.
+
+    Examples
+    --------
+    >>> from compas.geometry import Frame
+    >>> from compas.geometry import Box
+    >>> from compas_vol.primitives import VolBox
+    >>> box = Box(Frame.worldXY(), 1.0, 2.0, 3.0)
+    >>> vbx = VolBox(box, 0.3)
+    """
     def __init__(self, box, radius=0.0):
         self._box = None
         self.box = box

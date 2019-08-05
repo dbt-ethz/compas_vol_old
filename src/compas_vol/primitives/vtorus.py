@@ -9,6 +9,9 @@ __all__ = ['VolTorus']
 
 
 class VolTorus(object):
+    """
+    here goes the doc for the donut
+    """
     def __init__(self, torus):
         self.torus = torus
 
