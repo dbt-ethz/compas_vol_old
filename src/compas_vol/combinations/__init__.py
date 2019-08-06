@@ -9,6 +9,13 @@ compas_vol.combinations
     :toctree: generated/
     :nosignatures:
 
+    Union
+    Intersection
+    Subtraction
+    SmoothUnion
+    SmoothIntersection
+    SmoothSubtraction
+
 """
 from .intersection import *
 from .morph import *

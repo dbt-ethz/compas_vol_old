@@ -18,6 +18,7 @@ Classes
     VolTorus
     VolCapsule
     VolCone
+    VolPlane
 
 """
 

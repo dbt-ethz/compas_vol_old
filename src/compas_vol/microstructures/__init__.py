@@ -9,6 +9,9 @@ compas_vol.microstructures
     :toctree: generated/
     :nosignatures:
 
+    Lattice
+    TPMS
+
 """
 from .lattice import *
 from .tpms import *

@@ -9,6 +9,10 @@ compas_vol.modifications
     :toctree: generated/
     :nosignatures:
 
+    Overlay
+    Shell
+    Twist
+
 """
 from .overlay import *
 from .shell import *
