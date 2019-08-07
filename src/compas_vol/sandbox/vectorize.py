@@ -3,56 +3,7 @@ import numpy as np
 
 # https://stackoverflow.com/questions/41860623/fastest-way-to-fill-numpy-array-with-distances-from-a-point
 
-"""
-class Sphere(object):
-    def __init__(self, r=1.0, c=[0, 0, 0]):
-        self.r = r
-        self.c = c
 
-    def get_distance_np(self, x, y, z):
-        d = np.sqrt((x - self.c[0])**2 +
-                    (y - self.c[1])**2 +
-                    (z - self.c[2])**2) - self.r
-        return d
-
-
-class Box(object):
-    def __init__(self, a=1.0, b=1.0, c=1.0, r=0.0, p=[0, 0, 0]):
-        self.a = a
-        self.b = b
-        self.c = c
-        self.r = r
-        self.p = p
-
-    def get_distance_np(self, x, y, z):
-        dx = np.abs(x) - (self.a / 2.0 - self.r)
-        dy = np.abs(y) - (self.b / 2.0 - self.r)
-        dz = np.abs(z) - (self.c / 2.0 - self.r)
-        d = np.maximum(dx, np.maximum(dy, dz))
-        return d
-
-
-class Union(object):
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-
-    def get_distance_np(self, x, y, z):
-        ad = self.a.get_distance_np(x, y, z)
-        bd = self.b.get_distance_np(x, y, z)
-        return np.minimum(ad, bd)
-
-
-class Intersection(object):
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-
-    def get_distance_np(self, x, y, z):
-        ad = self.a.get_distance_np(x, y, z)
-        bd = self.b.get_distance_np(x, y, z)
-        return np.maximum(ad, bd)
-"""
 
 if __name__ == "__main__":
     from skimage.measure import marching_cubes_lewiner
