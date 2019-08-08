@@ -9,24 +9,24 @@ To get started with compas development, I recommend you create a separate enviro
 
 Long story short, the basic steps you need to take are the following:
 - preparation
- - `$ conda config --add channels conda-forge`
+  - `$ conda config --add channels conda-forge`
 - ~~create environment for dev and install compas~~
- - ~~`$ conda create -n compas-dev python=3.7 COMPAS`~~
+  - ~~`$ conda create -n compas-dev python=3.7 COMPAS`~~
 - create a new environment for compas development
- - `$ conda create -n compas-dev python=3.7`
+  - `$ conda create -n compas-dev python=3.7`
 - activate the new environment
- - `$ conda activate compas-dev`
-- clone compas core and install it from the local copy
- - `$ git clone git@github.com:compas-dev/compas.git`
- - `$ cd compas`
- - `$ pip install e .`
+  - `$ conda activate compas-dev`
+- clone compas core and install it from the local copy (because not all the features necessary for compas_vol to work are in the official conda / pip package yet)
+  - `$ git clone git@github.com:compas-dev/compas.git`
+  - `$ cd compas`
+  - `$ pip install e .`
 - navigate to a folder where you want the local copy of `compas_vol`
 - clone the repository (you should have gotten an invitation)
- - `$ git clone git@github.com:dbt-ethz/compas_vol.git`
+  - `$ git clone git@github.com:dbt-ethz/compas_vol.git`
 - install the package for the current environment
- - `$ pip install -r requirements-dev.txt`
+  - `$ pip install -r requirements-dev.txt`
 - furthermore, you will need pyside, opengl, scikit-image and ev. ipyvolume
- - `$ conda install pyopengl`
- - `$ conda install -c conda-forge pyside2`
- - `$ conda install scikit-image`
- - `$ conda install -c conda-forge ipyvolume`
+  - `$ conda install pyopengl`
+  - `$ conda install -c conda-forge pyside2`
+  - `$ conda install scikit-image`
+  - `$ conda install -c conda-forge ipyvolume`
