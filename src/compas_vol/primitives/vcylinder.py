@@ -1,4 +1,5 @@
 from compas.geometry import Frame
+from compas.geometry import Point
 from compas.geometry import Cylinder
 from compas.geometry import distance_point_point_xy
 
@@ -32,6 +33,8 @@ class VolCylinder(object):
     # ==========================================================================
 
     def get_distance(self, point):
+        if not isinstance(point, Point):
+            point = Point(*point)
         dxy = distance_point_point_xy(self.cylinder.center, point)
         d = dxy - self.cylinder.radius
         d = max(d, abs(point.z) - self.cylinder.height / 2.0)

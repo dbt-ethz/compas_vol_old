@@ -16,6 +16,8 @@ class VolTorus(object):
         self.torus = torus
 
     def get_distance(self, point):
+        if not isinstance(point, Point):
+            point = Point(*point)
         dxy = distance_point_point_xy(self.torus.center, point)
         d2 = sqrt((dxy - self.torus.radius_axis)**2 + point.z**2)
         return d2 - self.torus.radius_pipe

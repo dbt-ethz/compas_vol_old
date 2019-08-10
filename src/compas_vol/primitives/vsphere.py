@@ -35,6 +35,8 @@ class VolSphere(object):
         self._sphere = sphere
 
     def get_distance(self, point):
+        if not isinstance(point, Point):
+            point = Point(*point)
         d = point.distance_to_point(self.sphere.center)
         return d - self.sphere.radius
 
