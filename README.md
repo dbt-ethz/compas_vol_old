@@ -18,7 +18,7 @@ Long story short, the basic steps you need to take are the following:
   - `$ conda create -n compas-dev python=3.7`
 1. activate the new environment
   - `$ conda activate compas-dev`
-1. *conda install compas (for dependencies?) / compas uninstall compas*
+1. *conda install compas (for dependencies?) / conda uninstall compas*
 1. navigate to a folder where you want the local copies of **compas** and **compas_vol**
 1. clone compas core and install it from the local copy (because not all the features required for compas_vol to work are in the official conda / pip package yet)
   - `$ git clone git@github.com:compas-dev/compas.git`
