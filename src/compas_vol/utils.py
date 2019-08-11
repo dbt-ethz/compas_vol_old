@@ -17,7 +17,7 @@ def export_mesh(mesh, filename):
         f.write('\n'.join(fs))
 
 
-def export_layer(resolution, level):
+def export_layer(distfield, resolution, level):
     """
     Exports a slice through a distance field as an image.
     """
@@ -25,7 +25,7 @@ def export_layer(resolution, level):
     import numpy as np
 
     # x, y = np.ogrid[-10:10:resolution+0j, -10:10:resolution+0j]
-    x, y = np.ogrid[-10:10:10j, -10:10:10j]
+    y, x = np.ogrid[-10:10:10j, -10:10:10j]
 
     return (x, y)
 

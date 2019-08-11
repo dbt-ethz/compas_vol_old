@@ -9,13 +9,28 @@ __all__ = ['VolTorus']
 
 
 class VolTorus(object):
-    """
-    here goes the doc for the donut
+    """A volumetric torus is defined by a base torus from `compas.geometry`.
+
+    Parameters
+    ----------
+    torus : :class:`compas.geometry.Torus`
+        The base torus.
+
+    Examples
+    --------
+    >>> from compas.geometry import Plane
+    >>> from compas.geometry import Torus
+    >>> from compas_vol.primitives import VolTorus
+    >>> ctorus = Torus(Plane.worldXY(), 5., 2.)
+    >>> vtorus = VolTorus(ct)
     """
     def __init__(self, torus):
         self.torus = torus
 
     def get_distance(self, point):
+        """
+        point by point distance function
+        """
         if not isinstance(point, Point):
             point = Point(*point)
         dxy = distance_point_point_xy(self.torus.center, point)
@@ -23,6 +38,9 @@ class VolTorus(object):
         return d2 - self.torus.radius_pipe
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
         from compas.geometry import matrix_from_frame, inverse
 
