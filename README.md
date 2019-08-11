@@ -18,12 +18,13 @@ Long story short, the basic steps you need to take are the following:
    - `$ conda create -n compas-dev python=3.7`
 1. activate the new environment
    - `$ conda activate compas-dev`
-1. *conda install compas (for dependencies?) / conda uninstall compas*
 1. navigate to a folder where you want the local copies of **compas** and **compas_vol**
 1. clone compas core and install it from the local copy (because not all the features required for compas_vol to work are in the official conda / pip package yet)
    - `$ git clone git@github.com:compas-dev/compas.git`
    - `$ cd compas`
    - `$ pip install -e .`
+1. there is a known issue for compas with this installation (planarity/cython)
+   - see [this post](https://compas-dev.github.io/main/gettingstarted/knownissues.html) for a fix
 1. clone the repository (you should have gotten an invitation)
    - `$ git clone git@github.com:dbt-ethz/compas_vol.git`
 1. install the package for the current environment
