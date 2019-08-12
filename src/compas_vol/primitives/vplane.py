@@ -1,4 +1,4 @@
-from compas.geometry._primitives import Plane, Point
+from compas.geometry.primitives import Plane, Point
 from compas.geometry.distance import distance_point_plane_signed
 
 

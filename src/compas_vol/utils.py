@@ -23,13 +23,30 @@ def export_layer(distfield, resolution, level):
     """
 
     import numpy as np
+    from skimage import io
 
     # x, y = np.ogrid[-10:10:resolution+0j, -10:10:resolution+0j]
-    y, x = np.ogrid[-10:10:10j, -10:10:10j]
+    y, x = np.ogrid[-10:10:resolution*1j, -10:10:resolution*1j]
+    d = distfield.get_distance_numpy(x, y, level)
 
-    return (x, y)
+    # linear gradient
+#     d = d - d.min()
+#     m = d / d.max()
+    # binary image
+#     m = (d < 0)*1.0
+    # absolute
+    d = np.abs(d)
+    m = d / d.max()
+
+    io.imsave('outimg.png', m)
+    return d
 
 
 if __name__ == "__main__":
-    o = export_layer(10, 5)
-    print(type(o[0]))
+    from compas_vol.primitives import VolBox
+    from compas.geometry import Box, Frame
+
+    cb = Box(Frame((0, 0, 0), (1, 0.2, 0.1), (-0.1, 1, 0.2)), 16, 12, 8)
+    vb = VolBox(cb, 1.5)
+    o = export_layer(vb, 100, 0)
+    print(type(o))

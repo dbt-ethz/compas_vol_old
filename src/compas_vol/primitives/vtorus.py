@@ -51,20 +51,29 @@ class VolTorus(object):
         xt, yt, zt, _ = np.dot(mi, p)
 
         d = np.sqrt((xt - self.torus.center.x)**2 +
-                    (yt - self.torus.center.y)**2)
+                    (yt - self.torus.center.y)**2) - self.torus.radius_axis
+        d2 = np.sqrt(d**2 + (zt - self.torus.center.z)**2)
+        return d2 - self.torus.radius_pipe
 
 
 if __name__ == "__main__":
     from compas.geometry import Plane
+    import matplotlib.pyplot as plt
+    import numpy as np
 
     o = VolTorus(Torus(Plane.worldXY(), 7.0, 4.0))
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = o.get_distance(Point(x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '·'
-        print(s)
+    x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
+    d = o.get_distance_numpy(x, y, z)
+    plt.imshow(d[:, :, 30], cmap='RdBu')
+    plt.show()
+
+    # for y in range(-15, 15):
+    #     s = ''
+    #     for x in range(-30, 30):
+    #         d = o.get_distance(Point(x * 0.5, -y, 0))
+    #         if d < 0:
+    #             s += 'x'
+    #         else:
+    #             s += '·'
+    #     print(s)
