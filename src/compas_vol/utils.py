@@ -1,8 +1,15 @@
-def export_ski_mesh(v, f, n=None):
-    pass
+def export_ski_mesh(vs, fs, ns=None, filename='ski_mesh.obj'):
+    ve = ['v {} {} {}'.format(v[0], v[1], v[2]) for v in vs]
+    if ns is not None:
+        ne = ['vn {} {} {}'.format(n[0], n[1], n[2]) for n in ns]
+    fe = ['f {} {} {}'.format(f[0], f[1], f[2]) for f in fs]
+    with open(filename, 'w') as f:
+        f.write('\n'.join(ve))
+        f.write('\n'.join(ne))
+        f.write('\n'.join(fe))
 
 
-def export_ipv_mesh(mesh, filename):
+def export_ipv_mesh(mesh, filename='ipv_mesh.obj'):
     """
     Exports a mesh of type :class:`ipyvolume.widgets.Mesh`
     to an .obj file at specified location.
@@ -27,7 +34,7 @@ def get_compas_mesh(v, f):
     return m
 
 
-def export_layer(distfield, resolution, level):
+def export_layer(distfield, resolution, level, filename='layerimage.png'):
     """
     Exports a slice through a distance field as an image.
     """
@@ -48,7 +55,7 @@ def export_layer(distfield, resolution, level):
     d = np.abs(d)
     m = d / d.max()
 
-    io.imsave('outimg.png', m)
+    io.imsave(filename, m)
     return d
 
 

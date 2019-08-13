@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
     d = vb.get_distance_numpy(x, y, z)
-    plt.imshow(abs(d[:, :, 25].T), cmap='RdBu') # transpose because numpy indexing is 1)row 2) column instead of x y
+    plt.imshow(abs(d[:, :, 25].T), cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
     # plt.colorbar()
     plt.axis('equal')
     plt.show()
