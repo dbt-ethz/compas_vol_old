@@ -1,9 +1,11 @@
-from compas.geometry import Point
-from compas.geometry import Frame
-from compas.geometry import Torus
-from compas.geometry import distance_point_point_xy
 from math import sqrt
 
+from compas.geometry import Frame
+from compas.geometry import Point
+from compas.geometry import Torus
+from compas.geometry import distance_point_point_xy
+from compas.geometry import inverse
+from compas.geometry import matrix_from_frame
 
 __all__ = ['VolTorus']
 
@@ -33,6 +35,12 @@ class VolTorus(object):
         """
         if not isinstance(point, Point):
             point = Point(*point)
+
+        frame = Frame.from_plane(self.torus.plane)
+        m = matrix_from_frame(frame)
+        mi = inverse(m)
+        point.transform(mi)
+
         dxy = distance_point_point_xy(self.torus.center, point)
         d2 = sqrt((dxy - self.torus.radius_axis)**2 + point.z**2)
         return d2 - self.torus.radius_pipe
@@ -42,7 +50,6 @@ class VolTorus(object):
         vectorized distance function
         """
         import numpy as np
-        from compas.geometry import matrix_from_frame, inverse
 
         frame = Frame.from_plane(self.torus.plane)
         m = matrix_from_frame(frame)
@@ -61,7 +68,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    o = VolTorus(Torus(Plane.worldXY(), 7.0, 4.0))
+    o = VolTorus(Torus(Plane((0, 0, 0), (0.3, 0.2, 1)), 7.0, 4.0))
 
     x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
     d = o.get_distance_numpy(x, y, z)

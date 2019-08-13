@@ -1,8 +1,9 @@
+from compas.geometry import Cylinder
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import Cylinder
 from compas.geometry import distance_point_point_xy
-
+from compas.geometry import inverse
+from compas.geometry import matrix_from_frame
 
 __all__ = ['VolCylinder']
 
@@ -33,14 +34,26 @@ class VolCylinder(object):
     # ==========================================================================
 
     def get_distance(self, point):
+        """
+        point by point distance function
+        """
         if not isinstance(point, Point):
             point = Point(*point)
+
+        frame = Frame.from_plane(self.cylinder.plane)
+        m = matrix_from_frame(frame)
+        mi = inverse(m)
+        point.transform(mi)
+
         dxy = distance_point_point_xy(self.cylinder.center, point)
         d = dxy - self.cylinder.radius
         d = max(d, abs(point.z) - self.cylinder.height / 2.0)
         return d
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
         from compas.geometry import matrix_from_frame, inverse
 
@@ -63,24 +76,23 @@ class VolCylinder(object):
 if __name__ == "__main__":
 
     from compas.geometry import Circle, Plane
-    import numpy as np
     import matplotlib.pyplot as plt
 
     o = VolCylinder(Cylinder(Circle(Plane([0, 0, 0], [0.3, 0.4, 1.]), 5.0), 7.0))
 
-    x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
-    d = o.get_distance_numpy(x, y, z)
-    plt.imshow(abs(d[:, :, 30].T), cmap='RdBu') # transpose because numpy indexing is 1)row 2) column instead of x y
-    # plt.colorbar()
-    plt.axis('equal')
-    plt.show()
+    # x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
+    # d = o.get_distance_numpy(x, y, z)
+    # plt.imshow(abs(d[:, :, 30].T), cmap='RdBu') # transpose because numpy indexing is 1)row 2) column instead of x y
+    # # plt.colorbar()
+    # plt.axis('equal')
+    # plt.show()
 
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = o.get_distance(Point(x * 0.5, -y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '·'
-    #     print(s)
+    for y in range(-15, 15):
+        s = ''
+        for x in range(-30, 30):
+            d = o.get_distance(Point(x * 0.5, -y, 0))
+            if d < 0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)

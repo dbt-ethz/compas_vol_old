@@ -54,11 +54,18 @@ class VolBox(object):
         self._radius = float(radius)
 
     def get_distance(self, point):
-        x, y, z = point
+        """
+        point by point distance function
+        """
+        if not isinstance(point, Point):
+            p = Point(*point)
+        else:
+            p = point
+        # x, y, z = point
         # frame to frame: box to world
         T = Transformation.from_frame(self.box.frame)
         i = T.inverse()
-        p = Point(x, y, z)
+        # p = Point(x, y, z)
         p.transform(i)
 
         dx = abs(p.x) - (self.box.xsize / 2.0 - self.radius)
@@ -75,6 +82,9 @@ class VolBox(object):
             return corner
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
         from compas.geometry import matrix_from_frame, inverse
 
@@ -110,12 +120,12 @@ if __name__ == "__main__":
     plt.axis('equal')
     plt.show()
 
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = vb.get_distance((x * 0.5, -y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '·'
-    #     print(s)
+    for y in range(-15, 15):
+        s = ''
+        for x in range(-30, 30):
+            d = vb.get_distance((x * 0.5, -y, 0))
+            if d < 0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)

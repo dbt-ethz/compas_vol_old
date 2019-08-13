@@ -1,4 +1,8 @@
-def export_mesh(mesh, filename):
+def export_ski_mesh(v, f, n=None):
+    pass
+
+
+def export_ipv_mesh(mesh, filename):
     """
     Exports a mesh of type :class:`ipyvolume.widgets.Mesh`
     to an .obj file at specified location.
@@ -15,6 +19,12 @@ def export_mesh(mesh, filename):
         f.write('\n'.join(vs))
         f.write('\n')
         f.write('\n'.join(fs))
+
+
+def get_compas_mesh(v, f):
+    from compas.datastructures import Mesh
+    m = Mesh.from_vertices_and_faces(v, f)
+    return m
 
 
 def export_layer(distfield, resolution, level):
