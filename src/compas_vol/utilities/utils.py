@@ -1,11 +1,25 @@
+__all__ = [
+    'export_ski_mesh',
+    'export_ipv_mesh',
+    'get_compas_mesh',
+    'export_layer'
+    ]
+
+
 def export_ski_mesh(vs, fs, ns=None, filename='ski_mesh.obj'):
     ve = ['v {} {} {}'.format(v[0], v[1], v[2]) for v in vs]
     if ns is not None:
         ne = ['vn {} {} {}'.format(n[0], n[1], n[2]) for n in ns]
-    fe = ['f {} {} {}'.format(f[0], f[1], f[2]) for f in fs]
+        fe = ['f {0}//{0} {1}//{1} {2}//{2}'.format(f[0]+1, f[1]+1, f[2]+1) for f in fs]
+    else:
+        ne = None
+        fe = ['f {} {} {}'.format(f[0]+1, f[1]+1, f[2]+1) for f in fs]
     with open(filename, 'w') as f:
         f.write('\n'.join(ve))
-        f.write('\n'.join(ne))
+        f.write('\n')
+        if ne is not None:
+            f.write('\n'.join(ne))
+            f.write('\n')
         f.write('\n'.join(fe))
 
 
