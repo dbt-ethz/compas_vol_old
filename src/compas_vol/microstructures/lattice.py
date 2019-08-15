@@ -1,4 +1,7 @@
 import math
+from compas.geometry import Frame
+from compas.geometry import Point
+from compas.geometry import Transformation
 
 
 class Lattice(object):
@@ -8,6 +11,20 @@ class Lattice(object):
         self.type      = ltype
         self.unitcell  = unitcell
         self.thickness = thickness
+        self.frame     = Frame.worldXY()
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def frame(self):
+        """Frame: The lattice's frame."""
+        return self._frame
+
+    @frame.setter
+    def frame(self, frame):
+        self._frame = Frame(frame[0], frame[1], frame[2])
 
     def create_points(self):
         v1 = 0.0
@@ -55,12 +72,20 @@ class Lattice(object):
         interlock = grid+dual
         isotrop = [(0, 1), (2, 1), (5, 1), (7, 1), (3, 7), (6, 7), (4, 7)]
 
-        return [bigx, grid, star, cross, octagon, octet, vintile, dual, interlock, isotrop]
+        types = [bigx, grid, star, cross, octagon, octet, vintile, dual, interlock, isotrop]
+        return types
 
     def get_distance(self, point):
-        x, y, z = point
+        if not isinstance(point, Point):
+            pt = Point(*point)
+        else:
+            pt = point
+        # frame to frame: box to world
+        T = Transformation.from_frame(self.frame)
+        i = T.inverse()
+        pt.transform(i)
 
-        up = [abs((p % self.unitcell) - self.unitcell/2) for p in point]
+        up = [abs((p % self.unitcell) - self.unitcell/2) for p in pt]
         dmin = 9999999.
         for l in self.types[self.type]:
             sp = [self.pointlist[l[0]][i] * self.unitcell for i in range(3)]
@@ -77,6 +102,10 @@ class Lattice(object):
         return math.sqrt(dmin) - self.thickness/2.0
 
     def get_distance_numpy(self, x, y, z):
+        import numpy as np
+
+        # p3 = np.array([x, y, z])
+        # d=np.cross(p2-p1,p3-p1)/np.linalg.norm(p2-p1)
         pass
 
 
@@ -85,6 +114,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
     lat = Lattice(6, 20.0, 7)
+    lat.frame = Frame((1,0,0), (1,0.2,0.1), (-0.3, 1, 0.2))
     m = np.empty((100, 100))
     for r in range(100):
         for c in range(100):
