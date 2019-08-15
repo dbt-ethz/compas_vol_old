@@ -104,20 +104,27 @@ class Lattice(object):
     def get_distance_numpy(self, x, y, z):
         import numpy as np
 
+        lines = [np.array([[self.pointlist[l[0]][i] * self.unitcell for i in range(3)],
+                           [self.pointlist[l[0]][i] * self.unitcell for i in range(3)]] for l in self.types[self.type])]
+
         # p3 = np.array([x, y, z])
         # d=np.cross(p2-p1,p3-p1)/np.linalg.norm(p2-p1)
-        pass
+        return lines
 
 
 if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    lat = Lattice(6, 20.0, 7)
+    lat = Lattice(6, 40.0, 7)
     lat.frame = Frame((1,0,0), (1,0.2,0.1), (-0.3, 1, 0.2))
-    m = np.empty((100, 100))
-    for r in range(100):
-        for c in range(100):
+
+    print(lat.get_distance_numpy(1,1,1))
+
+    num = 200
+    m = np.empty((num, num))
+    for r in range(num):
+        for c in range(num):
             m[r, c] = lat.get_distance((c, r, 10))
     plt.imshow(m, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
     # plt.colorbar()
