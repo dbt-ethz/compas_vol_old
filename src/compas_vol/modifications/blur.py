@@ -4,7 +4,7 @@ from scipy.ndimage.filters import gaussian_filter
 class Blur(object):
     def __init__(self, distance_matrix, radius=3.0):
         self.distance_matrix = distance_matrix
-        self.radius = radius
+        self.radius = radius  # ev. pass sigma as argument to get_blurred?
 
     def get_blurred(self):
         return gaussian_filter(self.distance_matrix, sigma=self.radius)
