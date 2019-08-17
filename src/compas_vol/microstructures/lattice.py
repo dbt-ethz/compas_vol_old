@@ -102,13 +102,14 @@ class Lattice(object):
         return math.sqrt(dmin) - self.thickness/2.0
 
     def get_distance_numpy(self, x, y, z):
-        import numpy as np
+        raise NotImplementedError
+        # import numpy as np
 
-        lines = np.array([[[self.pointlist[l[0]][i] * self.unitcell for i in range(3)],
-                           [self.pointlist[l[1]][i] * self.unitcell for i in range(3)]] for l in self.types[self.type]])
+        # lines = np.array([[[self.pointlist[l[0]][i] * self.unitcell for i in range(3)],
+        #                    [self.pointlist[l[1]][i] * self.unitcell for i in range(3)]] for l in self.types[self.type]])
 
-        # d=np.cross(p2-p1,p3-p1)/np.linalg.norm(p2-p1)
-        return lines
+        # # d=np.cross(p2-p1,p3-p1)/np.linalg.norm(p2-p1)
+        # return lines
 
 
 if __name__ == "__main__":

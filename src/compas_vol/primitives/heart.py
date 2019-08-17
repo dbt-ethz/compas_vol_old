@@ -1,7 +1,7 @@
 class Heart(object):
     def __init__(self, size):
         self.size = size
-    
+
     def get_distance(self, point):
         x, y, z = point
         x /= self.size*0.43
@@ -12,7 +12,7 @@ class Heart(object):
         return res
 
     def get_distance_numpy(self, x, y, z):
-        return 0
+        raise NotImplementedError
 
 
 if __name__ == "__main__":
