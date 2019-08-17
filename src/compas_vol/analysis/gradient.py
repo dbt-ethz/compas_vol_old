@@ -68,15 +68,11 @@ class Gradient(object):
 
     def get_gradient_numpy(self, x, y, z):
         import numpy as np
-        """
-        central differences, with tetrahedron technique. 30-40% faster then regular get_gradient.
-        """
         d0 = self.o.get_distance_numpy(x + self.e, y - self.e, z - self.e)
         d1 = self.o.get_distance_numpy(x - self.e, y - self.e, z + self.e)
         d2 = self.o.get_distance_numpy(x - self.e, y + self.e, z - self.e)
         d3 = self.o.get_distance_numpy(x + self.e, y + self.e, z + self.e)
         dx, dy, dz = (d0 - d1 - d2 + d3, -d0 - d1 + d2 + d3, -d0 + d1 - d2 + d3)
-        
         return np.array([dx, dy, dz]).T
 
 
@@ -110,7 +106,7 @@ if __name__ == "__main__":
     x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
     d = g.get_gradient_numpy(x, y, z)
     print(type(d), d.shape)
-    
+
     ipv.figure()
     ipv.quiver(x, y, z, d[:, :, :, 0], d[:, :, :, 1], d[:, :, :, 2])
     ipv.show()
