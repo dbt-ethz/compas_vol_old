@@ -110,3 +110,4 @@ Icon
 # p5 java stuff
 .class
 .pyc
+*.pyc
