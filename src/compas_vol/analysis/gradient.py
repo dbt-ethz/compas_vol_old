@@ -78,19 +78,6 @@ class Gradient(object):
 
 if __name__ == "__main__":
 
-    """extra imports because of lazyness and no compas_vol in the python path.
-    to remove.
-    """
-    import sys
-    import os
-    HERE = str(sys.path[0])
-    path = os.path.dirname(HERE)
-    path = os.path.abspath(os.path.join(path, ".."))
-    sys.path.append(path)
-    sys.modules.pop("compas")
-    sys.path.append("c:\\Users\\nico\\Documents\\GitHub\\compas\\src") #quick and dirty way to get the correct version loaded
-    """end-of to remove"""
-
     from compas_vol.primitives import VolSphere
     from compas.geometry import Sphere
     import numpy as np
