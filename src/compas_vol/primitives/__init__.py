@@ -19,6 +19,7 @@ Classes
     VolCapsule
     VolCone
     VolPlane
+    VolExtrusion
 
 """
 
@@ -32,6 +33,7 @@ from .vbox import *
 from .vcapsule import *
 from .vcone import *
 from .vcylinder import *
+from .vextrusion import *
 from .vplane import *
 from .vpolyhedron import *
 from .vsphere import *

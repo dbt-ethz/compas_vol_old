@@ -61,13 +61,18 @@ def export_layer(distfield, resolution, level, filename='layerimage.png'):
     d = distfield.get_distance_numpy(x, y, level)
 
     # linear gradient
-#     d = d - d.min()
-#     m = d / d.max()
+    # d = d - d.min()
+    # m = d / d.max()
+
     # binary image
-#     m = (d < 0)*1.0
+    # m = (d < 0)*1.0
+
     # absolute
-    d = np.abs(d)
-    m = d / d.max()
+    # d = np.abs(d)
+    # m = d / d.max()
+
+    # with aliasing
+    m = 1-(np.tanh(d)+1)/2
 
     io.imsave(filename, m)
     return d
