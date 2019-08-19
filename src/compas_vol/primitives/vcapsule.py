@@ -13,6 +13,9 @@ class VolCapsule(object):
         p = closest_point_on_segment(point, self.segment)
         return point.distance_to_point(p) - self.radius
 
+    def get_distance_numpy(self, x, y, z):
+        raise NotImplementedError
+
 
 if __name__ == "__main__":
     from compas.geometry import Point

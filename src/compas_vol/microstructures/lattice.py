@@ -7,11 +7,11 @@ from compas.geometry import Transformation
 class Lattice(object):
     def __init__(self, ltype=0, unitcell=1.0, thickness=0.1):
         self.pointlist = self.create_points()
-        self.types     = self.create_types()
-        self.type      = ltype
-        self.unitcell  = unitcell
+        self.types = self.create_types()
+        self.type = ltype
+        self.unitcell = unitcell
         self.thickness = thickness
-        self.frame     = Frame.worldXY()
+        self.frame = Frame.worldXY()
 
     # ==========================================================================
     # descriptors
@@ -30,9 +30,9 @@ class Lattice(object):
         v1 = 0.0
         v2 = 0.5
         v3 = 0.25
-        
+
         points = []
-        
+
         points.append((v1, v1, v1))
         points.append((v2, v1, v1))
         points.append((v2, v2, v1))
@@ -102,7 +102,31 @@ class Lattice(object):
         return math.sqrt(dmin) - self.thickness/2.0
 
     def get_distance_numpy(self, x, y, z):
-        raise NotImplementedError
+        # raise NotImplementedError
+        import numpy as np
+        import time
+
+        pt = time.time()
+        pts = []
+        for tx in x[:, 0, 0]:
+            for ty in y[0, :, 0]:
+                for tz in z[0, 0, :]:
+                    cx = tx % self.unitcell - self.unitcell/2
+                    cy = ty % self.unitcell - self.unitcell/2
+                    cz = tz % self.unitcell - self.unitcell/2
+                    pts.append([cx, cy, cz])
+        npts = np.array(pts)
+        print(time.time()-pt, 'making points')
+        pt = time.time()
+
+        distances = []
+        for l in self.types[self.type]:
+            sp = np.array([self.pointlist[l[0]][i] * self.unitcell for i in range(3)])
+            ep = np.array([self.pointlist[l[1]][i] * self.unitcell for i in range(3)])
+            tds = [np.linalg.norm(np.cross(ep-sp, p3-sp))/np.linalg.norm(ep-sp) for p3 in npts]
+            distances.append(tds)
+        print(time.time()-pt, 'calculating distances')
+        return np.minimum.reduce((distances))
         # import numpy as np
 
         # lines = np.array([[[self.pointlist[l[0]][i] * self.unitcell for i in range(3)],
@@ -117,10 +141,11 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
     lat = Lattice(6, 17.0, 7)
-    lat.frame = Frame((1,0,0), (1,0.2,0.1), (-0.3, 1, 0.2))
+    lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
-    lns = lat.get_distance_numpy(1,1,1)
-    print(lns)
+    x, y, z = np.ogrid[-10:10:30j, -10:10:30j, -10:10:30j]
+    lns = lat.get_distance_numpy(x, y, z)
+    print(lns.shape)
 
     # num = 200
     # m = np.empty((num, num))

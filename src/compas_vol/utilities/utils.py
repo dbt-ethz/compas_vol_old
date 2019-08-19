@@ -23,7 +23,7 @@ def export_ski_mesh(vs, fs, ns=None, filename='ski_mesh.obj'):
         f.write('\n'.join(fe))
 
 
-def export_ipv_mesh(mesh, filename='ipv_mesh.obj'):
+def export_ipv_mesh(mesh, filename='ipv_mesh.obj', colors=None):
     """
     Exports a mesh of type :class:`ipyvolume.widgets.Mesh`
     to an .obj file at specified location.
@@ -34,6 +34,8 @@ def export_ipv_mesh(mesh, filename='ipv_mesh.obj'):
     vs = np.vstack((mesh.x, mesh.y, mesh.z)).T
     # vs = ['v {:.4f} {:.4f} {:.4f}'.format(v[0], v[1], v[2]) for v in vs]
     vs = ['v {} {} {}'.format(v[0], v[1], v[2]) for v in vs]
+    if colors is not None:
+        vs = [vs[i]+' {} {} {}'.format(c[0], c[1], c[2]) for i, c in enumerate(colors)]
     fs = ['f {} {} {}'.format(v[0]+1, v[1]+1, v[2]+1) for v in mesh.triangles]
 
     with open(filename, 'w') as f:
