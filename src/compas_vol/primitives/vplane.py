@@ -12,7 +12,7 @@ class VolPlane(object):
 
     def get_distance(self, point):
         """
-        point by point distance function
+        single point distance function
         """
         return distance_point_plane_signed(point, self.plane)
 

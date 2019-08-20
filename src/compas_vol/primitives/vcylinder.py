@@ -36,7 +36,7 @@ class VolCylinder(object):
 
     def get_distance(self, point):
         """
-        point by point distance function
+        single point distance function
         """
         if not isinstance(point, Point):
             point = Point(*point)

@@ -3,7 +3,7 @@ from math import sqrt
 from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import Torus
-from compas.geometry import distance_point_point_xy
+from compas.geometry import length_vector_xy
 from compas.geometry import inverse
 from compas.geometry import matrix_from_frame
 
@@ -31,7 +31,7 @@ class VolTorus(object):
 
     def get_distance(self, point):
         """
-        point by point distance function
+        single point distance function
         """
         if not isinstance(point, Point):
             point = Point(*point)
@@ -41,7 +41,7 @@ class VolTorus(object):
         mi = inverse(m)
         point.transform(mi)
 
-        dxy = distance_point_point_xy(self.torus.center, point)
+        dxy = length_vector_xy(point) #distance_point_point_xy(self.torus.center, point)
         d2 = sqrt((dxy - self.torus.radius_axis)**2 + point.z**2)
         return d2 - self.torus.radius_pipe
 
@@ -72,17 +72,17 @@ if __name__ == "__main__":
 
     o = VolTorus(Torus(Plane((2, 3, 0), (0.3, 0.2, 1)), 7.0, 4.0))
 
-    x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
-    d = o.get_distance_numpy(x, y, z)
-    plt.imshow(d[:, :, 30], cmap='RdBu')
-    plt.show()
+    # x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
+    # d = o.get_distance_numpy(x, y, z)
+    # plt.imshow(d[:, :, 30], cmap='RdBu')
+    # plt.show()
 
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = o.get_distance(Point(x * 0.5, -y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '·'
-    #     print(s)
+    for y in range(-15, 15):
+        s = ''
+        for x in range(-30, 30):
+            d = o.get_distance(Point(x * 0.5, -y, 0))
+            if d < 0:
+                s += 'x'
+            else:
+                s += '·'
+        print(s)

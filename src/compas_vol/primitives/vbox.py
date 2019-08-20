@@ -55,17 +55,15 @@ class VolBox(object):
 
     def get_distance(self, point):
         """
-        point by point distance function
+        single point distance function
         """
         if not isinstance(point, Point):
             p = Point(*point)
         else:
             p = point
-        # x, y, z = point
-        # frame to frame: box to world
+
         T = Transformation.from_frame(self.box.frame)
         i = T.inverse()
-        # p = Point(x, y, z)
         p.transform(i)
 
         dx = abs(p.x) - (self.box.xsize / 2.0 - self.radius)
