@@ -93,9 +93,12 @@ class VolBox(object):
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
 
-        dx = np.abs(xt - self.box.frame.point.x) - (self.box.xsize / 2.0 - self.radius)
-        dy = np.abs(yt - self.box.frame.point.y) - (self.box.ysize / 2.0 - self.radius)
-        dz = np.abs(zt - self.box.frame.point.z) - (self.box.zsize / 2.0 - self.radius)
+        # dx = np.abs(xt - self.box.frame.point.x) - (self.box.xsize / 2.0 - self.radius)
+        # dy = np.abs(yt - self.box.frame.point.y) - (self.box.ysize / 2.0 - self.radius)
+        # dz = np.abs(zt - self.box.frame.point.z) - (self.box.zsize / 2.0 - self.radius)
+        dx = np.abs(xt) - (self.box.xsize / 2.0 - self.radius)
+        dy = np.abs(yt) - (self.box.ysize / 2.0 - self.radius)
+        dz = np.abs(zt) - (self.box.zsize / 2.0 - self.radius)
         inside = np.maximum(dx, np.maximum(dy, dz)) - self.radius
         dx = np.maximum(dx, 0)
         dy = np.maximum(dy, 0)
@@ -115,7 +118,7 @@ if __name__ == "__main__":
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
     d = vb.get_distance_numpy(x, y, z)
-    plt.imshow(abs(d[:, :, 25].T), cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+    plt.imshow(d[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
     # plt.colorbar()
     plt.axis('equal')
     plt.show()

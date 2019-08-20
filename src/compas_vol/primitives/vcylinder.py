@@ -2,6 +2,7 @@ from compas.geometry import Cylinder
 from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import distance_point_point_xy
+from compas.geometry import length_vector_xy
 from compas.geometry import inverse
 from compas.geometry import matrix_from_frame
 
@@ -45,7 +46,7 @@ class VolCylinder(object):
         mi = inverse(m)
         point.transform(mi)
 
-        dxy = distance_point_point_xy(self.cylinder.center, point)
+        dxy = length_vector_xy(point) #distance_point_point_xy(self.cylinder.center, point)
         d = dxy - self.cylinder.radius
         d = max(d, abs(point.z) - self.cylinder.height / 2.0)
         return d
@@ -63,8 +64,7 @@ class VolCylinder(object):
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
 
-        d = np.sqrt((xt - self.cylinder.center.x)**2 +
-                    (yt - self.cylinder.center.y)**2) - self.cylinder.radius
+        d = np.sqrt(xt**2 + yt**2) - self.cylinder.radius
         out = np.maximum(d, np.abs(zt) - self.cylinder.height / 2.0)
         return out
 
@@ -74,25 +74,25 @@ class VolCylinder(object):
 # ==============================================================================
 
 if __name__ == "__main__":
-
+    import numpy as np
     from compas.geometry import Circle, Plane
     import matplotlib.pyplot as plt
 
-    o = VolCylinder(Cylinder(Circle(Plane([0, 0, 0], [0.3, 0.4, 1.]), 5.0), 7.0))
+    o = VolCylinder(Cylinder(Circle(Plane([1, 2, 3], [0.3, 0.4, 1.]), 5.0), 7.0))
 
-    # x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
-    # d = o.get_distance_numpy(x, y, z)
-    # plt.imshow(abs(d[:, :, 30].T), cmap='RdBu') # transpose because numpy indexing is 1)row 2) column instead of x y
-    # # plt.colorbar()
-    # plt.axis('equal')
-    # plt.show()
+    x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
+    d = o.get_distance_numpy(x, y, z)
+    plt.imshow(abs(d[:, :, 30].T), cmap='RdBu') # transpose because numpy indexing is 1)row 2) column instead of x y
+    # plt.colorbar()
+    plt.axis('equal')
+    plt.show()
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = o.get_distance(Point(x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '·'
-        print(s)
+    # for y in range(-15, 15):
+    #     s = ''
+    #     for x in range(-30, 30):
+    #         d = o.get_distance(Point(x * 0.5, -y, 0))
+    #         if d < 0:
+    #             s += 'x'
+    #         else:
+    #             s += '·'
+    #     print(s)

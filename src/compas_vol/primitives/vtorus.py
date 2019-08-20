@@ -57,9 +57,11 @@ class VolTorus(object):
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
 
-        d = np.sqrt((xt - self.torus.center.x)**2 +
-                    (yt - self.torus.center.y)**2) - self.torus.radius_axis
-        d2 = np.sqrt(d**2 + (zt - self.torus.center.z)**2)
+        # d = np.sqrt((xt - self.torus.center.x)**2 +
+        #             (yt - self.torus.center.y)**2) - self.torus.radius_axis
+        # d2 = np.sqrt(d**2 + (zt - self.torus.center.z)**2)
+        d = np.sqrt(xt**2 + yt**2) - self.torus.radius_axis
+        d2 = np.sqrt(d**2 + zt**2)
         return d2 - self.torus.radius_pipe
 
 
@@ -68,7 +70,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    o = VolTorus(Torus(Plane((0, 0, 0), (0.3, 0.2, 1)), 7.0, 4.0))
+    o = VolTorus(Torus(Plane((2, 3, 0), (0.3, 0.2, 1)), 7.0, 4.0))
 
     x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
     d = o.get_distance_numpy(x, y, z)
