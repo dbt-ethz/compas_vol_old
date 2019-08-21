@@ -1,5 +1,5 @@
-from compas.geometry.primitives import Plane
-from compas.geometry.primitives import Point
+from compas.geometry import Plane
+from compas.geometry import Point
 from compas.geometry.distance import distance_point_plane_signed
 
 
