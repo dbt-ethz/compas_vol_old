@@ -81,7 +81,7 @@ if __name__ == "__main__":
     from compas_vol.primitives import VolSphere
     from compas.geometry import Sphere
     import numpy as np
-    import ipyvolume as ipv
+    import matplotlib.pyplot as plt
 
     s = Sphere(Point(1, 2, 3), 4)
     vs = VolSphere(s)
@@ -92,8 +92,7 @@ if __name__ == "__main__":
 
     x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
     d = g.get_gradient_numpy(x, y, z)
-    print(type(d), d.shape)
 
-    ipv.figure()
-    ipv.quiver(x, y, z, d[:, :, :, 0], d[:, :, :, 1], d[:, :, :, 2])
-    ipv.show()
+    plt.quiver(x, y, d[:,:,0,1], d[:,:,0,2])
+    plt.axis('equal')
+    plt.show()
