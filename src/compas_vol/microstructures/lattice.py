@@ -26,6 +26,14 @@ class Lattice(object):
     def frame(self, frame):
         self._frame = Frame(frame[0], frame[1], frame[2])
 
+    @property
+    def typenames(self):
+        tn = ['bigx', 'grid', 'star', 'cross', 'octagon', 'octet', 'vintile', 'dual', 'interlock', 'isotrop']
+        d = {}
+        for i, n in enumerate(tn):
+            d[i] = n
+        return d
+
     def create_points(self):
         v1 = 0.0
         v2 = 0.5
@@ -112,8 +120,8 @@ class Lattice(object):
         mi = inverse(m)
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
-
-        mg = np.array(np.meshgrid(y, z, x)).T
+        md = np.dot(mi, p)
+        mg = np.stack(([md[0], md[1], md[2]]), axis=-1)
         mg = abs((mg % self.unitcell) - self.unitcell/2)
 
         distances = []
@@ -122,7 +130,7 @@ class Lattice(object):
             B = np.array([self.pointlist[l[1]][i] * self.unitcell for i in range(3)])
             d = np.linalg.norm(np.cross(B-A, mg-A), axis=-1)/np.linalg.norm(B-A)
             distances.append(d)
-        return np.asarray(distances).min(axis=0)
+        return np.asarray(distances).min(axis=0) - self.thickness/2.0
 
 
 if __name__ == "__main__":
@@ -131,6 +139,8 @@ if __name__ == "__main__":
 
     lat = Lattice(6, 5.0, 0.3)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
+
+    print(lat.typenames)
 
     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 
@@ -141,6 +151,7 @@ if __name__ == "__main__":
     # for r in range(num):
     #     for c in range(num):
     #         m[r, c] = lat.get_distance((c, r, 10))
+    
     plt.imshow(m[:, :, 25], cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
     # plt.colorbar()
     plt.axis('equal')
