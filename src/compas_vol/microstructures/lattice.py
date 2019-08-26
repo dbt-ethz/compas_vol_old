@@ -8,7 +8,7 @@ class Lattice(object):
     def __init__(self, ltype=0, unitcell=1.0, thickness=0.1):
         self.pointlist = self.create_points()
         self.types = self.create_types()
-        self.type = ltype
+        self.type = min(max(0,ltype), len(self.types)-1)
         self.unitcell = unitcell
         self.thickness = thickness
         self.frame = Frame.worldXY()
@@ -137,7 +137,7 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    lat = Lattice(6, 5.0, 0.3)
+    lat = Lattice(5, 5.0, 0.3)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
     print(lat.typenames)
