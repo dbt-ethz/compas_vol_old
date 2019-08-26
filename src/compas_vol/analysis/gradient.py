@@ -93,6 +93,6 @@ if __name__ == "__main__":
     x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
     d = g.get_gradient_numpy(x, y, z)
 
-    plt.quiver(x, y, d[:,:,0,1], d[:,:,0,2])
+    plt.quiver(x, y, d[:, :, 0, 1], d[:, :, 0, 2])
     plt.axis('equal')
     plt.show()

@@ -102,52 +102,47 @@ class Lattice(object):
         return math.sqrt(dmin) - self.thickness/2.0
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
-        # import time
+        from compas.geometry import matrix_from_frame, inverse
 
-        # pt = time.time()
+        m = matrix_from_frame(self.frame)
+        mi = inverse(m)
+        p = np.array([x, y, z, 1])
+        xt, yt, zt, _ = np.dot(mi, p)
 
-        xm, ym, zm = [*np.meshgrid(x, y, z)]
-        pts = np.array([xm.reshape(-1), ym.reshape(-1), zm.reshape(-1)]).T
+        mg = np.array(np.meshgrid(y, z, x)).T
+        mg = abs((mg % self.unitcell) - self.unitcell/2)
 
-        # print(time.time()-pt, 'meshgrid method')
-        # pt = time.time()
-
-        # distances = []
-        # for l in self.types[self.type]:
-        #     sp = np.array([self.pointlist[l[0]][i] * self.unitcell for i in range(3)])
-        #     ep = np.array([self.pointlist[l[1]][i] * self.unitcell for i in range(3)])
-        #     tds = [np.linalg.norm(np.cross(ep-sp, p3-sp))/np.linalg.norm(ep-sp) for p3 in npts]
-        #     distances.append(tds)
-        # print(time.time()-pt, 'calculating distances')
-        return pts  #np.minimum.reduce((distances))
-        # import numpy as np
-
-        # lines = np.array([[[self.pointlist[l[0]][i] * self.unitcell for i in range(3)],
-        #                    [self.pointlist[l[1]][i] * self.unitcell for i in range(3)]] for l in self.types[self.type]])
-
-        # # d=np.cross(p2-p1,p3-p1)/np.linalg.norm(p2-p1)
-        # return lines
+        distances = []
+        for l in self.types[self.type]:
+            A = np.array([self.pointlist[l[0]][i] * self.unitcell for i in range(3)])
+            B = np.array([self.pointlist[l[1]][i] * self.unitcell for i in range(3)])
+            d = np.linalg.norm(np.cross(B-A, mg-A), axis=-1)/np.linalg.norm(B-A)
+            distances.append(d)
+        return np.asarray(distances).min(axis=0)
 
 
 if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    lat = Lattice(6, 17.0, 7)
+    lat = Lattice(6, 5.0, 0.3)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
-    x, y, z = np.ogrid[-10:10:30j, -10:10:30j, -10:10:30j]
-    lns = lat.get_distance_numpy(x, y, z)
-    # print(lns.shape)
+    x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
+
+    m = lat.get_distance_numpy(x, y, z)
 
     # num = 200
     # m = np.empty((num, num))
     # for r in range(num):
     #     for c in range(num):
     #         m[r, c] = lat.get_distance((c, r, 10))
-    # plt.imshow(m, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    # # plt.colorbar()
-    # plt.axis('equal')
+    plt.imshow(m[:, :, 25], cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
     # plt.colorbar()
-    # plt.show()
+    plt.axis('equal')
+    plt.colorbar()
+    plt.show()
