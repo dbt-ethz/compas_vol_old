@@ -17,6 +17,14 @@ class SmoothUnion(object):
         h = min(max(0.5 + 0.5 * (db - da) / k, 0), 1)
         return (db * (1 - h) + h * da) - k * h * (1 - h)
 
+    def get_distance_numpy(self, x, y, z):
+        import numpy as np
+
+        da = self.a.get_distance_numpy(x, y, z)
+        db = self.b.get_distance_numpy(x, y, z)
+        h = np.minimum(np.maximum(0.5 + 0.5 * (db - da)/self.r, 0), 1)
+        return 0
+
 
 # ==============================================================================
 # Main
