@@ -23,7 +23,7 @@ class SmoothUnion(object):
         da = self.a.get_distance_numpy(x, y, z)
         db = self.b.get_distance_numpy(x, y, z)
         h = np.minimum(np.maximum(0.5 + 0.5 * (db - da)/self.r, 0), 1)
-        return 0
+        return (db * (1 - h) + h * da) - self.r * h * (1 - h)
 
 
 # ==============================================================================
@@ -33,18 +33,27 @@ class SmoothUnion(object):
 if __name__ == "__main__":
     from compas_vol.primitives import VolSphere, VolBox
     from compas.geometry import Box, Frame, Point, Sphere
+    import numpy as np
+    import matplotlib.pyplot as plt
 
     s = Sphere(Point(5, 6, 0), 9)
     b = Box(Frame.worldXY(), 20, 15, 10)
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
-    u = SmoothUnion(vs, vb, 2.5)
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = u.get_distance(Point(x*0.5, y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '·'
-        print(s)
+    u = SmoothUnion(vs, vb, 4.5)
+    # for y in range(-15, 15):
+    #     s = ''
+    #     for x in range(-30, 30):
+    #         d = u.get_distance(Point(x*0.5, y, 0))
+    #         if d < 0:
+    #             s += 'x'
+    #         else:
+    #             s += '·'
+    #     print(s)
+
+    x, y, z = np.ogrid[-15:15:50j, -15:15:50j, -15:15:50j]
+    d = u.get_distance_numpy(x, y, z)
+    m = d[:, :, 25].T
+    plt.imshow(np.tanh(m), cmap='Greys')
+    # plt.colorbar()
+    plt.show()
