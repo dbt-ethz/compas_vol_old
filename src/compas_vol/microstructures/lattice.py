@@ -150,7 +150,7 @@ class Lattice(object):
         m = matrix_from_frame(self.frame)
         mi = inverse(m)
         p = np.array([x, y, z, 1])
-        xt, yt, zt, _ = np.dot(mi, p)
+        # xt, yt, zt, _ = np.dot(mi, p)
         md = np.dot(mi, p)
         mg = np.stack(([md[0], md[1], md[2]]), axis=-1)
         mg = abs((mg % self.unitcell) - self.unitcell/2)
