@@ -20,6 +20,7 @@ Classes
     VolCone
     VolPlane
     VolExtrusion
+    VolPolyhedron
 
 """
 

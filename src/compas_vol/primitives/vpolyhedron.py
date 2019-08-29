@@ -14,6 +14,7 @@ class VolPolyhedron(object):
     planes : list of :class:`compas_vol.primitives.VolPlane`
         The list of delimiting planes.
     """
+
     def __init__(self, planes):
         self.planes = planes or []
         # print(self.planes[-1].plane)
@@ -47,6 +48,8 @@ if __name__ == "__main__":
         p = Plane((9*x, 9*y, 0), (x, y, 0))
         vp = VolPlane(p)
         planes.append(vp)
+    planes.append(VolPlane(Plane((0, 0, 4), (0, 0, 1))))
+    planes.append(VolPlane(Plane((0, 0, -4), (0, 0, -1))))
     vh = VolPolyhedron(planes)
 
     for y in range(-15, 15):
