@@ -42,7 +42,7 @@ if __name__ == "__main__":
     #         if d < 0:
     #             s += 'x'
     #         else:
-    #             s += '·'
+    #             s += '.'
     #     print(s)
 
     x, y, z = np.ogrid[-15:15:50j, -15:15:50j, -15:15:50j]

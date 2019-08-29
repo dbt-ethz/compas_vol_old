@@ -1,3 +1,6 @@
+__all__ = ['Heart']
+
+
 class Heart(object):
     def __init__(self, size):
         self.size = size
@@ -18,12 +21,12 @@ class Heart(object):
 if __name__ == "__main__":
     h = Heart(20)
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = h.get_distance((x * 0.5, 0, -y))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '·'
-        print(s)
+    # for y in range(-15, 15):
+    #     s = ''
+    #     for x in range(-30, 30):
+    #         d = h.get_distance((x * 0.5, 0, -y))
+    #         if d < 0:
+    #             s += 'x'
+    #         else:
+    #             s += '.'
+    #     print(s)

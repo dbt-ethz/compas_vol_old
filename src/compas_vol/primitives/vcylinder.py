@@ -1,7 +1,6 @@
 from compas.geometry import Cylinder
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import distance_point_point_xy
 from compas.geometry import length_vector_xy
 from compas.geometry import inverse
 from compas.geometry import matrix_from_frame
@@ -94,5 +93,5 @@ if __name__ == "__main__":
     #         if d < 0:
     #             s += 'x'
     #         else:
-    #             s += '·'
+    #             s += '.'
     #     print(s)

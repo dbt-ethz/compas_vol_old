@@ -1,5 +1,7 @@
 from compas.geometry import Vector
 
+__all__ = ['GDF']
+
 
 class GDF(object):
     """

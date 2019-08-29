@@ -60,5 +60,5 @@ if __name__ == "__main__":
             if d < 0:
                 s += 'x'
             else:
-                s += '·'
+                s += '.'
         print(s)

@@ -1,3 +1,5 @@
+__all__ = ['VolCone']
+
 class VolCone(object):
     def __init__(self, cone):
         self.cone = cone
