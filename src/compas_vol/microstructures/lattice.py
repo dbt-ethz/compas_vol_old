@@ -150,7 +150,6 @@ class Lattice(object):
         m = matrix_from_frame(self.frame)
         mi = inverse(m)
         p = np.array([x, y, z, 1])
-        # xt, yt, zt, _ = np.dot(mi, p)
         md = np.dot(mi, p)
         mg = np.stack(([md[0], md[1], md[2]]), axis=-1)
         mg = abs((mg % self.unitcell) - self.unitcell/2)
@@ -168,7 +167,7 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    lat = Lattice(5, 5.0, 0.3)
+    lat = Lattice(6, 5.0, 0.5)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
     print(lat.typenames)

@@ -61,8 +61,19 @@
 <h1>Gradient</h1>
 <dl class="class">
 <dt id="compas_vol.analysis.Gradient">
-<em class="property">class </em><code class="sig-prename descclassname">compas_vol.analysis.</code><code class="sig-name descname">Gradient</code></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_vol.analysis.</code><code class="sig-name descname">Gradient</code><span class="sig-paren">(</span><em class="sig-param">o</em>, <em class="sig-param">e=0.01</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A Gradient object calculates the ∇ (Nabla), or the direction vector of
+the gradient of a distance function. It is perpendicular to the 0-level
+iso-surface for points on the boundary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> (<a class="reference internal" href="../compas_vol.html#module-compas_vol" title="compas_vol"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_vol</span></code></a> distance object.) – The object with the signed distance function to calculate the gradient from.</p></li>
+<li><p><strong>e</strong> (<em>float</em>) – Epsilon, the offset (+/-) for the central distance calculation.</p></li>
+</ul>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -70,7 +81,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.analysis.Gradient.__init__.html#compas_vol.analysis.Gradient.__init__" title="compas_vol.analysis.Gradient.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.analysis.Gradient.__init__.html#compas_vol.analysis.Gradient.__init__" title="compas_vol.analysis.Gradient.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(o[, e])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 </tbody>
@@ -161,7 +172,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 06, 2019.
+                Last updated on Aug 30, 2019.
             
 
             

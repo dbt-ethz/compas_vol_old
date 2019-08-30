@@ -63,7 +63,20 @@
 <dt id="compas_vol.primitives.VolTorus">
 <em class="property">class </em><code class="sig-prename descclassname">compas_vol.primitives.</code><code class="sig-name descname">VolTorus</code><span class="sig-paren">(</span><em class="sig-param">torus</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>here goes the doc for the donut</p>
+<p>A volumetric torus is defined by a base torus from <cite>compas.geometry</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>torus</strong> (<a class="reference external" href="https://compas-dev.github.io/main/api/generated/compas.geometry.Torus.html#compas.geometry.Torus" title="(in COMPAS v0.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Torus</span></code></a>) – The base torus.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">Plane</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">Torus</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas_vol.primitives</span> <span class="k">import</span> <span class="n">VolTorus</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctorus</span> <span class="o">=</span> <span class="n">Torus</span><span class="p">(</span><span class="n">Plane</span><span class="o">.</span><span class="n">worldXY</span><span class="p">(),</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vtorus</span> <span class="o">=</span> <span class="n">VolTorus</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+</code></pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -75,10 +88,10 @@
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_vol.primitives.VolTorus.get_distance.html#compas_vol.primitives.VolTorus.get_distance" title="compas_vol.primitives.VolTorus.get_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance</span></code></a>(point)</p></td>
-<td><p></p></td>
+<td><p>single point distance function</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.primitives.VolTorus.get_distance_numpy.html#compas_vol.primitives.VolTorus.get_distance_numpy" title="compas_vol.primitives.VolTorus.get_distance_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance_numpy</span></code></a>(x, y, z)</p></td>
-<td><p></p></td>
+<td><p>vectorized distance function</p></td>
 </tr>
 </tbody>
 </table>
@@ -168,7 +181,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 06, 2019.
+                Last updated on Aug 30, 2019.
             
 
             

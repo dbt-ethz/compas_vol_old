@@ -61,8 +61,26 @@
 <h1>Lattice</h1>
 <dl class="class">
 <dt id="compas_vol.microstructures.Lattice">
-<em class="property">class </em><code class="sig-prename descclassname">compas_vol.microstructures.</code><code class="sig-name descname">Lattice</code></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_vol.microstructures.</code><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="sig-param">ltype=0</em>, <em class="sig-param">unitcell=1.0</em>, <em class="sig-param">thickness=0.1</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A lattice is defined by it’s type, size of a unit cell and its strut diameter.
+Optionally, a frame can be specified to modify orientation and origin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltype</strong> (<em>int</em>) – The index to the type of lattice.
+A dictionary with indices and corresponding type names can be retrieved with the property <cite>typenames</cite>.</p></li>
+<li><p><strong>unitcell</strong> (<em>float</em>) – The edgelength of a cubic unit cell.</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – The diameter of the struts.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas_vol.microstructure</span> <span class="k">import</span> <span class="n">Lattice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lat</span> <span class="o">=</span> <span class="n">Lattice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lat</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">))</span>
+</code></pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -70,7 +88,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.microstructures.Lattice.__init__.html#compas_vol.microstructures.Lattice.__init__" title="compas_vol.microstructures.Lattice.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.microstructures.Lattice.__init__.html#compas_vol.microstructures.Lattice.__init__" title="compas_vol.microstructures.Lattice.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([ltype, unitcell, thickness])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 </tbody>
@@ -161,7 +179,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 06, 2019.
+                Last updated on Aug 30, 2019.
             
 
             
