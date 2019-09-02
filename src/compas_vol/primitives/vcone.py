@@ -2,6 +2,22 @@ __all__ = ['VolCone']
 
 
 class VolCone(object):
+    """A volumetric cone is defined by a base cone from `compas.geometry`.
+
+    Attributes
+    ----------
+    cone: :class:`compas.geometry.Cone`
+        The base cone.
+
+    Examples
+    --------
+    >>> from compas.geometry import Plane
+    >>> from compas.geometry import Cylinder
+    >>> plane = Plane([0, 0, 0], [0, 0, 1])
+    >>> circle = Circle(plane, 5)
+    >>> cone = Cone(circle, 7)
+    >>> vcone = VolCone(cone)
+    """
     def __init__(self, cone):
         self.cone = cone
 

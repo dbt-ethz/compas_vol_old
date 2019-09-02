@@ -7,6 +7,19 @@ __all__ = ['VolPlane']
 
 
 class VolPlane(object):
+    """A volumetric plane is defined by a base plane from `compas.geometry`.
+
+    Attributes
+    ----------
+    cone: :class:`compas.geometry.Plane`
+        The base plane.
+
+    Examples
+    --------
+    >>> from compas.geometry import Plane
+    >>> plane = Plane([1,3,4], [0.1,0.2,1])
+    >>> vplane = VolPlane(plane)
+    """
     def __init__(self, plane):
         self.plane = plane
 

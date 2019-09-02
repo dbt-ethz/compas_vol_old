@@ -9,7 +9,7 @@ __all__ = ['VolCylinder']
 
 
 class VolCylinder(object):
-    """A volumetric cylinder is defined by a cylinder primitive.
+    """A volumetric cylinder is defined by a base cylinder from `compas.geometry`.
 
     Attributes
     ----------

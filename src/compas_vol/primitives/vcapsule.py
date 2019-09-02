@@ -5,6 +5,22 @@ __all__ = ['VolCapsule']
 
 
 class VolCapsule(object):
+    """A volumetric capsule is defined by a line segment and a radius.
+
+    Attributes
+    ----------
+    segment: list or tuple of two points
+        Start and end point of the line segment.
+    radius: float
+        The radius of the capsule.
+
+    Examples
+    --------
+    >>> sp = (1, 2, -3)
+    >>> ep = (5, 4, 3)
+    >>> segment = (sp, ep)
+    >>> capsule = VolCapsule(segment, 3.0)
+    """
     def __init__(self, segment, radius):
         self.segment = segment
         self.radius = radius

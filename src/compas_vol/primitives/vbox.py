@@ -9,7 +9,7 @@ __all__ = ['VolBox']
 
 
 class VolBox(object):
-    """A volumetric box is defined by a box and an optional fillet radius.
+    """A volumetric box is defined by a base box from `compas.geometry` and an optional fillet radius.
 
     The center of the volumetric box is positioned at the origin of the
     coordinate system defined by the frame. The box is axis-aligned to the frame.
