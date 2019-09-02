@@ -1,4 +1,21 @@
 class Union(object):
+    """The Boolean union between two or more volumetric objects.
+
+    Parameters
+    ----------
+    a: single volumetric object or list of objects
+        First object if the union is of two objects only. If a is a list of objects, b is discarded.
+    b: (optional) volumetric object
+        Second object if the union is of two objects only.
+
+    Examples
+    --------
+    >>> s = Sphere(Point(5, 6, 0), 9)
+    >>> b = Box(Frame.worldXY(), 20, 15, 10)
+    >>> vs = VolSphere(s)
+    >>> vb = VolBox(b, 2.5)
+    >>> u = Union(vs, vb)
+    """
     def __init__(self, a=None, b=None):
         if type(a) == list:
             self.objs = a

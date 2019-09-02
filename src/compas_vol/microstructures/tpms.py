@@ -2,8 +2,18 @@ from math import pi, sin, cos
 
 
 class TPMS(object):
-    """
-    Triply Periodic Minimal Surfaces (TMPS)
+    """A triply periodic minimal surface (TPMS) is defined by a type and a wavelength.
+
+    Parameters
+    ----------
+    tpmstype: String
+        Type of TPMS. Currently avaliable are Gyroid, SchwartzP, Diamond, Neovius, Lidinoid and FischerKoch.
+    wavelength: float
+        The wavelength of the trigonometric function.
+
+    Examples
+    --------
+    >>> a = TPMS(tpmstype='Gyroid', wavelength=5.0)
     """
     def __init__(self, tpmstype='Gyroid', wavelength=1.0):
         self.tpmstype = tpmstype

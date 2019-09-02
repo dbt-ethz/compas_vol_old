@@ -4,7 +4,7 @@ __all__ = ['VolCone']
 class VolCone(object):
     """A volumetric cone is defined by a base cone from `compas.geometry`.
 
-    Attributes
+    Parameters
     ----------
     cone: :class:`compas.geometry.Cone`
         The base cone.

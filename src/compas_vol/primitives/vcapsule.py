@@ -7,7 +7,7 @@ __all__ = ['VolCapsule']
 class VolCapsule(object):
     """A volumetric capsule is defined by a line segment and a radius.
 
-    Attributes
+    Parameters
     ----------
     segment: list or tuple of two points
         Start and end point of the line segment.

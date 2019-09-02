@@ -11,7 +11,7 @@ __all__ = ['VolCylinder']
 class VolCylinder(object):
     """A volumetric cylinder is defined by a base cylinder from `compas.geometry`.
 
-    Attributes
+    Parameters
     ----------
     cylinder: :class:`compas.geometry.Cylinder`
         The base cylinder.

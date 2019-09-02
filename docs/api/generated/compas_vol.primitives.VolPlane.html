@@ -63,6 +63,18 @@
 <dt id="compas_vol.primitives.VolPlane">
 <em class="property">class </em><code class="sig-prename descclassname">compas_vol.primitives.</code><code class="sig-name descname">VolPlane</code><span class="sig-paren">(</span><em class="sig-param">plane</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A volumetric plane is defined by a base plane from <cite>compas.geometry</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cone</strong> (<a class="reference external" href="https://compas-dev.github.io/main/api/generated/compas.geometry.Plane.html#compas.geometry.Plane" title="(in COMPAS v0.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Plane</span></code></a>) – The base plane.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">Plane</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span> <span class="o">=</span> <span class="n">Plane</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vplane</span> <span class="o">=</span> <span class="n">VolPlane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+</code></pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -164,7 +176,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 30, 2019.
+                Last updated on Sep 02, 2019.
             
 
             

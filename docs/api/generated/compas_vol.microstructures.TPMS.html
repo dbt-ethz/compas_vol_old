@@ -63,7 +63,19 @@
 <dt id="compas_vol.microstructures.TPMS">
 <em class="property">class </em><code class="sig-prename descclassname">compas_vol.microstructures.</code><code class="sig-name descname">TPMS</code><span class="sig-paren">(</span><em class="sig-param">tpmstype='Gyroid'</em>, <em class="sig-param">wavelength=1.0</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Triply Periodic Minimal Surfaces (TMPS)</p>
+<p>A triply periodic minimal surface (TPMS) is defined by a type and a wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tpmstype</strong> (<em>String</em>) – Type of TPMS. Currently avaliable are Gyroid, SchwartzP, Diamond, Neovius, Lidinoid and FischerKoch.</p></li>
+<li><p><strong>wavelength</strong> (<em>float</em>) – The wavelength of the trigonometric function.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">TPMS</span><span class="p">(</span><span class="n">tpmstype</span><span class="o">=</span><span class="s1">&#39;Gyroid&#39;</span><span class="p">,</span> <span class="n">wavelength</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+</code></pre></div>
+</div>
 <p class="rubric">Attributes</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -186,7 +198,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 30, 2019.
+                Last updated on Sep 02, 2019.
             
 
             

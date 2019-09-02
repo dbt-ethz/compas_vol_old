@@ -63,6 +63,23 @@
 <dt id="compas_vol.combinations.Intersection">
 <em class="property">class </em><code class="sig-prename descclassname">compas_vol.combinations.</code><code class="sig-name descname">Intersection</code><span class="sig-paren">(</span><em class="sig-param">a=None</em>, <em class="sig-param">b=None</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>The Boolean intersection between two or more volumetric objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>single volumetric object or list of objects</em>) – First object if the intersection is of two objects only. If a is a list of objects, b is discarded.</p></li>
+<li><p><strong>b</strong> (<em>(optional) volumetric object</em>) – Second object if the intersection is of two objects only.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Sphere</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Frame</span><span class="o">.</span><span class="n">worldXY</span><span class="p">(),</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vs</span> <span class="o">=</span> <span class="n">VolSphere</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vb</span> <span class="o">=</span> <span class="n">VolBox</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">Intersection</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="n">vb</span><span class="p">)</span>
+</code></pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -167,7 +184,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 30, 2019.
+                Last updated on Sep 02, 2019.
             
 
             

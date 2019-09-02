@@ -63,6 +63,22 @@
 <dt id="compas_vol.primitives.VolCapsule">
 <em class="property">class </em><code class="sig-prename descclassname">compas_vol.primitives.</code><code class="sig-name descname">VolCapsule</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">radius</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A volumetric capsule is defined by a line segment and a radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>list or tuple of two points</em>) – Start and end point of the line segment.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the capsule.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ep</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">segment</span> <span class="o">=</span> <span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">capsule</span> <span class="o">=</span> <span class="n">VolCapsule</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+</code></pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -164,7 +180,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 30, 2019.
+                Last updated on Sep 02, 2019.
             
 
             

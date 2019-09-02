@@ -9,7 +9,7 @@ __all__ = ['VolPlane']
 class VolPlane(object):
     """A volumetric plane is defined by a base plane from `compas.geometry`.
 
-    Attributes
+    Parameters
     ----------
     cone: :class:`compas.geometry.Plane`
         The base plane.

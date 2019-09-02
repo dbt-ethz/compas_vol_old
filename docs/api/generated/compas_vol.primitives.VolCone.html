@@ -63,6 +63,21 @@
 <dt id="compas_vol.primitives.VolCone">
 <em class="property">class </em><code class="sig-prename descclassname">compas_vol.primitives.</code><code class="sig-name descname">VolCone</code><span class="sig-paren">(</span><em class="sig-param">cone</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A volumetric cone is defined by a base cone from <cite>compas.geometry</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cone</strong> (<a class="reference external" href="https://compas-dev.github.io/main/api/generated/compas.geometry.Cone.html#compas.geometry.Cone" title="(in COMPAS v0.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Cone</span></code></a>) – The base cone.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">Plane</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">Cylinder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span> <span class="o">=</span> <span class="n">Plane</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">circle</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cone</span> <span class="o">=</span> <span class="n">Cone</span><span class="p">(</span><span class="n">circle</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vcone</span> <span class="o">=</span> <span class="n">VolCone</span><span class="p">(</span><span class="n">cone</span><span class="p">)</span>
+</code></pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -161,7 +176,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Aug 30, 2019.
+                Last updated on Sep 02, 2019.
             
 
             

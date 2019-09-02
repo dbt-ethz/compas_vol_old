@@ -1,4 +1,21 @@
 class Subtraction(object):
+    """The Boolean subtraction of one volumetric object from another volumetric object.
+
+    Parameters
+    ----------
+    a: volumetric object
+        Object to subtract from.
+    b: volumetric object
+        Object to subtract.
+
+    Examples
+    --------
+    >>> s = Sphere(Point(5, 6, 0), 9)
+    >>> b = Box(Frame.worldXY(), 20, 15, 10)
+    >>> vs = VolSphere(s)
+    >>> vb = VolBox(b, 2.5)
+    >>> s = Subtraction(vs, vb)
+    """
     def __init__(self, a=None, b=None):
         self.a = a
         self.b = b
