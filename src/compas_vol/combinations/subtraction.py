@@ -21,11 +21,17 @@ class Subtraction(object):
         self.b = b
 
     def get_distance(self, point):
+        """
+        single point distance function
+        """
         da = self.a.get_distance(point)
         db = self.b.get_distance(point)
         return max(da, -db)
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
 
         da = self.objs[0].get_distance_numpy(x, y, z)

@@ -26,10 +26,16 @@ class Union(object):
         self.objs.append(o)
 
     def get_distance(self, point):
+        """
+        single point distance function
+        """
         ds = [o.get_distance(point) for o in self.objs]
         return min(ds)
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
 
         distances = ([o.get_distance_numpy(x, y, z) for o in self.objs])

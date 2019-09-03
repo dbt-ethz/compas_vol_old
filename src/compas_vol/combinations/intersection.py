@@ -23,10 +23,16 @@ class Intersection(object):
             self.objs = [a, b]
 
     def get_distance(self, point):
+        """
+        single point distance function
+        """
         ds = [o.get_distance(point) for o in self.objs]
         return max(ds)
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
 
         # da = self.objs[0].get_distance_numpy(x, y, z)
