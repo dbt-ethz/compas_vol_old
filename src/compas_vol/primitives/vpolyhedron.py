@@ -1,4 +1,3 @@
-# platonic solids: create intersection of planes from faces (centroid)
 from compas.geometry import Plane
 from compas_vol.primitives import VolPlane
 

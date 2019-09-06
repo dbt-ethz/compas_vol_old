@@ -1,3 +1,7 @@
+from compas.geometry import Circle
+from compas.geometry import Cone
+from compas.geometry import Plane
+
 __all__ = ['VolCone']
 
 
@@ -29,7 +33,6 @@ class VolCone(object):
 
 
 if __name__ == "__main__":
-    from compas.geometry import Cone, Circle, Plane
 
     c = Cone(Circle(Plane((0, 0, 0), (0, 0, 1)), 3.), 4.)
     vc = VolCone(c)
