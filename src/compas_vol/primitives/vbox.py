@@ -56,6 +56,15 @@ class VolBox(object):
     def get_distance(self, point):
         """
         single point distance function
+
+        Parameters
+        ----------
+        point: :class:`compas.geometry.Point`
+            The point in R<sup>3</sup> space to query for it's distance.
+        Returns
+        -------
+        float
+            The distance from the query point to the surface of the object.
         """
         if not isinstance(point, Point):
             p = Point(*point)
@@ -82,6 +91,16 @@ class VolBox(object):
     def get_distance_numpy(self, x, y, z):
         """
         vectorized distance function
+
+        Parameters
+        ----------
+        x,y,z: `numpy arrays, np.ogrid[]`
+            The coordinates of all the points in R<sup>3</sup> space to query for their distances.
+            The shapes are ``x: (nx, 1, 1), y: (1, ny, 1), z: (1, 1, nz)``
+        Returns
+        -------
+        numpy array of floats, shape (nx, ny, nz)
+            The distances from the query points to the surface of the object.
         """
         import numpy as np
         from compas.geometry import matrix_from_frame, inverse
