@@ -1,9 +1,28 @@
+import math
+import random
+
+
 __all__ = [
     'export_ski_mesh',
     'export_ipv_mesh',
     'get_compas_mesh',
-    'export_layer'
+    'export_layer',
+    'get_random_vector_2D',
+    'get_random_vector_3D',
+    'get_iso_mesh'
     ]
+
+
+def get_iso_mesh(distobj):
+    # for RPC
+    from skimage.measure import marching_cubes_lewiner
+    import numpy as np
+
+    x, y, z = np.ogrid[-15:15:50j, -15:15:50j, -15:15:50j]
+    dm = distobj.get_distance_numpy(x, y, z)
+    verts, faces, norms, vals = marching_cubes_lewiner(dm, 0.0)
+    mesh = get_compas_mesh(verts, faces)
+    return mesh
 
 
 def export_ski_mesh(vs, fs, ns=None, filename='ski_mesh.obj'):
@@ -42,6 +61,21 @@ def export_ipv_mesh(mesh, filename='ipv_mesh.obj', colors=None):
         f.write('\n'.join(vs))
         f.write('\n')
         f.write('\n'.join(fs))
+
+
+def get_random_vector_2D():
+    angle = random.random() * math.pi * 2
+    vx = math.cos(angle)
+    vy = math.sin(angle)
+    return (vx, vy)
+
+
+def get_random_vector_3D():
+    angle = random.random() * math.pi * 2
+    vz = random.random() * 2 - 1
+    vx = math.sqrt(1 - vz**2) * math.cos(angle)
+    vy = math.sqrt(1 - vz**2) * math.sin(angle)
+    return (vx, vy, vz)
 
 
 def get_compas_mesh(v, f):
