@@ -53,6 +53,19 @@ class VolBox(object):
     def radius(self, radius):
         self._radius = float(radius)
 
+    @property
+    def data(self):
+        return {'box': self.box.data,
+                'radius': self.radius}
+
+    def to_data(self):
+        return self.data
+
+    @data.setter
+    def data(self, data):
+        self.box = Box.from_data(data['box'])
+        self.radius = data['radius']
+
     def get_distance(self, point):
         """
         single point distance function
