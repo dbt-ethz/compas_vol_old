@@ -39,6 +39,9 @@ class TPMS(object):
     # ==========================================================================
 
     def get_distance(self, point):
+        """
+        single point distance function
+        """
         x, y, z = point
         px = x/self._factor
         py = y/self._factor
@@ -73,6 +76,9 @@ class TPMS(object):
         return d
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
 
         px = x/self._factor

@@ -5,9 +5,9 @@ class Shell(object):
     ----------
     obj : :class:`compas_vol`
         The input object.
-    d : float
+    thickness : float
         The thickness of the shell.
-    s : float
+    side : float
         Side factor.
         For ``s = 1.0``, the shell will be offset to the inside.
         For ``s = 0.5``, the shell will be offset half/half on either side of the original surface.
@@ -18,17 +18,17 @@ class Shell(object):
     >>> TODO
     """
 
-    def __init__(self, obj, d=1.0, s=0.0):
+    def __init__(self, obj, thickness=1.0, side=0.0):
         self.o = obj
-        self.d = d
-        self.s = s
+        self.thickness = thickness
+        self.side = side
 
     def get_distance(self, point):
         """
         single point distance function
         """
         do = self.o.get_distance(point)
-        return abs(do + (self.s - 0.5) * self.d) - self.d/2.0
+        return abs(do + (self.side - 0.5) * self.thickness) - self.thickness/2.0
 
     def get_distance_numpy(self, x, y, z):
         """
@@ -37,7 +37,7 @@ class Shell(object):
         import numpy as np
 
         do = self.o.get_distance_numpy(x, y, z)
-        return np.abs(do + (self.s - 0.5) * self.d) - self.d/2.0
+        return np.abs(do + (self.side - 0.5) * self.thickness) - self.thickness/2.0
 
 # ==============================================================================
 # Main

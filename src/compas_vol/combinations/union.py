@@ -23,6 +23,9 @@ class Union(object):
             self.objs = [a, b]
 
     def add_object(self, o):
+        """
+        add another object to the union
+        """
         self.objs.append(o)
 
     def get_distance(self, point):

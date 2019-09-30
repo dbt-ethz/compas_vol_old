@@ -30,7 +30,7 @@ Long story short, the basic steps you need to take are the following:
 1. install the package for the current environment
    - `$ pip install -r requirements-dev.txt`
 1. furthermore, you will need pyside, opengl, scikit-image and ev. ipyvolume (will go into requirements.txt)
-   - `$ conda install pyopengl`
-   - `$ conda install -c conda-forge pyside2`
+   - ~~`$ conda install pyopengl`~~
+   - ~~`$ conda install -c conda-forge pyside2`~~
    - `$ conda install scikit-image`
    - `$ conda install -c conda-forge ipyvolume`

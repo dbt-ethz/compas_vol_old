@@ -60,15 +60,15 @@
 <h1>Shell</h1>
 <dl class="class">
 <dt id="compas_vol.modifications.Shell">
-<em class="property">class </em><code class="sig-prename descclassname">compas_vol.modifications.</code><code class="sig-name descname">Shell</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">d=1.0</em>, <em class="sig-param">s=0.0</em><span class="sig-paren">)</span></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_vol.modifications.</code><code class="sig-name descname">Shell</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">thickness=1.0</em>, <em class="sig-param">side=0.0</em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A shell object converts a solid volumetric object into a constant thickness boundary volume.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="../compas_vol.html#module-compas_vol" title="compas_vol"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_vol</span></code></a>) – The input object.</p></li>
-<li><p><strong>d</strong> (<em>float</em>) – The thickness of the shell.</p></li>
-<li><p><strong>s</strong> (<em>float</em>) – Side factor.
+<li><p><strong>thickness</strong> (<em>float</em>) – The thickness of the shell.</p></li>
+<li><p><strong>side</strong> (<em>float</em>) – Side factor.
 For <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">1.0</span></code>, the shell will be offset to the inside.
 For <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">0.5</span></code>, the shell will be offset half/half on either side of the original surface.
 For <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">0.0</span></code>, the shell will be offset to the outside.</p></li>
@@ -86,7 +86,7 @@ For <code class="docutils literal notranslate"><span class="pre">s</span> <span 
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.modifications.Shell.__init__.html#compas_vol.modifications.Shell.__init__" title="compas_vol.modifications.Shell.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(obj[, d, s])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.modifications.Shell.__init__.html#compas_vol.modifications.Shell.__init__" title="compas_vol.modifications.Shell.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(obj[, thickness, side])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_vol.modifications.Shell.get_distance.html#compas_vol.modifications.Shell.get_distance" title="compas_vol.modifications.Shell.get_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance</span></code></a>(point)</p></td>

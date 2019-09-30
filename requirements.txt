@@ -1,1 +1,3 @@
-COMPAS>=0.5.1
+COMPAS>=0.7.2
+scikit-image
+ipyvolume

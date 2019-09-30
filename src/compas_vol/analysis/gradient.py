@@ -24,8 +24,12 @@ class Gradient(object):
         self.ez = Point(0, 0, e)
 
     def get_gradient_regular(self, point):
+        """
+        central difference gradient method
+        """
         import warnings
         warnings.warn("get_gradient_regular is deprecated and might/will be removed in the future", DeprecationWarning, 2)
+        
         dx = self.o.get_distance(point + self.ex) - self.o.get_distance(
             point + self.ex * -1
         )
@@ -41,7 +45,7 @@ class Gradient(object):
 
     def get_gradient(self, point):
         """
-        central differences, with tetrahedron technique. 30-40% faster then regular get_gradient.
+        central differences, with tetrahedron technique. 30-40% faster regular `get_gradient_regular`.
         """
         d0 = self.o.get_distance(Point(point.x + self.e, point.y - self.e, point.z - self.e))
         d1 = self.o.get_distance(Point(point.x - self.e, point.y - self.e, point.z + self.e))
@@ -54,6 +58,7 @@ class Gradient(object):
     def get_gradient_numpy_regular(self, x, y, z):
         import warnings
         warnings.warn("get_gradient_numpy_regular is deprecated and might/will be removed in the future", DeprecationWarning, 2)
+
         import numpy as np
         dx = self.o.get_distance_numpy(x + self.e, y, z) - self.o.get_distance_numpy(
             x - self.e, y, z
@@ -67,6 +72,9 @@ class Gradient(object):
         return np.array([dx, dy, dz]).T
 
     def get_gradient_numpy(self, x, y, z):
+        """
+        vectorized tetrahedron difference method for gradient
+        """
         import numpy as np
         d0 = self.o.get_distance_numpy(x + self.e, y - self.e, z - self.e)
         d1 = self.o.get_distance_numpy(x - self.e, y - self.e, z + self.e)

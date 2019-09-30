@@ -26,12 +26,18 @@ class VolCapsule(object):
         self.radius = radius
 
     def get_distance(self, point):
+        """
+        single point distance function
+        """
         if not isinstance(point, Point):
             point = Point(*point)
         p = closest_point_on_segment(point, self.segment)
         return point.distance_to_point(p) - self.radius
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
         import numpy as np
 
         A = np.array([*self.segment[0]])
