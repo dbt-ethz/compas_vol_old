@@ -17,12 +17,17 @@ def get_iso_mesh(distobj):
     # for RPC
     from skimage.measure import marching_cubes_lewiner
     import numpy as np
+    from compas_vol.primitives import VolBox
+    from compas.geometry import Box
 
-    x, y, z = np.ogrid[-15:15:50j, -15:15:50j, -15:15:50j]
-    dm = distobj.get_distance_numpy(x, y, z)
+    x, y, z = np.ogrid[-15:15:30j, -15:15:30j, -15:15:30j]
+    b = Box.from_data(distobj['box'])
+    vb = VolBox(b)
+    vb.data = distobj
+    dm = vb.get_distance_numpy(x, y, z)
     verts, faces, norms, vals = marching_cubes_lewiner(dm, 0.0)
     mesh = get_compas_mesh(verts, faces)
-    return mesh
+    return str(mesh.number_of_vertices())
 
 
 def export_ski_mesh(vs, fs, ns=None, filename='ski_mesh.obj'):
