@@ -116,10 +116,10 @@ class VolBox(object):
             The distances from the query points to the surface of the object.
         """
         import numpy as np
-        from compas.geometry import matrix_from_frame, inverse
+        from compas.geometry import matrix_from_frame, matrix_inverse
 
         m = matrix_from_frame(self.box.frame)
-        mi = inverse(m)
+        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
 

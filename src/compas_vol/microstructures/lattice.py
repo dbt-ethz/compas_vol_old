@@ -145,10 +145,10 @@ class Lattice(object):
         vectorized distance function
         """
         import numpy as np
-        from compas.geometry import matrix_from_frame, inverse
+        from compas.geometry import matrix_from_frame, matrix_inverse
 
         m = matrix_from_frame(self.frame)
-        mi = inverse(m)
+        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
         md = np.dot(mi, p)
         mg = np.stack(([md[0], md[1], md[2]]), axis=-1)

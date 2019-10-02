@@ -4,7 +4,7 @@ from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import Torus
 from compas.geometry import length_vector_xy
-from compas.geometry import inverse
+from compas.geometry import matrix_inverse
 from compas.geometry import matrix_from_frame
 
 __all__ = ['VolTorus']
@@ -38,7 +38,7 @@ class VolTorus(object):
 
         frame = Frame.from_plane(self.torus.plane)
         m = matrix_from_frame(frame)
-        mi = inverse(m)
+        mi = matrix_inverse(m)
         point.transform(mi)
 
         dxy = length_vector_xy(point) #distance_point_point_xy(self.torus.center, point)
@@ -53,7 +53,7 @@ class VolTorus(object):
 
         frame = Frame.from_plane(self.torus.plane)
         m = matrix_from_frame(frame)
-        mi = inverse(m)
+        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
 

@@ -2,7 +2,7 @@ from compas.geometry import Cylinder
 from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import length_vector_xy
-from compas.geometry import inverse
+from compas.geometry import matrix_inverse
 from compas.geometry import matrix_from_frame
 
 __all__ = ['VolCylinder']
@@ -42,7 +42,7 @@ class VolCylinder(object):
 
         frame = Frame.from_plane(self.cylinder.plane)
         m = matrix_from_frame(frame)
-        mi = inverse(m)
+        mi = matrix_inverse(m)
         point.transform(mi)
 
         dxy = length_vector_xy(point) #distance_point_point_xy(self.cylinder.center, point)
@@ -55,11 +55,11 @@ class VolCylinder(object):
         vectorized distance function
         """
         import numpy as np
-        from compas.geometry import matrix_from_frame, inverse
+        from compas.geometry import matrix_from_frame
 
         frame = Frame.from_plane(self.cylinder.plane)
         m = matrix_from_frame(frame)
-        mi = inverse(m)
+        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
 

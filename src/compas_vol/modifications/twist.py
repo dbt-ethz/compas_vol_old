@@ -30,7 +30,7 @@ class Twist(object):
         """
         vectorized distance function
         """
-        from compas.geometry import inverse
+        from compas.geometry import matrix_inverse
         import numpy as np
 
         plane = Plane(self.frame.point, self.frame.normal)
@@ -38,7 +38,7 @@ class Twist(object):
         dm = vp.get_distance_numpy(x, y, z)
 
         m = matrix_from_axis_and_angle(self.frame.normal, 10, self.frame.point)
-        mi = inverse(m)
+        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
         xt, yt, zt, _ = np.dot(mi, p)
         return self.obj.get_distance_numpy(xt, yt, zt)
