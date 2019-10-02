@@ -108,7 +108,7 @@ class VolBox(object):
         Parameters
         ----------
         x,y,z: `numpy arrays, np.ogrid[]`
-            The coordinates of all the points in R<sup>3</sup> space to query for their distances.
+            The coordinates of all the points in R:sup:`3` space to query for their distances.
             The shapes are ``x: (nx, 1, 1), y: (1, ny, 1), z: (1, 1, nz)``
         Returns
         -------
