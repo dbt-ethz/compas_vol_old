@@ -1,6 +1,7 @@
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import Transformation
+from compas.geometry import matrix_from_frame
+from compas.geometry import matrix_inverse
 from compas.geometry import closest_point_on_polyline_xy
 from compas.geometry import is_point_in_polygon_xy
 
@@ -15,9 +16,9 @@ class VolExtrusion(object):
         if not isinstance(point, Point):
             point = Point(*point)
 
-        T = Transformation.from_frame(self.frame)
-        i = T.inverse()
-        point.transform(i)
+        m = matrix_from_frame(self.frame)
+        mi = matrix_inverse(m)
+        point.transform(mi)
 
         tp = Point(point[0], point[1], 0)
         cp = closest_point_on_polyline_xy(tp, self.polyline)

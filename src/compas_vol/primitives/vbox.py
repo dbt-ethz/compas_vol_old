@@ -3,7 +3,8 @@ from math import sqrt
 from compas.geometry import Box
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import Transformation
+from compas.geometry import matrix_from_frame
+from compas.geometry import matrix_inverse
 
 __all__ = ['VolBox']
 
@@ -84,9 +85,9 @@ class VolBox(object):
         else:
             p = point
 
-        T = Transformation.from_frame(self.box.frame)
-        i = T.inverse()
-        p.transform(i)
+        m = matrix_from_frame(self.box.frame)
+        mi = matrix_inverse(m)
+        p.transform(mi)
 
         dx = abs(p.x) - (self.box.xsize / 2.0 - self.radius)
         dy = abs(p.y) - (self.box.ysize / 2.0 - self.radius)

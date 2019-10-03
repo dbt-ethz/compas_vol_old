@@ -1,7 +1,8 @@
 import math
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import Transformation
+from compas.geometry import matrix_from_frame
+from compas.geometry import matrix_inverse
 
 
 class Lattice(object):
@@ -120,9 +121,9 @@ class Lattice(object):
         else:
             pt = point
         # frame to frame: box to world
-        T = Transformation.from_frame(self.frame)
-        i = T.inverse()
-        pt.transform(i)
+        m = matrix_from_frame(self.frame)
+        mi = matrix_inverse(m)
+        pt.transform(mi)
 
         up = [abs((p % self.unitcell) - self.unitcell/2) for p in pt]
         dmin = 9999999.
@@ -145,7 +146,6 @@ class Lattice(object):
         vectorized distance function
         """
         import numpy as np
-        from compas.geometry import matrix_from_frame, matrix_inverse
 
         m = matrix_from_frame(self.frame)
         mi = matrix_inverse(m)
