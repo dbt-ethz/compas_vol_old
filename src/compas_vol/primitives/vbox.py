@@ -1,3 +1,4 @@
+from math import pi
 from math import sqrt
 
 from compas.geometry import Box
@@ -34,7 +35,7 @@ class VolBox(object):
         self._box = None
         self.box = box
         self._radius = None
-        self.radius = radius
+        self.radius = max(radius, 0)
 
     @property
     def box(self):
@@ -53,6 +54,21 @@ class VolBox(object):
     @radius.setter
     def radius(self, radius):
         self._radius = float(radius)
+
+    @property
+    def volume(self):
+        if self.radius == 0:
+            return self.box.volume
+        else:
+            # box without the radius layer
+            inner = (self.box.xsize - self.radius) * (self.box.ysize - self.radius) * (self.box.xsize - self.radius)
+            # sides
+            sides = self.box.area * self.radius
+            # cylinder along all edges, base circle x height
+            edges = (self.radius**2 * pi) * ((self.box.xsize + self.box.ysize + self.box.zsize) - 3 * self.radius)
+            # eight time corner, 1/8th of a sphere = 1 sphere
+            corns = 4./3. * pi * self.radius**3
+            return inner + sides + edges + corns
 
     @property
     def data(self):
@@ -146,6 +162,7 @@ if __name__ == "__main__":
 
     box = Box(Frame(Point(3, 2, 0), [1, 0.2, 0.1], [-0.1, 1, 0.1]), 25, 10, 15)
     vb = VolBox(box, 3.0)
+    print(vb.volume)
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
     d = vb.get_distance_numpy(x, y, z)
