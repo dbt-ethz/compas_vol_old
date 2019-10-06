@@ -42,7 +42,7 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in mat4 matrix, i
     //VolSphere
     if (id == VolSphere_id){
         vec3 center = size_xyzw.xyz;
-        // center = center + animate_point(current_index) ;
+        center = center + animate_point(current_index) ;
         float radius = size_xyzw.w;
         return length(p - center) - radius;
     //VolBox

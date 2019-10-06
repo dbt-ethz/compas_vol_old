@@ -12,10 +12,10 @@ from compas.geometry import Box, Frame, Point, Plane, Cylinder, Circle, Sphere, 
 
 
 from compas_vol.raymarching.pandaRenderer import PandaRenderer
-from compas_vol.rayMarchingFactory import RayMarchingFactory
-from compas_vol.translator import Translator
+from compas_vol.raymarching.rayMarchingFactory import RayMarchingFactory
+from compas_vol.raymarching.translator import Translator
 
-import raymarching.remapping_functions
+from compas_vol.raymarching.remapping_functions import remap
 
 ## window size
 from panda3d.core import loadPrcFileData     
@@ -29,7 +29,7 @@ fact = (ub-lb)/(num-1) #size of grid-cell
 
 def rand(lb_, ub_):
     value = np.random.rand(1)
-    return remapping_functions.remap(value, 0, 1, lb_, ub_)
+    return remap(value, 0, 1, lb_, ub_)
 
 
 def discretize_distance_field_in_array(distance_field):
@@ -71,8 +71,8 @@ if __name__ == "__main__":
     translator = Translator(total_geom)
 
     rayMarcher = RayMarchingFactory(renderer, translator)
-    # rayMarcher.post_processing_ray_marching_filter()
-    rayMarcher.ray_marching_shader()
+    rayMarcher.post_processing_ray_marching_filter()
+    # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
     rayMarcher.create_slicing_slider(-7, 16 ,-7)
     # rayMarcher.create_general_purpose_slider()

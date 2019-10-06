@@ -19,7 +19,7 @@ uniform float[max_num] start_values;
 
 uniform float y_slice;
 uniform int vv;
-uniform float slider_value;
+// uniform float slider_value; // should be initialized to sth even if it doesnt exist
 
 //buffers
 uniform sampler2D color_texture;
@@ -43,7 +43,7 @@ vec3 animate_point(in int current_index){
     float magnitude = random (vec2(current_index))  * 7.+ 1.;
     float frequency1 = random (vec2(current_index/3.56))  * 0.45  + 0.1;
     float offset  = random (vec2(current_index/3.56))  * 6.;
-    float frequency = frequency1 * slider_value;
+    float frequency = frequency1 ; // * slider_value
     // frequency *=  slider_value;
     return vec3(sin(osg_FrameTime * frequency) * magnitude, cos(offset +osg_FrameTime * frequency) * magnitude, sin(offset + osg_FrameTime * frequency) * magnitude);
 }
@@ -53,7 +53,7 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in mat4 matrix, i
     //VolSphere
     if (id == VolSphere_id){
         vec3 center = size_xyzw.xyz;
-        // center = center + animate_point(current_index) ;
+        center = center + animate_point(current_index) ;
         float radius = size_xyzw.w;
         return length(p - center) - radius;
     //VolBox

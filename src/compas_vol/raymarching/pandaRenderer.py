@@ -1,3 +1,4 @@
+import os
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import Geom, GeomVertexArrayFormat,LVector3,LVector2f, MeshDrawer, LVector3f, LVector4, PerspectiveLens, Texture, TransparencyAttrib, OccluderNode ,OmniBoundingVolume,  SceneSetup, Shader, LPoint3, LMatrix4, GeomVertexFormat, GeomVertexData, GeomVertexWriter, GeomTriangles, GeomNode, NodePath, GeomLines, GeomPoints, DirectionalLight, AmbientLight, VBase4, Material, TextNode
 from direct.gui.OnscreenText import OnscreenText
@@ -6,7 +7,7 @@ from direct.filter.FilterManager import FilterManager
 from direct.filter.CommonFilters import CommonFilters
 
 import numpy as np
-import compas_vol.raymarching.remapping_functions
+from compas_vol.raymarching.remapping_functions import map_values_to_colors
 
 from direct.filter.CommonFilters import CommonFilters
 
@@ -14,7 +15,6 @@ from direct.gui.DirectGui import DirectSlider
 from direct.gui.DirectGui import *
 
 from direct.task import Task
-
 
 
 class PandaRenderer(ShowBase):
@@ -222,7 +222,7 @@ class PandaRenderer(ShowBase):
         vertex_writer = GeomVertexWriter(vdata , 'vertex')
         color_writer  = GeomVertexWriter(vdata , 'color')
 
-        r,g,b = remapping_functions.map_values_to_colors(m, num)
+        r,g,b = map_values_to_colors(m, num)
 
         #write vertices
         for i in range(num):

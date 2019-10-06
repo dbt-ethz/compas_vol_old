@@ -1,3 +1,7 @@
+import os
+import re
+from pathlib import Path
+
 # from direct.showbase.ShowBase import ShowBase
 from panda3d.core import *
 from direct.gui.OnscreenText import OnscreenText
@@ -15,7 +19,18 @@ from direct.gui.DirectGui import *
 
 from direct.task import Task
 
-from compas_vol.raymarching.translator import Translator
+import compas_vol.raymarching.translator as translator
+
+
+def get_shader_path(shader_name):
+    dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(dir, shader_name)
+    path_capitalized = str(Path(path))
+    path_reg = re.sub(r':?\\', '/', path_capitalized)
+    path_reg = str('/' + path_reg)
+    print ("PATH : ",  path_reg)
+    return path_reg
+    
 
 
 class RayMarchingFactory:
@@ -63,6 +78,7 @@ class RayMarchingFactory:
         self.shader_quad.setDepthWrite(False) 
         self.shader_quad.setDepthTest(False) 
         
+        # myShader = Shader.load(Shader.SL_GLSL , get_shader_path("vshader_ray_marching.glsl"), get_shader_path("fshader_ray_marching.glsl")) 
         myShader = Shader.load(Shader.SL_GLSL , "vshader_ray_marching.glsl", "fshader_ray_marching.glsl") 
         self.shader_quad.setShader(myShader)
         self.shader_quad.setShaderInput("u_resolution" , self.renderer.getSize())
@@ -103,6 +119,7 @@ class RayMarchingFactory:
 
         self.ray_marching_quad = manager.renderSceneInto(colortex = color_texture, depthtex = depth_buffer)
 
+        # self.ray_marching_quad.setShader(Shader.load(Shader.SL_GLSL , get_shader_path("vshader.glsl"), get_shader_path("fshader_post_processing_ray_marching.glsl"))) #fshader.glsl
         self.ray_marching_quad.setShader(Shader.load(Shader.SL_GLSL , "vshader.glsl", "fshader_post_processing_ray_marching.glsl")) #fshader.glsl
         self.ray_marching_quad.setShaderInput("u_resolution" , self.renderer.getSize())
 
@@ -151,10 +168,15 @@ class RayMarchingFactory:
         title_of_slider = OnscreenText(text = name, pos = (-0.55, -0.816 - 0.065), scale = 0.045, fg = (1,1,1,.8))
         min_of_slider   = OnscreenText(text = str(range_a), pos = (-0.3, -0.87- 0.065), scale = 0.035, fg = (1,1,1,.8))
         max_of_slider   = OnscreenText(text = str(range_b), pos = (0.3, -0.87 - 0.065), scale = 0.035, fg = (1,1,1,.8))
-        
-        self.renderer.taskMgr.add (self.task_update_speed_slicer, "task_update_speed_slicer", extraArgs = [Task, self.sliders.index(slider)]) 
 
-    def task_update_speed_slicer(self, task, s_index): # THIS SHOULD ONLY HAPPEN WHEN THE SLIDER IS CHANGED
+        if self.ray_marching_quad:
+            self.ray_marching_quad.setShaderInput("slider_value", slider_value) 
+        if self.shader_quad: 
+            self.shader_quad.setShaderInput("slider_value", slider_value) 
+        
+        self.renderer.taskMgr.add (self.task_update_general_slicer, "task_update_general_slicer", extraArgs = [Task, self.sliders.index(slider)]) 
+
+    def task_update_general_slicer(self, task, s_index): # THIS SHOULD ONLY HAPPEN WHEN THE SLIDER IS CHANGED
         slider = self.sliders[s_index]
         slider_value = slider['value']
         if self.ray_marching_quad:
@@ -216,7 +238,7 @@ class RayMarchingFactory:
             v_next = vertices[(i+1)% len(vertices)]
             generator_slice_plane.crossSegment(LVector3(v[0], v[1], v[2]), \
                                                     LVector3(v_next[0], v_next[1], v_next[2]), \
-                                                    LVector4(1,1,1,1), 0.03, \
+                                                    LVector4(1,1,1,1), 0.02, \
                                                     LVector4(1,1,1,1)) #start, stop, frame, thickness, color)
 
         generator_slice_plane.end()
