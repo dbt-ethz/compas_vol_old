@@ -21,7 +21,7 @@ from compas_vol.raymarching.remapping_functions import remap
 from panda3d.core import loadPrcFileData     
 loadPrcFileData('', 'win-size 1024 760') 
 
-num = 30 # resolution of grid
+num = 20 # resolution of grid
 lb = 0   # lower boundary (for now keep to 0)
 ub = 10  # upper boundary 
 fact = (ub-lb)/(num-1) #size of grid-cell
@@ -55,26 +55,26 @@ if __name__ == "__main__":
     u = Union(VolSphere(Sphere(Point(5, 6, 0), 3)), VolBox(Box(Frame(Point(3., 3., 3.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 10, 11, 12), 1))
     sh = SmoothUnion(Shell(u, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
 
-    total_geom = sh   # Intersection(union_spheres ,vol_box) 
+    total_geom = cylinder   # Intersection(union_spheres ,vol_box) 
     
     ### panda3d visualisation
     renderer = PandaRenderer()
 
-    # m = discretize_distance_field_in_array(total_geom)
-    # verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
-    # renderer.create_mesh_from_marching_cubes(verts, faces, normals, 'marching_cubes_primitive')
+    m = discretize_distance_field_in_array(total_geom)
+    verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
+    renderer.create_mesh_from_marching_cubes(verts, faces, normals, 'marching_cubes_primitive')
 
     # renderer.create_boundary_box(ub) #lb has to be 0 for now
-    # renderer.print_scene_graph()
+    # renderer.print_scene_graph()§
     # renderer.display_volumetric_grid(lb, ub, m, num, fact, True)
 
     translator = Translator(total_geom)
 
-    # rayMarcher = RayMarchingFactory(renderer, translator)
+    rayMarcher = RayMarchingFactory(renderer, translator)
     # rayMarcher.post_processing_ray_marching_filter()
-    # rayMarcher.ray_marching_shader()
+    rayMarcher.ray_marching_shader()
     # rayMarcher.show_csg_tree_GUI()
-    # rayMarcher.create_slicing_slider(-7, 16 ,-7)
+    rayMarcher.create_slicing_slider(-7, 16 ,-7)
     # rayMarcher.create_general_purpose_slider()
 
     ### WIP

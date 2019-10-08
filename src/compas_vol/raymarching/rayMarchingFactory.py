@@ -42,7 +42,7 @@ class RayMarchingFactory:
         self.ray_marching_quad = None
 
         ## GUI 
-        self.v = [1]
+        self.display_target_object = [1]
         self.sliders = []
     
     ### ---------------------------------------------------------------- Ray marching shader
@@ -84,11 +84,13 @@ class RayMarchingFactory:
         self.shader_quad.setShaderInput("u_resolution" , self.renderer.getSize())
         self.shader_quad.setShaderInput("camera_POS", self.renderer.camera.getPos())
         
-        
-        self.shader_quad.setShaderInput("v_data", self.translator.final_data)
-        # self.shader_quad.setShaderInput("v_data_length", len(self.translator.final_data))
-        self.shader_quad.setShaderInput("v_start_values", self.translator.shader_start_vaues)
-        # self.shader_quad.setShaderInput("v_data_count_per_object", self.translator.???????)
+        self.shader_quad.setShaderInput("v_indices", self.translator.indices)
+        self.shader_quad.setShaderInput("v_ids", self.translator.ids)
+        self.shader_quad.setShaderInput("v_parent_indices", self.translator.parent_indices)
+        self.shader_quad.setShaderInput("v_parent_ids", self.translator.parent_ids)
+        self.shader_quad.setShaderInput("v_object_geometries_data", self.translator.object_geometries_data)  
+        self.shader_quad.setShaderInput("v_data_count_per_object", self.translator.data_count_per_object)  
+        self.shader_quad.setShaderInput("v_shader_start_values", self.translator.shader_start_vaues)
 
         self.shader_quad.setShaderInput("y_slice", -1000.) ## value far away from the model if slicer is not defined
 
@@ -103,7 +105,7 @@ class RayMarchingFactory:
 
     def task_update_ray_marching_shader (self, task):
         self.shader_quad.set_shader_input("camera_POS", self.renderer.camera.getPos())
-        self.shader_quad.set_shader_input("vv", self.v[0]) 
+        self.shader_quad.set_shader_input("display_target_object", self.display_target_object[0]) 
         return task.cont 
 
 
@@ -154,7 +156,7 @@ class RayMarchingFactory:
         transform_clip_plane_to_perspective_camera = transform_coordinate_system * proj_matrix_inv * view_matrix 
         self.ray_marching_quad.setShaderInput("transform_clip_plane_to_perspective_camera", transform_clip_plane_to_perspective_camera)
 
-        self.ray_marching_quad.set_shader_input("vv", self.v[0]) ## ATTENTION< THIS SHOULD ONLY BE HAPPENING WHEN THE GUI BUTTONS ARE PRESSED!
+        self.ray_marching_quad.set_shader_input("display_target_object", self.display_target_object[0]) ## ATTENTION< THIS SHOULD ONLY BE HAPPENING WHEN THE GUI BUTTONS ARE PRESSED!
         return task.cont   
 
 
@@ -270,7 +272,7 @@ class RayMarchingFactory:
             position = LVector3f(0.8 + order * 0.09, 0 ,0.95 - i * 0.06)
 
             buttons.append( DirectRadioButton(text = " " + str(i)  + " " + translator.get_obj_name(id) + " " ,\
-                                              variable = self.v, value= [i], scale=0.03,                        \
+                                              variable = self.display_target_object, value= [i], scale=0.03,                        \
                                               pos= position ) ) #, command = set_input_of_shader(i)
             
             if i>1 : #then connect object with parent 
