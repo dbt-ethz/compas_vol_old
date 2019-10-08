@@ -86,8 +86,9 @@ class RayMarchingFactory:
         
         
         self.shader_quad.setShaderInput("v_data", self.translator.final_data)
-        self.shader_quad.setShaderInput("v_data_length", len(self.translator.final_data))
-        self.shader_quad.setShaderInput("start_values", self.translator.shader_start_vaues)
+        # self.shader_quad.setShaderInput("v_data_length", len(self.translator.final_data))
+        self.shader_quad.setShaderInput("v_start_values", self.translator.shader_start_vaues)
+        # self.shader_quad.setShaderInput("v_data_count_per_object", self.translator.???????)
 
         self.shader_quad.setShaderInput("y_slice", -1000.) ## value far away from the model if slicer is not defined
 
@@ -137,8 +138,9 @@ class RayMarchingFactory:
         self.ray_marching_quad.setShaderInput("transform_clip_plane_to_world", transform_clip_plane_to_world)
 
         self.ray_marching_quad.setShaderInput("v_data", self.translator.final_data)
-        self.ray_marching_quad.setShaderInput("v_data_length", len(self.translator.final_data))
-        self.ray_marching_quad.setShaderInput("start_values", self.translator.shader_start_vaues)
+        # self.ray_marching_quad.setShaderInput("v_data_length", len(self.translator.final_data))
+        self.ray_marching_quad.setShaderInput("v_start_values", self.translator.shader_start_vaues)
+        # self.ray_marching_quad.setShaderInput("v_data_count_per_object", self.translator.???????)
 
         self.ray_marching_quad.setShaderInput("y_slice", -1000.) ## value far away from the model if slicer is not defined
 

@@ -77,9 +77,9 @@ class VSphere_data:
                 self.id = sphere_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
-                self.matrix = identity_matrix
-                self.size_xyzr = [vSphere.sphere.point.x, vSphere.sphere.point.y, vSphere.sphere.point.z , vSphere.sphere.radius]
                 self.order = order
+                self.start_value = 0.
+                self.geometry_data = [vSphere.sphere.point.x, vSphere.sphere.point.y, vSphere.sphere.point.z , vSphere.sphere.radius]
 
 class VBox_data:
         def __init__(self, index, vBox, parent_index, parent_id, order): #add parent id 
@@ -88,8 +88,12 @@ class VBox_data:
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.matrix = inverse(matrix_from_frame(vBox.box.frame)) 
-                self.size_xyzr = [vBox.box.xsize , vBox.box.ysize , vBox.box.zsize ,  vBox.radius]
                 self.order = order
+                self.start_value = 0.
+                self.geometry_data = [vBox.box.xsize , vBox.box.ysize , vBox.box.zsize ,  vBox.radius]
+                for vec4 in self.matrix:
+                        for f in vec4:
+                                self.geometry_data.append(f)
 
 class VTorus_data:
         def __init__(self, index, vTorus, parent_index, parent_id, order): #add parent id 
@@ -99,8 +103,12 @@ class VTorus_data:
                 self.parent_id = parent_id
                 frame = Frame.from_plane(vTorus.torus.plane)
                 self.matrix = inverse(matrix_from_frame(frame)) 
-                self.size_xyzr = [vTorus.torus.radius_axis , vTorus.torus.radius_pipe , 0. , 0.]
                 self.order = order
+                self.start_value = 0.
+                self.geometry_data = [vTorus.torus.radius_axis , vTorus.torus.radius_pipe]
+                for vec4 in self.matrix:
+                        for f in vec4:
+                                self.geometry_data.append(f)
 
 class VCylinder_data:
         def __init__(self, index, vCylinder, parent_index, parent_id, order): #add parent id 
@@ -110,8 +118,12 @@ class VCylinder_data:
                 self.parent_id = parent_id
                 frame = Frame.from_plane(vCylinder.cylinder.plane)
                 self.matrix = inverse(matrix_from_frame(frame)) 
-                self.size_xyzr = [vCylinder.cylinder.height , vCylinder.cylinder.radius , 0. , 0.]
                 self.order = order
+                self.start_value = 0.
+                self.geometry_data = [vCylinder.cylinder.height , vCylinder.cylinder.radius]
+                for vec4 in self.matrix:
+                        for f in vec4:
+                                self.geometry_data.append(f)
 
 ################### combinations
 class VUnion_data:
@@ -120,9 +132,9 @@ class VUnion_data:
                 self.id = union_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
-                self.matrix = identity_matrix
-                self.size_xyzr = [1 , 1 , 1 , 1]
                 self.order = order
+                self.start_value = 1000.
+                self.geometry_data = []
 
 class VIntersection_data:
         def __init__(self, index, vIntersection, parent_index, parent_id, order): #add parent id 
@@ -130,9 +142,9 @@ class VIntersection_data:
                 self.id = intersection_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
-                self.matrix = identity_matrix
-                self.size_xyzr = [1 , 1 , 1 , 1]
                 self.order = order
+                self.start_value = -1000.
+                self.geometry_data = []
 
 class VSmooth_Union_data:
         def __init__(self, index, vSmoothUnion, parent_index, parent_id, order): #add parent id 
@@ -140,9 +152,9 @@ class VSmooth_Union_data:
                 self.id = smooth_union_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
-                self.matrix = identity_matrix
-                self.size_xyzr = [vSmoothUnion.r , 1 , 1 , 1]
                 self.order = order
+                self.start_value = 1000.
+                self.geometry_data = [vSmoothUnion.r]
 
 
 ################### modifications
@@ -152,9 +164,9 @@ class VShell_data:
                 self.id = shell_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
-                self.matrix = identity_matrix
-                self.size_xyzr = [vShell.thickness , vShell.side , 1 , 1]
                 self.order = order
+                self.start_value = 0.
+                self.geometry_data = [vShell.thickness , vShell.side]
 
 
 ###########################################################
@@ -164,12 +176,21 @@ class Translator:
                 self.index_count = 1
                 self.input_object = input_object_
                 self.objects_unwrapped_list = []
-                self.final_data = []
+
+                ##data to be sent to shader
+                self.indices = []
+                self.ids = []
+                self.parent_indices = []
+                self.parent_ids = []
+                self.object_geometries_data = []
+                self.data_count_per_object = []
                 self.shader_start_vaues = []
 
                 self.translate_data(self.input_object, 0, union_id, 0) ## starting object, parent id = 0, 0 start_order
                 self.create_final_data()
                 self.create_shader_start_values()
+                self.print_out_all_data(True)
+
                 
         
         def translate_data(self, in_obj, parent_index_, parent_id_, parent_order):
@@ -224,81 +245,56 @@ class Translator:
                 else: 
                         print ("Warning: Unknown SOMETHING")
 
-        def create_data_array_of_single_object(self, object):
-                data_array = []
-                data_array.append([object.index, object.id ,object.parent_index ,object.parent_id]) # box id, combination function id
-                for k in object.matrix:
-                        data_array.append(k)
-                data_array.append(object.size_xyzr)
-                return data_array
 
         def create_final_data(self):
-                self.objects_unwrapped_list.reverse()
+                self.objects_unwrapped_list.reverse() ## reverse list of objects
                 print ("List of objects reversed")
-                for primitive in self.objects_unwrapped_list:
-                        data_array = self.create_data_array_of_single_object(primitive)
-                        for vec4 in data_array:
-                                vec4_rounded = [round(d, 2) for d in vec4]
-                                self.final_data.append(vec4_rounded)
-                print ("")
-                print ("lentgh of shader data : ", len(self.final_data))
-                print ("")
+
                 for obj in self.objects_unwrapped_list:
-                        print ("order : " , obj.order)
-                        print("index: ", obj.index, ",  id: ", get_obj_name(obj.id), ",  parent_index: ", obj.parent_index,  ",  parent_id: " , get_obj_name(obj.parent_id) , \
-                              "\nmatrix: ",obj.matrix, ",  size_xyzr: ", obj.size_xyzr )
+
+                        self.indices.append(obj.index)                ###########///// append index 
+                        self.ids.append(obj.id)                       ###########///// append id 
+                        self.parent_indices.append(obj.parent_index)  ###########///// append parent_index   
+                        self.parent_ids.append(obj.parent_id)         ###########///// append parent_id       
+                        
+                        current_obj_data_array = obj.geometry_data  
+                        for f in current_obj_data_array:
+                                f_rounded = round(f, 2)
+                                self.object_geometries_data.append(f_rounded)          ###########///// append geometry data 
+
+                        self.data_count_per_object.append(len(current_obj_data_array)) ###########///// append count 
+                        
+
+
+        def print_out_all_data(self, print_data_per_object):
+                if print_data_per_object:
+                        # print (len(self.indices), len(self.ids), len(self.parent_indices), len(self.parent_ids), len(self.data_count_per_object), len(self.object_geometries_data))
+                        # print (len(self.shader_start_vaues))
+                        pos = 0
+                        for i in range(len(self.indices)):
+                                print ("")
+                                print ("index : ", self.indices[i] , ",    id : ", get_obj_name(self.ids[i]), ",    parent_index : ", self.parent_indices[i], ",    parent_id : " , get_obj_name(self.parent_ids[i]))
+                                count_data = self.data_count_per_object[i]
+                                print ("data_count : ", count_data)
+                                print ("geometry_data : ", self.object_geometries_data[pos : pos+count_data])
+                                pos += count_data
+
+                else: 
                         print ("")
-                # print (self.final_data)
-                print ("")
-
-
-
-
+                        print ("indices : ", self.indices)
+                        print ("ids : ", [get_obj_name(id) for id in self.ids])
+                        print ("parent_indices : ", self.parent_indices)
+                        print ("parent_ids : ", [get_obj_name(id) for id in self.parent_ids])
+                        print ("")
+                        print ("data_count_per_object : ", self.data_count_per_object)
+                        print ("object_geometries_data : ", self.object_geometries_data)
 
         def create_shader_start_values(self):
                 values = []
-                values.append(100.)
+                self.shader_start_vaues.append(1000.)
                 self.objects_unwrapped_list.reverse()
-                my_obj_list = self.objects_unwrapped_list
-                for obj in my_obj_list:
-                        #combination
-                        if obj.id == union_id:
-                                values.append(100.) #very big value
-                        elif obj.id == intersection_id:
-                                values.append(-100.) #very small value
-                        elif obj.id == smooth_union_id:
-                                values.append(100.) #very big value
-                        
-                        # primitive
-                        elif obj.id  == sphere_id :
-                                values.append(0.)
-                        elif obj.id  == box_id :
-                                values.append(0.)
-                        elif obj.id  == torus_id :
-                                values.append(0.)
-                        elif obj.id  == cylinder_id :
-                                values.append(0.)
+                for obj in self.objects_unwrapped_list:
+                        self.shader_start_vaues.append(obj.start_value) ###########///// append start value  
 
-                        # modifications
-                        elif obj.id  == shell_id :
-                                values.append(0.)
-
-                        else: 
-                                print ("Unknown object, id : " , obj.id , " , index : ", obj.index)
-
-
-                self.shader_start_vaues = values
                 print ("")
                 print ("shader_start_vaues : " , self.shader_start_vaues)
-
-
-
-        
-
-
-# def Spheres_union(myUnion):
-    
-#     #  gather data of shapes for reconstructing distance function at the shader (at the moment upper limit of shapes: 100, only Union, only Spheres)
-#     if isinstance(myUnion, compas_vol.combinations.union.Union):
-#         spheres_xyzw = [[o.sphere.point.x, o.sphere.point.y, o.sphere.point.z , o.sphere.radius] for o in myUnion.objs if isinstance(o, compas_vol.primitives.vsphere.VolSphere)]
-#         return spheres_xyzw

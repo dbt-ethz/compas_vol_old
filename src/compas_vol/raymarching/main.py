@@ -70,11 +70,11 @@ if __name__ == "__main__":
 
     translator = Translator(total_geom)
 
-    rayMarcher = RayMarchingFactory(renderer, translator)
-    rayMarcher.post_processing_ray_marching_filter()
+    # rayMarcher = RayMarchingFactory(renderer, translator)
+    # rayMarcher.post_processing_ray_marching_filter()
     # rayMarcher.ray_marching_shader()
-    rayMarcher.show_csg_tree_GUI()
-    rayMarcher.create_slicing_slider(-7, 16 ,-7)
+    # rayMarcher.show_csg_tree_GUI()
+    # rayMarcher.create_slicing_slider(-7, 16 ,-7)
     # rayMarcher.create_general_purpose_slider()
 
     ### WIP

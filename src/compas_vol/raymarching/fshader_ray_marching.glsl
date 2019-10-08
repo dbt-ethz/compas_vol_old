@@ -1,6 +1,7 @@
 #version 120
 
 #define max_num 150 // CAREFUL, MEMORY LIMITED
+#define v_data_max_num 50
 
 ///---------------------------------------------------------------- INPUTS
 uniform vec2 u_resolution;
@@ -9,8 +10,9 @@ uniform float osg_FrameTime;
 
 //v_data
 uniform vec4[max_num] v_data;
-uniform int v_data_length;
-uniform float[max_num] start_values;
+// uniform int v_data_length;
+uniform float[max_num] v_start_values;
+uniform float[v_data_max_num] v_data_count_per_object;
 
 uniform float y_slice;
 uniform int vv;
@@ -119,9 +121,9 @@ vec4 size_xyzw;
 vec4 parent_details_xyzw = vec4(0.); // only needed for a few combinations
 
 float GetDistance(vec3 p){ //union of shapes  
-    values = start_values;
+    values = v_start_values;
 
-    for (int i = 0; i < v_data_length-1; i+= 6){ 
+    for (int i = 0; i < len(v_data) -1; i+= 6){ 
         //---- get data
         current_index = int( v_data[i][0]);
         current_id = int( v_data[i][1]);
