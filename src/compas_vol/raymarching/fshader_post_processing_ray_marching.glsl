@@ -118,7 +118,6 @@ float yPlane(vec3 p, float y_of_plane){
 
 float VolCombination(in int id, in float[max_num_of_children] geometry_data, in int count){
     //Union
-    
     if (id == Union_id){
         float d = 10000.; // very big value
         for (int i=0; i< count; i++){
@@ -146,8 +145,6 @@ float VolCombination(in int id, in float[max_num_of_children] geometry_data, in 
             float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
             d = (b * (1 - h) + h * a) - r * h * (1 - h);}
         return d;
-
-
     } else {
         return 0.;
     }
@@ -168,6 +165,29 @@ float VolModification(in int id, in int index, in float [20] data){
     }
 }
 
+
+// ///// MICROSTRUCTURES
+// #define Lattice_id 400
+
+// float VolMicrostructure(in vec3 p, in int id, in int index, in float [40] data){
+//     // Lattice
+//     if (id == Lattice_id){ 
+//         float unitcell = data[0];
+//         float thickness = data[1];
+//         mat4 matrix = mat4( vec4(geometry_data[2], geometry_data[3], geometry_data[4], geometry_data[5]),
+//                             vec4(geometry_data[6], geometry_data[7], geometry_data[8], geometry_data[9]),
+//                             vec4(geometry_data[10], geometry_data[11], geometry_data[12], geometry_data[13]),
+//                             vec4(geometry_data[14], geometry_data[15], geometry_data[16], geometry_data[17]) );
+//         vec4 pos_transformed =  transpose(matrix) * vec4(p , 1.);
+
+//         int number_of_lattice_points = int(geometry_data[18]);
+//         float [number_of_lattice_points] up; 
+//         for (int i = 0; i < number_of_lattice_points; i++){
+//             up[i] = abs((pos_transformed % unitcell) - unitcell/2.);
+//         }
+//         float dmin = 9999999.;
+//         for l in self.types[self.type]:
+
 /////////////////////////////////////////////////////////////
 
 float dist_final;
@@ -177,11 +197,6 @@ int current_id;
 int parent_index; 
 int parent_id;
 int count;
-
-// for (int i=0; i<object_max_num; i++)
-//     objects_values[i] = 0.;
-// }
-
 
 float GetDistance(vec3 p){ //union of shapes  
     int pos = 0;
@@ -212,9 +227,7 @@ float GetDistance(vec3 p){ //union of shapes
             objects_values[current_index] = dist;  
         }
 
-
         pos += int(v_data_count_per_object[i]);
-
 
         /////------------------- break loop once the necessary values have been calculated
         if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
@@ -274,7 +287,6 @@ float GetLight (vec3 p){ //gets the position of intersection of ray with shape
     }
     return dif;
 }
-
 
 
 vec3 findRayDirection(in vec2 uv){

@@ -290,10 +290,6 @@ vec3 findRayDirection(in vec2 uv, in vec3 ro){
 }
 
 
-
-
-
-
 void main(){  
     vec2 st = gl_FragCoord.xy / u_resolution.xy;
     vec2 uv = 2*(st - vec2(0.5, 0.5));

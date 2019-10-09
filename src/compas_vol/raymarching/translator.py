@@ -23,6 +23,9 @@ combinations_id = [union_id, intersection_id, smooth_union_id]
 #modifications id
 shell_id = 300
 
+#microstructures id
+lattice_id = 400
+
 
 def  get_obj_name(id):
     if id == union_id:
@@ -40,9 +43,11 @@ def  get_obj_name(id):
     elif id == cylinder_id:
             return "Cylinder"     
     elif id == shell_id:
-            return "Shell"           
+            return "Shell"     
+    elif id == lattice_id:
+            return "Lattice"       
         
-identity_matrix =  [[1.,0.,0.,0.],[0.,1.,0.,0.],[0.,0.,1.,0.],[0.,0.,0.,1.]]
+# identity_matrix =  [[1.,0.,0.,0.],[0.,1.,0.,0.],[0.,0.,1.,0.],[0.,0.,0.,1.]]
 
 def is_vUnion(input_object):
         return isinstance(input_object, compas_vol.combinations.union.Union)
@@ -71,6 +76,11 @@ def is_vShell(input_object):
 def is_vMODIFICATION(input_object):
         return is_vShell(input_object)
 
+def is_vLattice(input_object):
+        return isinstance(input_object, compas_vol.microstructures.lattice.Lattice)
+def is_vMICROSTRUCTURE(input_object):
+        return is_vLattice(input_object)
+
 ############## primitives
 class VSphere_data:
         def __init__(self, index, vSphere, parent_index, parent_id, order): ##add parent id 
@@ -79,7 +89,6 @@ class VSphere_data:
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
-                self.start_value = 0.
                 self.geometry_data = [vSphere.sphere.point.x, vSphere.sphere.point.y, vSphere.sphere.point.z , vSphere.sphere.radius]
 
 class VBox_data:
@@ -90,7 +99,6 @@ class VBox_data:
                 self.parent_id = parent_id
                 self.matrix = inverse(matrix_from_frame(vBox.box.frame)) 
                 self.order = order
-                self.start_value = 0.
                 self.geometry_data = [vBox.box.xsize , vBox.box.ysize , vBox.box.zsize ,  vBox.radius]
                 for vec4 in self.matrix:
                         for f in vec4:
@@ -105,7 +113,6 @@ class VTorus_data:
                 frame = Frame.from_plane(vTorus.torus.plane)
                 self.matrix = inverse(matrix_from_frame(frame)) 
                 self.order = order
-                self.start_value = 0.
                 self.geometry_data = [vTorus.torus.radius_axis , vTorus.torus.radius_pipe]
                 for vec4 in self.matrix:
                         for f in vec4:
@@ -120,7 +127,6 @@ class VCylinder_data:
                 frame = Frame.from_plane(vCylinder.cylinder.plane)
                 self.matrix = inverse(matrix_from_frame(frame)) 
                 self.order = order
-                self.start_value = 0.
                 self.geometry_data = [vCylinder.cylinder.height , vCylinder.cylinder.radius]
                 for vec4 in self.matrix:
                         for f in vec4:
@@ -134,7 +140,6 @@ class VUnion_data:
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
-                self.start_value = 1000.
                 self.children = []
                 self.geometry_data = [] ## this takes the list of all the children
 
@@ -145,7 +150,6 @@ class VIntersection_data:
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
-                self.start_value = -1000.
                 self.children = []
                 self.geometry_data = [] ## this takes the list of all the children
 
@@ -156,7 +160,6 @@ class VSmooth_Union_data:
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
-                self.start_value = 1000.
                 self.children = []
                 self.geometry_data = [] ## this takes the list of all the children
                 self.geometry_data.append(vCurrentObject.r)
@@ -171,14 +174,46 @@ class VShell_data:
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
-                self.start_value = 0.
-                ##################### should also know child! ATTENTION
+                ## lattice should also know child! But it's always the next index ;)
                 self.geometry_data = [vShell.thickness , vShell.side]
+
+
+# # ################### microstructures
+# class VLattice_data:
+#         def __init__(self, index, vLattice, parent_index, parent_id, order): #add parent id 
+#                 self.index = index
+#                 self.id = lattice_id
+#                 self.parent_index = parent_index
+#                 self.parent_id = parent_id
+#                 self.order = order
+
+#                 type_of_lattice = vLattice.type
+#                 point_list = vLattice.pointlist
+#                 frame = vLattice.frame
+#                 matrix = matrix_inverse(matrix_from_frame(frame))
+
+#                 ## append lattice data to self.geometry_data
+#                 self.geometry_data = [vLattice.unitcell , vLattice.thickness]  ## 1,2
+#                 for vec4 in matrix:
+#                         for f in vec4:
+#                                 self.geometry_data.append(f) ## 3 - 17
+#                 self.geometry_data.append(len(point_list)) ##18
+
 
 
 ###########################################################
 
 class Translator:
+        """
+        Creates arrays of floats that can be sent to the fragment shader
+        (INDEX AND ID ARRAYS SHOULD BE INTEGERS)
+
+        Parameters
+        ----------
+        input_object_: Instance of a compas_vol primitive, combination or modification (more to be added soon)
+                       It is volumetric object that we want to display using raymarching. The highest parent of the CSG tree.
+                       For now it can have up to 25 children (soon many more!)
+        """
         def __init__(self, input_object_):
                 self.index_count = 1
                 self.input_object = input_object_
@@ -249,8 +284,12 @@ class Translator:
                                 self.translate_data(in_obj.o, current_index, shell_id, parent_order +1)
                         else: 
                                 print ("Warning: Unknown combination mathod")
-                                self.translate_data(o, current_index, smooth_union_id, parent_order +1)
+                                # self.translate_data(o, current_index, smooth_union_id, parent_order +1)
                                 
+                elif is_vMICROSTRUCTURE(in_obj):
+                        if is_vLattice(in_obj):
+                                new = VLattice_data(current_index, in_obj, parent_index, parent_id,  parent_order + 1)
+                                self.objects_unwrapped_list.append(new) 
                 else: 
                         print ("Warning: Unknown SOMETHING")
 
@@ -306,7 +345,7 @@ class Translator:
                                 print ("geometry_data : ", self.object_geometries_data[pos : pos+count_data])
                                 pos += count_data
 
-                if True:
+                if False:
                         print ("")
                         print ("indices : ", self.indices)
                         print ("ids : ", [get_obj_name(id) for id in self.ids])

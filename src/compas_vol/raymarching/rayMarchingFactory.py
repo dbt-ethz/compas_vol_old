@@ -34,6 +34,16 @@ def get_shader_path(shader_name):
 
 
 class RayMarchingFactory:
+    """
+    Has all the necessary functionality that concerns the implementation of raymarching using GLSL shaders.
+
+    Parameters
+    ----------
+    renderer_  : instance of the class pandaRenderer.PandaRenderer that is used to render the scene
+    translator_: instance of the class translator.Translator that has been initialized with the volumetric object that we want to display 
+
+    """
+
     def __init__(self, renderer_, translator_):
         self.renderer = renderer_
         self.translator = translator_
@@ -47,6 +57,13 @@ class RayMarchingFactory:
     
     ### ---------------------------------------------------------------- Ray marching shader
     def ray_marching_shader(self): 
+        """
+        Creates a quad and applies to it a vertex shader which makes it stick to the viewport as if it was 2D.
+        It also applies a fragment shader which has the implementation raymarching, and sends to the fragment shader all the necessary data.
+        Finally it creates a tast to update the fragment shader data that needs to be updated in every frame.
+        This is happening during the rendering of the scene and is overlayed on the existing pixels, as a result there is no depth culling.
+        Works both on Windows and on Macbook.
+        """
 
         #Create plane 2D on which to use the shader
         format = GeomVertexFormat.getV3() # vec3 vertex, vec4 color
@@ -109,10 +126,13 @@ class RayMarchingFactory:
         return task.cont 
 
 
-
-
-
     ### ---------------------------------------------------------------- Ray marching in post-processing filter 
+    """
+    Creates a post processing filter of the scene, and applies to it a fragment shader with the implementation of raymarching.
+    Sends all the necessary data to the fragment shader and creates a task to update in every frame the data that needs to be updated.
+    The difference with the function 'ray_marching_shader' is that it alsso evaluates the depth buffer and performs depth culling. 
+    (So far) works only on Windows. 
+    """
     def post_processing_ray_marching_filter(self):
 
         manager = FilterManager(self.renderer.win, self.renderer.cam)
@@ -162,6 +182,20 @@ class RayMarchingFactory:
 
     ###  ---------------------------------------------------------------- General purpose slider
     def create_general_purpose_slider(self, range_a = 0., range_b = 2., start_value = 1., name = "slider"):
+        """
+        Creates a slider for general purpose whose value is sent to the fragment shader and updated in everry frame.
+        For example you can use it to alpha / color /motion speed of objects. You can create more that one.
+        It also creates a task to send data to the fragment shader every frame. (SHOULD INSTEAD BE AN EVENT) 
+        HASN'T BEEN PROPERLY TESTED YET
+
+        Parameters
+        ----------
+        range_a     : (float) Lower boundary of slider values.
+        range_b     : (float) Upper boundary of slider values.
+        start_value : (float), the start value of the slider.
+        name        : (string) Name of the slider that will appear on the scene.
+        """
+
         slider = DirectSlider(range=(range_a,range_b), value = start_value, pageSize=3) #command=showValue
         self.sliders.append(slider) 
 
@@ -192,6 +226,18 @@ class RayMarchingFactory:
     ### ---------------------------------------------------------------- Slicing y plane
 
     def create_slicing_slider(self, range_a = 0, range_b = 100, start_value = 0):
+        """
+        Creates a slider that slices the model with a plane parallel to the y axis.
+        It also creates a white frame at the position of the slicing plane.
+        Finally it creates a task to send data to the fragment shader every frame. (SHOULD INSTEAD BE AN EVENT) 
+
+        Parameters
+        ----------
+        range_a     : (float) Lower boundary of slider values.
+        range_b     : (float) Upper boundary of slider values.
+        start_value : (float) Start value of the slider.
+        """
+
         slicing_slider = DirectSlider(range=(range_a,range_b), value = start_value, pageSize=3) #command=showValue
 
         slicing_slider.reparentTo(self.renderer.aspect2d)
@@ -250,8 +296,13 @@ class RayMarchingFactory:
 
 
 ### ---------------------------------------------------------------- GUI
-
     def show_csg_tree_GUI(self):        
+        """
+        Creates and displays the CSG tree on the screen. 
+        This tree is interactive, i.e. you can click on an object to display it and all its children.
+        Also it creates a task to send the tree-selection data to the fragment shader every frame (SHOULD INSTEAD BE AN EVENT) 
+
+        """
         ## show lines of GUI
         format = GeomVertexFormat.getV3c4() # vec3 vertex, vec4 color
         vdata = GeomVertexData('GUI_lines', format, Geom.UHStatic)

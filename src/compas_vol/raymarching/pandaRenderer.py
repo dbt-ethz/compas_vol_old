@@ -18,6 +18,16 @@ from direct.task import Task
 
 
 class PandaRenderer(ShowBase):
+    """
+    Inherits from Panda3d Showbase, the built-in renderer class.
+    Documentation: https://www.panda3d.org/reference/python/classdirect_1_1showbase_1_1ShowBase_1_1ShowBase.html
+    Only one can exist in the scene.
+
+    Creates the basic categories-nodepaths of the scene graph where the other nodepaths should be reparented.
+    Creates default lights.
+
+    """
+
     def __init__(self):
         ShowBase.__init__(self)
         self.setFrameRateMeter(True)
@@ -69,6 +79,10 @@ class PandaRenderer(ShowBase):
             self.print_scene_graph_b(path)
 
     def create_compas_primitive(self, primitive, name):
+        """
+        WIP. Didn't have time to finish this yet
+        """
+
         format = GeomVertexFormat.getV3n3c4() # vec3 vertex, vec3 normal, vec4 color
         vdata = GeomVertexData('static_prim', format, Geom.UHStatic)
         vdata.setNumRows(len(primitive.vertices))
@@ -105,6 +119,16 @@ class PandaRenderer(ShowBase):
         # nodePath.setMaterial(mtl)
 
     def create_mesh_from_marching_cubes(self, vertices, faces, normals, name):  #
+        """
+        Creates and displays a panda3d shape from a marching cubes algorithm 
+
+        Parameters
+        ----------
+        vertices: (array) Vertices of mesh
+        faces   : (array) Faces of mesh
+        normals : (array) Normals of mesh. Attention normals are inverted because using the marching_cubes_lewiner from skimage.measure they came in inverted
+        name    : (string) Name of the shape on the scene graph.  
+        """
 
         ## GeomVertexFormat
         format = GeomVertexFormat.getV3n3c4() # vec3 vertex, vec3 normal, vec4 color
@@ -145,6 +169,12 @@ class PandaRenderer(ShowBase):
         # nodePath.setMaterial(mtl)
 
     def create_boundary_box(self, n):
+        """ Displays a wireframe box 
+        
+        Parameters
+        ----------
+        n: (float) Upper boundary of the box. Lower boundary has to be 0 (SHOULD FIX THIS)
+        """
 
         format = GeomVertexFormat.getV3() # vec3 vertex
         vdata = GeomVertexData('bounding_box', format, Geom.UHStatic)
@@ -177,6 +207,14 @@ class PandaRenderer(ShowBase):
 
 
     def display_axes_xyz(self, size):
+        """
+        Displays the xyz axis with the usual color convention (x red, y gree, z blue).
+        
+        Parameters
+        ----------
+        size: (float) Length of axis.
+        """
+
         format = GeomVertexFormat.getV3c4() # vec3 vertex, vec4 color
         vdata = GeomVertexData('axes', format, Geom.UHStatic)
         vdata.setNumRows(6) # 6 vertices in total
@@ -214,6 +252,18 @@ class PandaRenderer(ShowBase):
 
 
     def display_volumetric_grid(self, lb, ub, m, num, fact, showValues):
+        """ Displays a grid of points that is colored depending on the values of the distance field
+        
+        Parameters
+        ----------
+        lb        : (float) lower boundary. For now keep to 0
+        ub        : (float) upper boudnary
+        m         : (numpy array) distance values
+        num       : (int) resolution of grid
+        fact      : (float) size of grid cell
+        showValues: (bool) Toggle on/off the number text on the viewport. (Attention, has a considerable impact on performance)
+        """
+
         format = GeomVertexFormat.getV3c4() # vec3 vertex, vec4 color
 
         ## GeomVertexData
@@ -257,6 +307,11 @@ class PandaRenderer(ShowBase):
             self.display_volumetric_grid_values(lb, ub, m, num, fact)
 
     def display_volumetric_grid_values(self, lb, ub, m, num, fact):
+        """
+        Displays distance values of volumetric grid.
+        Don't call independently, it's called by the 'display_volumetric_grid'
+        """
+
         for i in range(num):
             for j in range(num):
                 for k in range(num):
@@ -268,7 +323,19 @@ class PandaRenderer(ShowBase):
                     self.create_text(str(value), x, y, z, fact * 0.25)
         
 
-    def create_text(self, t, dx, dy, dz, scale):
+    def create_text(self, t, dx, dy, dz, scale = 0.08):
+        """
+        Creates and displays text.
+
+        Parameters
+        ----------
+        t    : (string) Text to be displayed
+        dx   : (float) Position x
+        dy   : (float) Position y
+        dz   : (float) Position z
+        scale: (float) Scale of text
+        """
+
         textNode = TextNode('text_name')
         textNode.setText(t)
         textNode.setTransform(Translation_matrix(dx/scale, dy/scale, dz/scale))
@@ -286,6 +353,11 @@ class PandaRenderer(ShowBase):
 
 
     def show(self):     
+        """
+        Starts the renderer viewport.
+        Attention, it should be the last function you call, anything that comes after it will not run untill the window exits.
+        """
+        
         self.run()
 
 
@@ -294,18 +366,11 @@ def Translation_matrix(dx, dy, dz):
     return LMatrix4(1,0,0,0 , 0,1,0,0 , 0,0,1,0 , dx,dy,dz,1)
 
 
-# def set_input_of_shader(v):
-#     print (v)
-
-
 if __name__ == "__main__":
 ## Default ShowBase
     renderer = PandaRenderer()
-    # renderer.shader()
     renderer.display_axes(4)
     # renderer.create_onscreen_text("Title", -0.5,-0.5,0.05)
     # renderer.print_scene_graph()
-    # renderer.simple_filter()
-
     renderer.create_slicing_slider()
     renderer.show()

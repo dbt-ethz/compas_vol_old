@@ -4,6 +4,7 @@ import compas_vol
 from compas_vol.primitives import *
 from compas_vol.combinations import *
 from compas_vol.modifications import *
+from compas_vol.microstructures import *
 
 from skimage.measure import marching_cubes_lewiner
 
@@ -56,15 +57,17 @@ if __name__ == "__main__":
     intersection = Intersection(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 9)))
     sh = SmoothUnion(Shell(union, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
 
-    total_geom =  SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) #Intersection(sphere, box)  #Union(Union(torus , sphere), Union(intersection, cylinder))
+    b = TPMS(tpmstype='Gyroid', wavelength=5)
+
+    total_geom =  SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
     
 
     ### panda3d visualisation
     renderer = PandaRenderer()
 
-    # m = discretize_distance_field_in_array(total_geom)
-    # verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
-    # renderer.create_mesh_from_marching_cubes(verts, faces, normals, 'marching_cubes_primitive')
+    m = discretize_distance_field_in_array(total_geom)
+    verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
+    renderer.create_mesh_from_marching_cubes(verts, faces, normals, 'marching_cubes_primitive')
 
     # renderer.create_boundary_box(ub) #lb has to be 0 for now
     # renderer.print_scene_graph()§
@@ -72,11 +75,11 @@ if __name__ == "__main__":
 
     translator = Translator(total_geom)
 
-    rayMarcher = RayMarchingFactory(renderer, translator)
-    rayMarcher.post_processing_ray_marching_filter()
+    # rayMarcher = RayMarchingFactory(renderer, translator)
+    # rayMarcher.post_processing_ray_marching_filter()
     # rayMarcher.ray_marching_shader()
-    rayMarcher.show_csg_tree_GUI()
-    rayMarcher.create_slicing_slider(-7, 16 ,-7)
+    # rayMarcher.show_csg_tree_GUI()
+    # rayMarcher.create_slicing_slider(-7, 16 ,-7)
     # # rayMarcher.create_general_purpose_slider()
 
     ### WIP
