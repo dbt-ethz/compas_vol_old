@@ -18,6 +18,7 @@ cylinder_id = 103
 union_id = 200
 intersection_id = 201
 smooth_union_id = 202
+combinations_id = [union_id, intersection_id, smooth_union_id]
 
 #modifications id
 shell_id = 300
@@ -127,34 +128,38 @@ class VCylinder_data:
 
 ################### combinations
 class VUnion_data:
-        def __init__(self, index, vUnion, parent_index, parent_id, order): #add parent id 
+        def __init__(self, index, vCurrentObject, parent_index, parent_id, order): #add parent id 
                 self.index = index
                 self.id = union_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
                 self.start_value = 1000.
-                self.geometry_data = []
+                self.children = []
+                self.geometry_data = [] ## this takes the list of all the children
 
 class VIntersection_data:
-        def __init__(self, index, vIntersection, parent_index, parent_id, order): #add parent id 
+        def __init__(self, index, vCurrentObject, parent_index, parent_id, order): #add parent id 
                 self.index = index
                 self.id = intersection_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
                 self.start_value = -1000.
-                self.geometry_data = []
+                self.children = []
+                self.geometry_data = [] ## this takes the list of all the children
 
 class VSmooth_Union_data:
-        def __init__(self, index, vSmoothUnion, parent_index, parent_id, order): #add parent id 
+        def __init__(self, index, vCurrentObject, parent_index, parent_id, order): #add parent id 
                 self.index = index
                 self.id = smooth_union_id
                 self.parent_index = parent_index
                 self.parent_id = parent_id
                 self.order = order
                 self.start_value = 1000.
-                self.geometry_data = [vSmoothUnion.r]
+                self.children = []
+                self.geometry_data = [] ## this takes the list of all the children
+                self.geometry_data.append(vCurrentObject.r)
 
 
 ################### modifications
@@ -166,6 +171,7 @@ class VShell_data:
                 self.parent_id = parent_id
                 self.order = order
                 self.start_value = 0.
+                ##################### should also know child! ATTENTION
                 self.geometry_data = [vShell.thickness , vShell.side]
 
 
@@ -186,10 +192,12 @@ class Translator:
                 self.data_count_per_object = []
                 self.shader_start_vaues = []
 
+                self.orders = []
+                
                 self.translate_data(self.input_object, 0, union_id, 0) ## starting object, parent id = 0, 0 start_order
+                self.assign_children_to_combinations()
                 self.create_final_data()
-                self.create_shader_start_values()
-                self.print_out_all_data(True)
+                self.print_out_all_data(False)
 
                 
         
@@ -245,6 +253,21 @@ class Translator:
                 else: 
                         print ("Warning: Unknown SOMETHING")
 
+        def assign_children_to_combinations(self):
+                list_of_children = [[] for obj in  self.objects_unwrapped_list]
+
+                for obj in self.objects_unwrapped_list:
+                        list_of_children[obj.parent_index].append(obj.index)
+                # print ("list_of_children : ", list_of_children)
+                
+                for obj in self.objects_unwrapped_list:
+                        if obj.id in combinations_id:
+                                obj.children = list_of_children[obj.index]
+
+                                for o in obj.children:
+                                        obj.geometry_data.append(o)
+
+
 
         def create_final_data(self):
                 self.objects_unwrapped_list.reverse() ## reverse list of objects
@@ -254,9 +277,11 @@ class Translator:
 
                         self.indices.append(obj.index)                ###########///// append index 
                         self.ids.append(obj.id)                       ###########///// append id 
-                        self.parent_indices.append(obj.parent_index)  ###########///// append parent_index   
-                        self.parent_ids.append(obj.parent_id)         ###########///// append parent_id       
-                        
+                        self.parent_indices.append(obj.parent_index)
+                        self.parent_ids.append(obj.parent_id)
+                        self.orders.append(obj.order)
+
+
                         current_obj_data_array = obj.geometry_data  
                         for f in current_obj_data_array:
                                 f_rounded = round(f, 2)
@@ -267,19 +292,20 @@ class Translator:
 
 
         def print_out_all_data(self, print_data_per_object):
-                if print_data_per_object:
-                        # print (len(self.indices), len(self.ids), len(self.parent_indices), len(self.parent_ids), len(self.data_count_per_object), len(self.object_geometries_data))
-                        # print (len(self.shader_start_vaues))
+                if True: #print_data_per_object:
+                        print (len(self.indices), len(self.ids), len(self.parent_indices), len(self.parent_ids), len(self.data_count_per_object), len(self.object_geometries_data))
+
                         pos = 0
                         for i in range(len(self.indices)):
                                 print ("")
+                                print ("        order: ", self.orders[i])
                                 print ("index : ", self.indices[i] , ",    id : ", get_obj_name(self.ids[i]), ",    parent_index : ", self.parent_indices[i], ",    parent_id : " , get_obj_name(self.parent_ids[i]))
                                 count_data = self.data_count_per_object[i]
                                 print ("data_count : ", count_data)
                                 print ("geometry_data : ", self.object_geometries_data[pos : pos+count_data])
                                 pos += count_data
 
-                else: 
+                if True:
                         print ("")
                         print ("indices : ", self.indices)
                         print ("ids : ", [get_obj_name(id) for id in self.ids])
@@ -289,12 +315,3 @@ class Translator:
                         print ("data_count_per_object : ", self.data_count_per_object)
                         print ("object_geometries_data : ", self.object_geometries_data)
 
-        def create_shader_start_values(self):
-                values = []
-                self.shader_start_vaues.append(1000.)
-                self.objects_unwrapped_list.reverse()
-                for obj in self.objects_unwrapped_list:
-                        self.shader_start_vaues.append(obj.start_value) ###########///// append start value  
-
-                print ("")
-                print ("shader_start_vaues : " , self.shader_start_vaues)

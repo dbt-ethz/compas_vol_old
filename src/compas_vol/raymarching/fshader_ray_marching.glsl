@@ -2,7 +2,7 @@
 
 #define object_max_num    25 // CAREFUL, MEMORY LIMITED
 #define geom_data_max_num 150
-
+#define max_num_of_children 20
 ///---------------------------------------------------------------- INPUTS
 uniform vec2 u_resolution;
 uniform vec3 camera_POS;
@@ -15,17 +15,20 @@ uniform float osg_FrameTime;
 // uniform float[v_data_max_num] v_data_count_per_object;
 
 //v_data
-uniform float[object_max_num] v_indices;
-uniform float[object_max_num] v_ids;
-uniform float[object_max_num] v_parent_indices;
-uniform float[object_max_num] v_parent_ids;    
-uniform float[object_max_num] v_shader_start_values;     
+uniform float[object_max_num] v_indices;  
+uniform float[object_max_num] v_ids;   
 uniform float[object_max_num] v_data_count_per_object;  
 uniform float[geom_data_max_num] v_object_geometries_data;  
 
 uniform float y_slice;
 uniform int display_target_object;
 uniform float slider_value;
+
+
+///---------------------------------------------------------------- 
+
+float[object_max_num] objects_values = v_indices; // We initialize this to some value so that it doesnt give a warnign
+                                                  // that it might be used before it is initialized
 
 
 ///---------------------------------------------------------------- SDF FUNCTIONS (from compas-vol)
@@ -107,104 +110,108 @@ float yPlane(vec3 p, float y_of_plane){
 #define Intersection_id 201
 #define Smooth_Union_id 202
 
-float VolCombination(in float id, in float a, in float b){
-    ////////////////// FIX THIS!!!!
-    float r = 0;
-
+float VolCombination(in int id, in float[max_num_of_children] geometry_data, in int count){
     //Union
+    
     if (id == Union_id){
-        return min(a , b);
+        float d = 10000.; // very big value
+        for (int i=0; i< count; i++){
+            float child_dist = objects_values[int(geometry_data[i])];
+            d = min(d, child_dist); }
+        return d;
+        
     //Intersection
     } else if (id == Intersection_id){
-        return max(a , b);
+        float d = -10000.; // very small value
+        for (int i=0; i<count; i++){
+            float child_dist = objects_values[int(geometry_data[i])];
+            d = max(d, child_dist); }
+        return d;
     //Smooth Union
     } else if (id == Smooth_Union_id){
-        float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
-        return (b * (1 - h) + h * a) - r * h * (1 - h);
+        float d = 100000.; // very big value
+        float r = geometry_data[0];
+        // // 
+        // // 
+        for (int i=1; i<count; i++){
+            float child_dist = objects_values[int(geometry_data[i])];
+            float a = d;
+            float b = child_dist;
+            float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
+            d = (b * (1 - h) + h * a) - r * h * (1 - h);}
+        return d;
+
     } else {
-        return 0. ;
+        return 0.;
     }
 }
 
 ///// MODIFICATIONS
 #define Shell_id 300
 
-float VolModification(in float id, in float current_dist,  in float [20] data){
+float VolModification(in int id, in int index, in float [20] data){
     // Shell
-    if (id == Shell_id){
-        return 1.;
+    if (id == Shell_id){ //// The shell theoretically needs to know the child. But practically it's always the next index 
+        float current_dist = objects_values[index+1]; 
+        float d = data[0];
+        float s = data[1];
+        return abs(current_dist + (s - 0.5) * d) - d/2.0;
     } else {
         return 0.;
     }
 }
 
-
-    //// ---- Shell
-    // float Shell_get_distance( in float current_dist,  in float d, in float s){ // torus centered in origin. t: vec2(rad of center of torus, rad of section of torus)
-    //     return abs(current_dist + (s - 0.5) * d) - d/2.0;
-    // }
-
-
 /////////////////////////////////////////////////////////////
-float[object_max_num] values; 
+
 float dist_final;
 float dist;
 int current_index;
 int current_id;
 int parent_index; 
 int parent_id;
+int count;
+
+// for (int i=0; i<object_max_num; i++)
+//     objects_values[i] = 0.;
+// }
 
 
 float GetDistance(vec3 p){ //union of shapes  
-    values = v_shader_start_values;
-
     int pos = 0;
     for (int i = 0; i < object_max_num -1; i++ ){ 
     //     //---- get data
-        current_index = int( v_indices[i]);
-        current_id = int( v_ids[i]);
-        parent_index = int( v_parent_indices[i]);
-        parent_id = int( v_parent_ids[i]);
+        current_index = int(v_indices[i]);
+        current_id = int(v_ids[i]);
+        count = int(v_data_count_per_object[i]);
 
         float [20] geometry_data ;
         for (int j=0 ; j < v_data_count_per_object[i]; j++){
             geometry_data[j] = v_object_geometries_data[pos + j];
         }
 
-        //---- update parent_details_xyzw only when needed 
-        // if (parent_id == Smooth_Union_id){ // or other combination types that need it 
-        //     int pos = int(v_data[0][0]) - parent_index; crap..........
-            // parent_details_xyzw = v_data[pos*6 +5];
-        // }
 
-        /////------------------- Get dist of CURRENT obj
+        /////------------------- Get dist of current object
         //primitive
         if (current_id == VolSphere_id || current_id == VolBox_id || current_id == VolTorus_id || current_id == VolCylinder_id){
             dist = VolPrimitive(p, current_id, current_index, geometry_data);
-            values[current_index] = dist;
+            objects_values[current_index] = dist;
         //combination
         } else if (current_id == Union_id || current_id ==  Intersection_id ||current_id ==  Smooth_Union_id ){
-            dist = values[current_index];
+            dist = VolCombination(current_id, geometry_data, count);
+            objects_values[current_index] = dist;
         //modification
         } else if(current_id == Shell_id){ // Shell FIX HERE: UNIVERSAL MODIFICATION
-            dist = VolModification(current_id , values[current_index] , geometry_data);
-            values[current_index] = dist;  
+            dist = VolModification(current_id , current_index, geometry_data);
+            objects_values[current_index] = dist;  
         }
 
-        /////------------------- send information to PARENT
-        // combination
-        if (parent_id == Union_id || parent_id ==  Intersection_id ||parent_id ==  Smooth_Union_id ){
-            values[parent_index] = VolCombination(parent_id , values[parent_index], dist);  //parent_details_xyzw.x
-        // modification
-        } else if (parent_id == Shell_id){
-            values[parent_index] = values[current_index]; 
-        }
 
-            pos += int(v_data_count_per_object[i]);
+        pos += int(v_data_count_per_object[i]);
 
-    //     /////------------------- break loop once the necessary values have been calculated
-        if (current_index == display_target_object || current_index == 0 ){
-            dist_final = values[display_target_object];
+
+        /////------------------- break loop once the necessary values have been calculated
+        if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
+            dist_final = objects_values[display_target_object];
 
             // intersect wih slicing plane !!!!!!!!!!!!!!!HERE THIS SHOULD HAPPEN ONLY IF SLICING PLANE EXISTS
             float y_slice_plane_dist = yPlane(p, y_slice);

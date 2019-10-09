@@ -86,11 +86,8 @@ class RayMarchingFactory:
         
         self.shader_quad.setShaderInput("v_indices", self.translator.indices)
         self.shader_quad.setShaderInput("v_ids", self.translator.ids)
-        self.shader_quad.setShaderInput("v_parent_indices", self.translator.parent_indices)
-        self.shader_quad.setShaderInput("v_parent_ids", self.translator.parent_ids)
         self.shader_quad.setShaderInput("v_object_geometries_data", self.translator.object_geometries_data)  
         self.shader_quad.setShaderInput("v_data_count_per_object", self.translator.data_count_per_object)  
-        self.shader_quad.setShaderInput("v_shader_start_values", self.translator.shader_start_vaues)
 
         self.shader_quad.setShaderInput("y_slice", -1000.) ## value far away from the model if slicer is not defined
 
@@ -106,6 +103,8 @@ class RayMarchingFactory:
     def task_update_ray_marching_shader (self, task):
         self.shader_quad.set_shader_input("camera_POS", self.renderer.camera.getPos())
         self.shader_quad.set_shader_input("display_target_object", self.display_target_object[0]) 
+        if task.time % 5 == 0:
+            print (self.display_target_object[0])
         return task.cont 
 
 
@@ -182,7 +181,7 @@ class RayMarchingFactory:
 
     def task_update_general_slicer(self, task, s_index): # THIS SHOULD ONLY HAPPEN WHEN THE SLIDER IS CHANGED
         slider = self.sliders[s_index]
-        slider_value = slider['value']
+        slider_value = slider['value'] 
         if self.ray_marching_quad:
             self.ray_marching_quad.setShaderInput("slider_value", slider_value) 
         if self.shader_quad: 
@@ -286,6 +285,7 @@ class RayMarchingFactory:
         for i,v in enumerate(vertices): 
             vertex_writer.addData3f(v[0] , v[1] , v[2])
 
+        ## Create lines connecting buttons 
         #create primitives 
         geom = Geom(vdata)
 
