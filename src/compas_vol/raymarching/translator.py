@@ -162,6 +162,7 @@ class VSmooth_Union_data:
                 self.geometry_data.append(vCurrentObject.r)
 
 
+
 ################### modifications
 class VShell_data:
         def __init__(self, index, vShell, parent_index, parent_id, order): #add parent id 

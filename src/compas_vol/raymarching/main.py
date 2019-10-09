@@ -58,6 +58,7 @@ if __name__ == "__main__":
 
     total_geom =  SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(box, 0.3, 0.5), 2.) #Intersection(sphere, box)  #Union(Union(torus , sphere), Union(intersection, cylinder))
     
+    
     ### panda3d visualisation
     renderer = PandaRenderer()
 

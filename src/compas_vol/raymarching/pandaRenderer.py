@@ -284,6 +284,7 @@ class PandaRenderer(ShowBase):
 
 
 
+
     def show(self):     
         self.run()
 

@@ -22,6 +22,7 @@ class Intersection(object):
         else:
             self.objs = [a, b]
 
+
     def get_distance(self, point):
         """
         single point distance function

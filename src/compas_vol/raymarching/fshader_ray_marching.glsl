@@ -140,6 +140,7 @@ float VolCombination(in int id, in float[max_num_of_children] geometry_data, in 
             float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
             d = (b * (1 - h) + h * a) - r * h * (1 - h);}
         return d;
+        
 
     } else {
         return 0.;

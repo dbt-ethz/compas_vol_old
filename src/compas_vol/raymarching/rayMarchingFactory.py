@@ -59,6 +59,7 @@ class RayMarchingFactory:
         for i,v in enumerate(verts): 
             vertex_writer.addData3f(v[0], v[1], v[2])
         
+        
         #create primitives 
         geom = Geom(vdata)
         faces = [[0,1,2],[2,3,0]]
