@@ -42,7 +42,7 @@ def discretize_distance_field_in_array(distance_field):
 if __name__ == "__main__":
     ## Create compas_vol primitives
     Spheres = []
-    for i in range(5):
+    for i in range(10):
         mySphere = VolSphere(Sphere(Point(rand(lb+1,ub-1), rand(lb+1,ub-1), rand(lb+1,ub-1)), rand(2.,3.)))
         Spheres.append(mySphere)
     union_spheres = Union(Spheres)
@@ -56,9 +56,9 @@ if __name__ == "__main__":
     intersection = Intersection(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 9)))
     sh = SmoothUnion(Shell(union, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
 
-    total_geom =  SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(box, 0.3, 0.5), 2.) #Intersection(sphere, box)  #Union(Union(torus , sphere), Union(intersection, cylinder))
+    total_geom =  SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) #Intersection(sphere, box)  #Union(Union(torus , sphere), Union(intersection, cylinder))
     
-    
+
     ### panda3d visualisation
     renderer = PandaRenderer()
 
@@ -73,8 +73,8 @@ if __name__ == "__main__":
     translator = Translator(total_geom)
 
     rayMarcher = RayMarchingFactory(renderer, translator)
-    # rayMarcher.post_processing_ray_marching_filter()
-    rayMarcher.ray_marching_shader()
+    rayMarcher.post_processing_ray_marching_filter()
+    # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
     rayMarcher.create_slicing_slider(-7, 16 ,-7)
     # # rayMarcher.create_general_purpose_slider()

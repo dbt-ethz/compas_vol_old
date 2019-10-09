@@ -4,31 +4,38 @@
 precision mediump float;
 #endif
 
-#define resolution_of_texture 1024.
-#define max_num 150 // CAREFUL! MEMORY
-#define v_data_max_num 50
+#define object_max_num    25 // CAREFUL, MEMORY LIMITED
+#define geom_data_max_num 150
+#define max_num_of_children 20
+
+#define resolution_of_texture 1024
 
 ///---------------------------------------------------------------- INPUTS
 uniform vec2 u_resolution;
 uniform vec3 camera_POS;
 uniform float osg_FrameTime;
 
-//v_data
-uniform vec4[max_num] v_data;
-// uniform int v_data_length;
-uniform float[max_num] v_start_values;
-uniform float[v_data_max_num] v_data_count_per_object;
+// v_data
+uniform float[object_max_num] v_indices;  
+uniform float[object_max_num] v_ids;   
+uniform float[object_max_num] v_data_count_per_object;  
+uniform float[geom_data_max_num] v_object_geometries_data;  
 
 uniform float y_slice;
-uniform int vv;
-// uniform float slider_value; // should be initialized to sth even if it doesnt exist
+uniform int display_target_object;
+uniform float slider_value;
 
-//buffers
+// buffers
 uniform sampler2D color_texture;
 uniform sampler2D depth_buffer;
 
+// transformationm matrix of perspective camera (can't use matrices of default orthographic camera)
 uniform mat4 transform_clip_plane_to_perspective_camera;
 
+///---------------------------------------------------------------- 
+// list of all objects that will be filled in with values 
+float[object_max_num] objects_values = v_indices; // We initialize this to some value so that it doesnt give a warnign
+                                                  // that it might be used before it is initialized
 
 ///---------------------------------------------------------------- SDF FUNCTIONS (from compas-vol)
 ///// PRIMITIVES 
@@ -45,37 +52,52 @@ vec3 animate_point(in int current_index){
     float magnitude = random (vec2(current_index))  * 7.+ 1.;
     float frequency1 = random (vec2(current_index/3.56))  * 0.45  + 0.1;
     float offset  = random (vec2(current_index/3.56))  * 6.;
-    float frequency = frequency1 ; // * slider_value
+    float frequency = frequency1 * slider_value;
     // frequency *=  slider_value;
     return vec3(sin(osg_FrameTime * frequency) * magnitude, cos(offset +osg_FrameTime * frequency) * magnitude, sin(offset + osg_FrameTime * frequency) * magnitude);
 }
 
-
-float VolPrimitive(in vec3 p, in int id, in int current_index, in mat4 matrix, in vec4 size_xyzw){ //current_index only needed for 
+float VolPrimitive(in vec3 p, in int id, in int current_index, in float[20] geometry_data){ //current_index only needed for 
     //VolSphere
     if (id == VolSphere_id){
-        vec3 center = size_xyzw.xyz;
-        center = center + animate_point(current_index) ;
-        float radius = size_xyzw.w;
+        vec3 center = vec3(geometry_data[0], geometry_data[1], geometry_data[2]);
+        // center = center + animate_point(current_index) ;
+        float radius = geometry_data[3];
         return length(p - center) - radius;
-    //VolBox
+    //VolBox     
     }else if (id == VolBox_id){
-        float radius= size_xyzw.w;
+        float radius = geometry_data[3];
+        vec3 size_xyz= vec3(geometry_data[0], geometry_data[1], geometry_data[2]);
+        mat4 matrix = mat4( vec4(geometry_data[4], geometry_data[5], geometry_data[6], geometry_data[7]),
+                            vec4(geometry_data[8], geometry_data[9], geometry_data[10], geometry_data[11]),
+                            vec4(geometry_data[12], geometry_data[13], geometry_data[14], geometry_data[15]),
+                            vec4(geometry_data[16], geometry_data[17], geometry_data[18], geometry_data[19]) );
+
         vec4 pos_transformed =  transpose(matrix) * vec4(p , 1.);
-        vec3 d = abs(pos_transformed.xyz) - (size_xyzw.xyz * 0.5 - radius);
+        vec3 d = abs(pos_transformed.xyz) - (size_xyz.xyz * 0.5 - radius);
         return length(max(d, 0.0)) - radius + min(max(d.x,max(d.y,d.z)), 0.0);
     //VolTorus
     }else if (id == VolTorus_id){
-        float center_radius = size_xyzw.x;
-        float section_radius = size_xyzw.y;
+        float center_radius = geometry_data[0];
+        float section_radius = geometry_data[1];
+        mat4 matrix = mat4( vec4(geometry_data[2], geometry_data[3], geometry_data[4], geometry_data[5]),
+                            vec4(geometry_data[6], geometry_data[7], geometry_data[8], geometry_data[9]),
+                            vec4(geometry_data[10], geometry_data[11], geometry_data[12], geometry_data[13]),
+                            vec4(geometry_data[14], geometry_data[15], geometry_data[16], geometry_data[17]) );
+
         vec4 pos_transformed = transpose(matrix)  * vec4(p , 1.);
         float dxy = length(pos_transformed.xy);
         float d2 = sqrt((dxy - center_radius)*(dxy - center_radius) + pos_transformed.z*pos_transformed.z );
         return d2 - section_radius;
     //VolCylinder
     }else if (id == VolCylinder_id){
-        float h = size_xyzw.x;
-        float r = size_xyzw.y;
+        float h = geometry_data[0];
+        float r = geometry_data[1];
+        mat4 matrix = mat4( vec4(geometry_data[2], geometry_data[3], geometry_data[4], geometry_data[5]),
+                            vec4(geometry_data[6], geometry_data[7], geometry_data[8], geometry_data[9]),
+                            vec4(geometry_data[10], geometry_data[11], geometry_data[12], geometry_data[13]),
+                            vec4(geometry_data[14], geometry_data[15], geometry_data[16], geometry_data[17]) );
+
         vec4 pos_transformed = transpose(matrix) * vec4(p , 1.);
         float d = length(pos_transformed.xy) - r;
         return max(d, abs(pos_transformed.z) - h/2.);
@@ -94,87 +116,109 @@ float yPlane(vec3 p, float y_of_plane){
 #define Intersection_id 201
 #define Smooth_Union_id 202
 
-float VolCombination(in float a, in float b, in float id, in float r){
+float VolCombination(in int id, in float[max_num_of_children] geometry_data, in int count){
     //Union
+    
     if (id == Union_id){
-        return min(a , b);
+        float d = 10000.; // very big value
+        for (int i=0; i< count; i++){
+            float child_dist = objects_values[int(geometry_data[i])];
+            d = min(d, child_dist); }
+        return d;
+        
     //Intersection
     } else if (id == Intersection_id){
-        return max(a , b);
+        float d = -10000.; // very small value
+        for (int i=0; i<count; i++){
+            float child_dist = objects_values[int(geometry_data[i])];
+            d = max(d, child_dist); }
+        return d;
     //Smooth Union
     } else if (id == Smooth_Union_id){
-        float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
-        return (b * (1 - h) + h * a) - r * h * (1 - h);
+        float d = 100000.; // very big value
+        float r = geometry_data[0];
+        // // 
+        // // 
+        for (int i=1; i<count; i++){
+            float child_dist = objects_values[int(geometry_data[i])];
+            float a = d;
+            float b = child_dist;
+            float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
+            d = (b * (1 - h) + h * a) - r * h * (1 - h);}
+        return d;
+
+
     } else {
-        return 0. ;
+        return 0.;
     }
 }
 
 ///// MODIFICATIONS
 #define Shell_id 300
 
-//// ---- Shell
-float Shell_get_distance( in float current_dist,  in float d,in float s){ // torus centered in origin. t: vec2(rad of center of torus, rad of section of torus)
-    return abs(current_dist + (s - 0.5) * d) - d/2.0;
+float VolModification(in int id, in int index, in float [20] data){
+    // Shell
+    if (id == Shell_id){ //// The shell theoretically needs to know the child. But practically it's always the next index 
+        float current_dist = objects_values[index+1]; 
+        float d = data[0];
+        float s = data[1];
+        return abs(current_dist + (s - 0.5) * d) - d/2.0;
+    } else {
+        return 0.;
+    }
 }
 
-
 /////////////////////////////////////////////////////////////
-float[max_num] values; 
+
 float dist_final;
 float dist;
 int current_index;
 int current_id;
 int parent_index; 
 int parent_id;
-mat4 matrix;
-vec4 size_xyzw;
-vec4 parent_details_xyzw = vec4(0.); // only needed for a few combinations
+int count;
+
+// for (int i=0; i<object_max_num; i++)
+//     objects_values[i] = 0.;
+// }
+
 
 float GetDistance(vec3 p){ //union of shapes  
-    values = v_start_values;
+    int pos = 0;
+    for (int i = 0; i < object_max_num -1; i++ ){ 
+    //     //---- get data
+        current_index = int(v_indices[i]);
+        current_id = int(v_ids[i]);
+        count = int(v_data_count_per_object[i]);
 
-    for (int i = 0; i < len(v_data)-1; i+= 6){ 
-        //---- get data
-        current_index = int( v_data[i][0]);
-        current_id = int( v_data[i][1]);
-        parent_index = int( v_data[i][2] );
-        parent_id = int( v_data[i][3]);
-        matrix = mat4(v_data[i+1], v_data[i+2], v_data[i+3], v_data[i+4]);
-        size_xyzw = vec4(v_data[i+5]);
-
-        //---- update parent_details_xyzw only when needed 
-        if (parent_id == Smooth_Union_id){ // or other combination types that need it 
-            int pos = int(v_data[0][0]) - parent_index;
-            parent_details_xyzw = v_data[pos*6 +5];
+        float [20] geometry_data ;
+        for (int j=0 ; j < v_data_count_per_object[i]; j++){
+            geometry_data[j] = v_object_geometries_data[pos + j];
         }
 
-        /////------------------- Get dist of CURRENT obj
+
+        /////------------------- Get dist of current object
         //primitive
         if (current_id == VolSphere_id || current_id == VolBox_id || current_id == VolTorus_id || current_id == VolCylinder_id){
-            dist = VolPrimitive(p, current_id, current_index, matrix, size_xyzw);
-            values[current_index] = dist;
+            dist = VolPrimitive(p, current_id, current_index, geometry_data);
+            objects_values[current_index] = dist;
         //combination
         } else if (current_id == Union_id || current_id ==  Intersection_id ||current_id ==  Smooth_Union_id ){
-            dist = values[current_index];
+            dist = VolCombination(current_id, geometry_data, count);
+            objects_values[current_index] = dist;
         //modification
-        } else if(current_id == Shell_id){ // Shell
-            dist = Shell_get_distance(values[current_index] , size_xyzw.x, size_xyzw.y);
-            values[current_index] = dist;  
+        } else if(current_id == Shell_id){ // Shell FIX HERE: UNIVERSAL MODIFICATION
+            dist = VolModification(current_id , current_index, geometry_data);
+            objects_values[current_index] = dist;  
         }
 
-        /////------------------- send information to PARENT
-        // combination
-        if (parent_id == Union_id || parent_id ==  Intersection_id ||parent_id ==  Smooth_Union_id ){
-            values[parent_index] = VolCombination(values[parent_index], dist, parent_id, parent_details_xyzw.x);  
-        // modification
-        } else if (parent_id == Shell_id){
-            values[parent_index] = values[current_index]; 
-        }
+
+        pos += int(v_data_count_per_object[i]);
+
 
         /////------------------- break loop once the necessary values have been calculated
-        if (current_index == vv || current_index == 0 ){
-            dist_final = values[vv];
+        if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
+            dist_final = objects_values[display_target_object];
 
             // intersect wih slicing plane !!!!!!!!!!!!!!!HERE THIS SHOULD HAPPEN ONLY IF SLICING PLANE EXISTS
             float y_slice_plane_dist = yPlane(p, y_slice);
@@ -184,6 +228,7 @@ float GetDistance(vec3 p){ //union of shapes
         }
     }  
 }
+
 
 
 int total_steps = 0;

@@ -59,7 +59,7 @@ class RayMarchingFactory:
         for i,v in enumerate(verts): 
             vertex_writer.addData3f(v[0], v[1], v[2])
         
-        
+
         #create primitives 
         geom = Geom(vdata)
         faces = [[0,1,2],[2,3,0]]
@@ -139,10 +139,10 @@ class RayMarchingFactory:
 
         self.ray_marching_quad.setShaderInput("transform_clip_plane_to_world", transform_clip_plane_to_world)
 
-        self.ray_marching_quad.setShaderInput("v_data", self.translator.final_data)
-        # self.ray_marching_quad.setShaderInput("v_data_length", len(self.translator.final_data))
-        self.ray_marching_quad.setShaderInput("v_start_values", self.translator.shader_start_vaues)
-        # self.ray_marching_quad.setShaderInput("v_data_count_per_object", self.translator.???????)
+        self.ray_marching_quad.setShaderInput("v_indices", self.translator.indices)
+        self.ray_marching_quad.setShaderInput("v_ids", self.translator.ids)
+        self.ray_marching_quad.setShaderInput("v_object_geometries_data", self.translator.object_geometries_data)  
+        self.ray_marching_quad.setShaderInput("v_data_count_per_object", self.translator.data_count_per_object)  
 
         self.ray_marching_quad.setShaderInput("y_slice", -1000.) ## value far away from the model if slicer is not defined
 

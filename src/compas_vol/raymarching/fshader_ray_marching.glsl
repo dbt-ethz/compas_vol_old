@@ -9,12 +9,6 @@ uniform vec3 camera_POS;
 uniform float osg_FrameTime;
 
 //v_data
-// uniform vec4[max_num] v_data;
-// uniform int v_data_length;
-// uniform float[max_num] v_start_values;
-// uniform float[v_data_max_num] v_data_count_per_object;
-
-//v_data
 uniform float[object_max_num] v_indices;  
 uniform float[object_max_num] v_ids;   
 uniform float[object_max_num] v_data_count_per_object;  
@@ -26,7 +20,7 @@ uniform float slider_value;
 
 
 ///---------------------------------------------------------------- 
-
+// list of all objects that will be filled in with values
 float[object_max_num] objects_values = v_indices; // We initialize this to some value so that it doesnt give a warnign
                                                   // that it might be used before it is initialized
 
@@ -140,7 +134,7 @@ float VolCombination(in int id, in float[max_num_of_children] geometry_data, in 
             float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
             d = (b * (1 - h) + h * a) - r * h * (1 - h);}
         return d;
-        
+
 
     } else {
         return 0.;
