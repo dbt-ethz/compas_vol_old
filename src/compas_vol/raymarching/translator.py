@@ -179,25 +179,42 @@ class VShell_data:
 
 
 # # ################### microstructures
-# class VLattice_data:
-#         def __init__(self, index, vLattice, parent_index, parent_id, order): #add parent id 
-#                 self.index = index
-#                 self.id = lattice_id
-#                 self.parent_index = parent_index
-#                 self.parent_id = parent_id
-#                 self.order = order
+class VLattice_data:
+        def __init__(self, index, vLattice, parent_index, parent_id, order): #add parent id 
+                pass
+                # self.index = index
+                # self.id = lattice_id
+                # self.parent_index = parent_index
+                # self.parent_id = parent_id
+                # self.order = order
 
-#                 type_of_lattice = vLattice.type
-#                 point_list = vLattice.pointlist
-#                 frame = vLattice.frame
-#                 matrix = matrix_inverse(matrix_from_frame(frame))
+                # type_of_lattice = vLattice.type
+                # point_list = vLattice.pointlist
+                # frame = vLattice.frame
+                # matrix = matrix_inverse(matrix_from_frame(frame))
 
-#                 ## append lattice data to self.geometry_data
-#                 self.geometry_data = [vLattice.unitcell , vLattice.thickness]  ## 1,2
-#                 for vec4 in matrix:
-#                         for f in vec4:
-#                                 self.geometry_data.append(f) ## 3 - 17
-#                 self.geometry_data.append(len(point_list)) ##18
+                # ## append lattice data to self.geometry_data
+                # self.geometry_data = [vLattice.unitcell , vLattice.thickness]  ## 1,2
+                # for vec4 in matrix:
+                #         for f in vec4:
+                #                 self.geometry_data.append(f) ## 3 to 17
+
+                # self.geometry_data.append(3*len(point_list)) ##18  
+                # for p in point_list:
+                #         self.geometry_data.append(p[0])
+                #         self.geometry_data.append(p[1])
+                #         self.geometry_data.append(p[2]) ## 19 to 18 + (3 * list[18])
+
+
+                # type_tupples_array = vLattice.types[vLattice.type]
+                # self.geometry_data.append(2*len(type_tupples_array)) ## 18 + (list[18]) + 1   to ...
+                # for tupl in type_tupples_array:
+                #         self.geometry_data.append(tupl[0])
+                #         self.geometry_data.append(tupl[1])
+
+
+        
+                
 
 
 

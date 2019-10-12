@@ -127,9 +127,13 @@ class Lattice(object):
 
         up = [abs((p % self.unitcell) - self.unitcell/2) for p in pt]
         dmin = 9999999.
+        
+        print ("TYPES: ", self.types[self.type])
         for l in self.types[self.type]:
             sp = [self.pointlist[l[0]][i] * self.unitcell for i in range(3)]
+            print ("sp : ", sp)
             ep = [self.pointlist[l[1]][i] * self.unitcell for i in range(3)]
+            print ("ep : ", ep)
             v = [ep[i]-sp[i] for i in range(3)]
             d = [up[i]-sp[i] for i in range(3)]
             # dot products
@@ -170,11 +174,13 @@ if __name__ == "__main__":
     lat = Lattice(6, 5.0, 0.5)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
-    print(lat.typenames)
+    print(lat.typenames[lat.type])
 
     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 
-    m = lat.get_distance_numpy(x, y, z)
+    # print (x[0][0][0])
+    m = lat.get_distance(Point(x[0][0][0], y[0][0][0], z[0][0][0]))
+
 
     # num = 200
     # m = np.empty((num, num))
@@ -182,7 +188,7 @@ if __name__ == "__main__":
     #     for c in range(num):
     #         m[r, c] = lat.get_distance((c, r, 10))
 
-    plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
+    # plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+    # plt.colorbar()
+    # plt.axis('equal')
+    # plt.show()

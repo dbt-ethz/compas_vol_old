@@ -97,7 +97,26 @@ class RayMarchingFactory:
         self.shader_quad.setDepthTest(False) 
         
         # myShader = Shader.load(Shader.SL_GLSL , get_shader_path("vshader_ray_marching.glsl"), get_shader_path("fshader_ray_marching.glsl")) 
-        myShader = Shader.load(Shader.SL_GLSL , "vshader_ray_marching.glsl", "fshader_ray_marching.glsl") 
+        # myShader = Shader.load(Shader.SL_GLSL , "vshader_ray_marching.glsl", "fshader_ray_marching.glsl")
+
+        ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
+        parts = [] 
+        #verterx shader
+        with open("vshader_ray_marching.glsl", "r") as shader:
+            parts.append(shader.read())
+        v_shader_full_code = "\n".join(parts)
+        parts = []
+        #fragments shaders
+        with open("fshader_1_translations.glsl", "r") as shader:
+            parts.append(shader.read())
+        with open("fshader_2_raymarching.glsl", "r") as shader:
+            parts.append(shader.read())  
+        with open("fshader_3_simple_shader_main.glsl", "r") as shader:
+            parts.append(shader.read())          
+        f_shader_full_code = "\n".join(parts)
+        myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
+        self.shader_quad.setShader(myShader)
+ 
         self.shader_quad.setShader(myShader)
         self.shader_quad.setShaderInput("u_resolution" , self.renderer.getSize())
         self.shader_quad.setShaderInput("camera_POS", self.renderer.camera.getPos())
@@ -143,12 +162,30 @@ class RayMarchingFactory:
         self.ray_marching_quad = manager.renderSceneInto(colortex = color_texture, depthtex = depth_buffer)
 
         # self.ray_marching_quad.setShader(Shader.load(Shader.SL_GLSL , get_shader_path("vshader.glsl"), get_shader_path("fshader_post_processing_ray_marching.glsl"))) #fshader.glsl
-        self.ray_marching_quad.setShader(Shader.load(Shader.SL_GLSL , "vshader.glsl", "fshader_post_processing_ray_marching.glsl")) #fshader.glsl
+        # self.ray_marching_quad.setShader(Shader.load(Shader.SL_GLSL , "vshader.glsl", "fshader_post_processing_ray_marching.glsl")) #fshader.glsl
+ 
+        ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
+        parts = [] 
+        #verterx shader
+        with open("vshader.glsl", "r") as shader:
+            parts.append(shader.read())
+        v_shader_full_code = "\n".join(parts)
+        parts = []
+        #fragments shaders
+        with open("fshader_1_translations.glsl", "r") as shader:
+            parts.append(shader.read())
+        with open("fshader_2_raymarching.glsl", "r") as shader:
+            parts.append(shader.read())  
+        with open("fshader_3_post_processing_main.glsl", "r") as shader:
+            parts.append(shader.read())          
+        f_shader_full_code = "\n".join(parts)
+        myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
+        self.ray_marching_quad.setShader(myShader)
+        
+        ### set shader inputs
         self.ray_marching_quad.setShaderInput("u_resolution" , self.renderer.getSize())
-
         self.ray_marching_quad.setShaderInput("color_texture", color_texture)
         self.ray_marching_quad.setShaderInput("depth_buffer", depth_buffer)
-
         self.ray_marching_quad.set_shader_input("camera_POS", self.renderer.camera.getPos())
         self.ray_marching_quad.setShaderInput('myCamera', self.renderer.camera)
 
@@ -158,7 +195,6 @@ class RayMarchingFactory:
         transform_clip_plane_to_world = transform_coordinate_system * proj_matrix_inv * view_matrix  
 
         self.ray_marching_quad.setShaderInput("transform_clip_plane_to_world", transform_clip_plane_to_world)
-
         self.ray_marching_quad.setShaderInput("v_indices", self.translator.indices)
         self.ray_marching_quad.setShaderInput("v_ids", self.translator.ids)
         self.ray_marching_quad.setShaderInput("v_object_geometries_data", self.translator.object_geometries_data)  

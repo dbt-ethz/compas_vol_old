@@ -1,14 +1,21 @@
 #version 120
 
+#ifdef GL_ES
+precision mediump float;
+#endif
+
 #define object_max_num    25 // CAREFUL, MEMORY LIMITED
-#define geom_data_max_num 150
+#define geom_data_max_num 200
 #define max_num_of_children 20
+
+#define resolution_of_texture 1024
+
 ///---------------------------------------------------------------- INPUTS
 uniform vec2 u_resolution;
 uniform vec3 camera_POS;
 uniform float osg_FrameTime;
 
-//v_data
+// v_data
 uniform float[object_max_num] v_indices;  
 uniform float[object_max_num] v_ids;   
 uniform float[object_max_num] v_data_count_per_object;  
@@ -18,12 +25,10 @@ uniform float y_slice;
 uniform int display_target_object;
 uniform float slider_value;
 
-
 ///---------------------------------------------------------------- 
-// list of all objects that will be filled in with values
+// list of all objects that will be filled in with values 
 float[object_max_num] objects_values = v_indices; // We initialize this to some value so that it doesnt give a warnign
                                                   // that it might be used before it is initialized
-
 
 ///---------------------------------------------------------------- SDF FUNCTIONS (from compas-vol)
 ///// PRIMITIVES 
@@ -94,11 +99,6 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[20] geom
     }
 }
 
-
-float yPlane(vec3 p, float y_of_plane){
-    return -(p.y - y_of_plane);
-}
-
 ///// COMBINATIONS
 #define Union_id 200
 #define Intersection_id 201
@@ -106,7 +106,6 @@ float yPlane(vec3 p, float y_of_plane){
 
 float VolCombination(in int id, in float[max_num_of_children] geometry_data, in int count){
     //Union
-    
     if (id == Union_id){
         float d = 10000.; // very big value
         for (int i=0; i< count; i++){
@@ -134,8 +133,6 @@ float VolCombination(in int id, in float[max_num_of_children] geometry_data, in 
             float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
             d = (b * (1 - h) + h * a) - r * h * (1 - h);}
         return d;
-
-
     } else {
         return 0.;
     }
@@ -156,168 +153,37 @@ float VolModification(in int id, in int index, in float [20] data){
     }
 }
 
-/////////////////////////////////////////////////////////////
+///// MICROSTRUCTURES
+#define Lattice_id 400
+// float VolMicrostructure(in vec3 p, in int id, in int index, in float [100] geometry_data){
+    // // Lattice
+    // if (id == Lattice_id){ 
+    //     float unitcell = geometry_data[0];
+    //     float thickness = geometry_data[1];
+    //     mat4 matrix = mat4( vec4(geometry_data[2], geometry_data[3], geometry_data[4], geometry_data[5]),
+    //                         vec4(geometry_data[6], geometry_data[7], geometry_data[8], geometry_data[9]),
+    //                         vec4(geometry_data[10], geometry_data[11], geometry_data[12], geometry_data[13]),
+    //                         vec4(geometry_data[14], geometry_data[15], geometry_data[16], geometry_data[17]) );
+    //     vec4 pos_transformed =  transpose(matrix) * vec4(p , 1.);
 
-float dist_final;
-float dist;
-int current_index;
-int current_id;
-int parent_index; 
-int parent_id;
-int count;
-
-// for (int i=0; i<object_max_num; i++)
-//     objects_values[i] = 0.;
+    //     float dmin = 9999999.;
+    //     int coords_num = int(geometry_data[18]);
+    //     int points_num = int(coords_num/3);
+    //     vec3 [points_num] up; 
+    //     vec3 [points_num] points; 
+    //     for (int i = 0; i < points_num; i++){
+    //         up[i] = abs((pos_transformed % unitcell) - unitcell/2.);
+    //     }        
+    //     for (int i = 0; i < points_num; i += 3){
+    //         points[i/3] = vec3(geometry_data[18+i], geometry_data[18+i+1], geometry_data[18+i+2]);
+    //     }
+    //     int pos = int(18 + coords_num + 1);
+    //     int types_num = geometry_data[pos];
+    //     for (int i = 0; i < types_num; i += 2){
+    //         vec2 l = vec2(geometry_data[pos+i], geometry_data[pos +i + 1]);
+    //     }
+    // }
+    // return 1.
 // }
-
-
-float GetDistance(vec3 p){ //union of shapes  
-    int pos = 0;
-    for (int i = 0; i < object_max_num -1; i++ ){ 
-    //     //---- get data
-        current_index = int(v_indices[i]);
-        current_id = int(v_ids[i]);
-        count = int(v_data_count_per_object[i]);
-
-        float [20] geometry_data ;
-        for (int j=0 ; j < v_data_count_per_object[i]; j++){
-            geometry_data[j] = v_object_geometries_data[pos + j];
-        }
-
-
-        /////------------------- Get dist of current object
-        //primitive
-        if (current_id == VolSphere_id || current_id == VolBox_id || current_id == VolTorus_id || current_id == VolCylinder_id){
-            dist = VolPrimitive(p, current_id, current_index, geometry_data);
-            objects_values[current_index] = dist;
-        //combination
-        } else if (current_id == Union_id || current_id ==  Intersection_id ||current_id ==  Smooth_Union_id ){
-            dist = VolCombination(current_id, geometry_data, count);
-            objects_values[current_index] = dist;
-        //modification
-        } else if(current_id == Shell_id){ // Shell FIX HERE: UNIVERSAL MODIFICATION
-            dist = VolModification(current_id , current_index, geometry_data);
-            objects_values[current_index] = dist;  
-        }
-
-
-        pos += int(v_data_count_per_object[i]);
-
-
-        /////------------------- break loop once the necessary values have been calculated
-        if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
-            dist_final = objects_values[display_target_object];
-
-            // intersect wih slicing plane !!!!!!!!!!!!!!!HERE THIS SHOULD HAPPEN ONLY IF SLICING PLANE EXISTS
-            float y_slice_plane_dist = yPlane(p, y_slice);
-            return max(dist_final, y_slice_plane_dist);
-
-            return dist_final;
-        }
-    }  
-}
-
-
-int total_steps = 0;
-
-#define MAX_STEPS 300
-#define MAX_DIST 300.
-#define SURF_DIST 0.01
-float RayMarch(vec3 ro, vec3 rd){ // ray origin, ray direction
-    float dO = 0.; // distance from origin
-
-    for (int i = 0;  i< MAX_STEPS; i++){
-        vec3 p = ro + rd * dO;
-        float dS = GetDistance(p); // Get distance scene
-        dO += dS;
-        total_steps += 1;
-        if (dO> MAX_DIST || dS < SURF_DIST) break;
-    }
-    return dO;
-}
-
-vec3 GetNormal(vec3 p){
-    float d = GetDistance(p);
-    //evaluate distance of points around p
-    vec2 e = vec2(.01 , 0); // very small vector
-    vec3 n = d - vec3(GetDistance(p-e.xyy), // e.xyy = vec3(.01,0,0)
-                      GetDistance(p-e.yxy),
-                      GetDistance(p-e.yyx));
-    return normalize(n);
-}
-
-float GetLight (vec3 p){ //gets the position of intersection of ray with shape
-    vec3 LightPos = vec3(0 , 5, 6);
-    // LightPos.xz += vec2( sin(u_time) , cos(u_time));
-
-    vec3 l = normalize(LightPos - p); // vector from light source to position
-    vec3 n = GetNormal(p);
-    float dif = clamp(dot(n, l)  , 0., 1.);
-
-    //compute shadows
-    float d = RayMarch(p+n * SURF_DIST,l);
-    if(d<length(LightPos -p)){
-        dif *= .3;
-    }
-    return dif;
-}
-
-// float GetSunLight (vec3 p, vec3 normal){ //gets the position of intersection of ray with shape
-//     vec3 LightPos = vec3(5 , -5, 16);
-//     vec3 l = normalize(LightPos  - p); // vector from light source to position
-//     return clamp(dot(normal, l)  , 0., 1.);
-//     // //compute shadows
-//     // float d = RayMarch(p+n * SURF_DIST,l);
-//     // if(d<length(LightPos -p)){
-//     //     dif *= .3;
-//     // }
-// }
-
-// float GetSkyLight (vec3 p, vec3 normal){
-//     vec3 sunPos = vec3(0.,10.,0.);
-//     return clamp(dot(normal, sunPos), 0., 1.);
-// }
-
-
-//////// ------------------ Find Ray Direction
-uniform mat4 trans_clip_to_model;
-uniform mat4 p3d_ViewProjectionMatrixInverse;
-
-vec3 findRayDirection(in vec2 uv, in vec3 ro){
-    vec4 pixel_world_coords =  trans_clip_to_model * vec4(uv.x, uv.y, 1., 1.);
-    vec3 rd = pixel_world_coords.xyz;
-    return normalize(rd);
-}
-
-
-void main(){  
-    vec2 st = gl_FragCoord.xy / u_resolution.xy;
-    vec2 uv = 2*(st - vec2(0.5, 0.5));
-    
-    vec3 ro = camera_POS; // ray origin = camera position (world coordinates)
-    vec3 rd = findRayDirection(uv, ro);
-
-    float d = RayMarch(ro, rd);
-    vec3 p  = ro + rd * d; // position of intersection of ray with solid
-
-    float alpha = 1.0;
-    if (d > 200 ){
-        alpha = 0.;
-    } else {
-        alpha = 1.;
-    }
-
-    vec3 normal = GetNormal(p);
-
-    vec3 color = normal;
-    // color section white
-    if (abs(p.y - y_slice) < 0.1) {
-        color = vec3(1.);  // so that section becomes white
-    }
-    gl_FragColor = vec4 (color, alpha);
-}
-
-
-
 
 
