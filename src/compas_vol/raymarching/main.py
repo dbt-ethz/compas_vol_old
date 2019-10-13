@@ -1,4 +1,5 @@
 import numpy as np
+import sys, os
 
 import compas_vol
 from compas_vol.primitives import *
@@ -21,6 +22,8 @@ from compas_vol.raymarching.remapping_functions import remap
 ## window size
 from panda3d.core import loadPrcFileData     
 loadPrcFileData('', 'win-size 1024 760') 
+
+main_path = os.path.abspath(os.path.dirname(__file__))
 
 num = 30 # resolution of grid
 lb = 0   # lower boundary (for now keep to 0)
@@ -60,7 +63,6 @@ if __name__ == "__main__":
 
     total_geom =  SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
     
-
     ### panda3d visualisation
     renderer = PandaRenderer()
 
@@ -74,9 +76,9 @@ if __name__ == "__main__":
 
     translator = Translator(total_geom)
 
-    rayMarcher = RayMarchingFactory(renderer, translator)
-    # rayMarcher.post_processing_ray_marching_filter()
-    rayMarcher.ray_marching_shader()
+    rayMarcher = RayMarchingFactory( main_path , renderer, translator)
+    rayMarcher.post_processing_ray_marching_filter()
+    # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
     rayMarcher.create_slicing_slider(-7, 16 ,-7)
     # # rayMarcher.create_general_purpose_slider()

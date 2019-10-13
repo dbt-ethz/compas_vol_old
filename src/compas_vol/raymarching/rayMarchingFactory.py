@@ -1,7 +1,3 @@
-import os
-import re
-from pathlib import Path
-
 # from direct.showbase.ShowBase import ShowBase
 from panda3d.core import *
 from direct.gui.OnscreenText import OnscreenText
@@ -19,18 +15,8 @@ from direct.gui.DirectGui import *
 
 from direct.task import Task
 
+import compas_vol.raymarching.shaders.shader_path as shader_path
 import compas_vol.raymarching.translator as translator
-
-
-def get_shader_path(shader_name):
-    dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(dir, shader_name)
-    path_capitalized = str(Path(path))
-    path_reg = re.sub(r':?\\', '/', path_capitalized)
-    path_reg = str('/' + path_reg)
-    print ("PATH : ",  path_reg)
-    return path_reg
-    
 
 
 class RayMarchingFactory:
@@ -39,12 +25,16 @@ class RayMarchingFactory:
 
     Parameters
     ----------
+    main_path  : the absolute path of the directory where the main.py is (i.e. the python file that runs the whole thing, can have any name) 
     renderer_  : instance of the class pandaRenderer.PandaRenderer that is used to render the scene
     translator_: instance of the class translator.Translator that has been initialized with the volumetric object that we want to display 
 
     """
 
-    def __init__(self, renderer_, translator_):
+    def __init__(self, main_path_ , renderer_, translator_):
+
+        self.main_path = main_path_
+
         self.renderer = renderer_
         self.translator = translator_
 
@@ -95,23 +85,23 @@ class RayMarchingFactory:
         ## this nodePath shouldn't affect the depth buffer
         self.shader_quad.setDepthWrite(False) 
         self.shader_quad.setDepthTest(False) 
-        
-        # myShader = Shader.load(Shader.SL_GLSL , get_shader_path("vshader_ray_marching.glsl"), get_shader_path("fshader_ray_marching.glsl")) 
-        # myShader = Shader.load(Shader.SL_GLSL , "vshader_ray_marching.glsl", "fshader_ray_marching.glsl")
+
+ 
+        # print ("PATH : ",  shader_path.get_shader_path( self.main_path, "vshader_ray_marching.glsl") )
 
         ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
         parts = [] 
         #verterx shader
-        with open("vshader_ray_marching.glsl", "r") as shader:
+        with open( shader_path.get_shader_path( self.main_path, "vshader_ray_marching.glsl") , 'r') as shader:
             parts.append(shader.read())
         v_shader_full_code = "\n".join(parts)
         parts = []
         #fragments shaders
-        with open("fshader_1_translations.glsl", "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path, "fshader_1_translations.glsl"), "r") as shader:
             parts.append(shader.read())
-        with open("fshader_2_raymarching.glsl", "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_2_raymarching.glsl"), "r") as shader:
             parts.append(shader.read())  
-        with open("fshader_3_simple_shader_main.glsl", "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_3_simple_shader_main.glsl"), "r") as shader:
             parts.append(shader.read())          
         f_shader_full_code = "\n".join(parts)
         myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
@@ -161,25 +151,23 @@ class RayMarchingFactory:
 
         self.ray_marching_quad = manager.renderSceneInto(colortex = color_texture, depthtex = depth_buffer)
 
-        # self.ray_marching_quad.setShader(Shader.load(Shader.SL_GLSL , get_shader_path("vshader.glsl"), get_shader_path("fshader_post_processing_ray_marching.glsl"))) #fshader.glsl
-        # self.ray_marching_quad.setShader(Shader.load(Shader.SL_GLSL , "vshader.glsl", "fshader_post_processing_ray_marching.glsl")) #fshader.glsl
- 
         ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
         parts = [] 
         #verterx shader
-        with open("vshader.glsl", "r") as shader:
+        with open( shader_path.get_shader_path( self.main_path, "vshader.glsl") , 'r') as shader:
             parts.append(shader.read())
         v_shader_full_code = "\n".join(parts)
         parts = []
         #fragments shaders
-        with open("fshader_1_translations.glsl", "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path, "fshader_1_translations.glsl"), "r") as shader:
             parts.append(shader.read())
-        with open("fshader_2_raymarching.glsl", "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_2_raymarching.glsl"), "r") as shader:
             parts.append(shader.read())  
-        with open("fshader_3_post_processing_main.glsl", "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_3_post_processing_main.glsl"), "r") as shader:
             parts.append(shader.read())          
         f_shader_full_code = "\n".join(parts)
         myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
+
         self.ray_marching_quad.setShader(myShader)
         
         ### set shader inputs
