@@ -78,26 +78,34 @@ class PandaRenderer(ShowBase):
             print(path)
             self.print_scene_graph_b(path)
 
-    def create_compas_primitive(self, primitive, name):
+    def display_compas_mesh(self, mesh, name):
         """
-        WIP. Didn't have time to finish this yet
+
+        TO DO
         """
+
+        mesh_faces = [mesh.face[key] for key in list(mesh.faces())]
+        mesh_vertices = [mesh.vertex_coordinates(key) for key in list(mesh.vertices())]   
+        mesh_vertex_normals = [mesh.vertex_normal(key) for key in list(mesh.vertices())]
 
         format = GeomVertexFormat.getV3n3c4() # vec3 vertex, vec3 normal, vec4 color
         vdata = GeomVertexData('static_prim', format, Geom.UHStatic)
-        vdata.setNumRows(len(primitive.vertices))
+        vdata.setNumRows(len(mesh_vertices))
 
         vertex_writer = GeomVertexWriter(vdata , 'vertex')
-        # color_writer  = GeomVertexWriter(vdata , 'color')
-        # normal_writer = GeomVertexWriter(vdata , 'normal')
+        color_writer  = GeomVertexWriter(vdata , 'color')
+        normal_writer = GeomVertexWriter(vdata , 'normal')
 
-        [vertex_writer.addData3f(v[0] , v[1] , v[2]) for v in primitive.vertices ]
+        [vertex_writer.addData3f(v[0] , v[1] , v[2]) for v in mesh_vertices]
+        [normal_writer.addData3f(n[0] , n[1] , n[2]) for n in mesh_vertex_normals]
+        [color_writer.addData3f(1, 1 ,1) for n in mesh_vertex_normals]
+        # [color_writer.addData3f((n[0] + 1) /2, (n[1] + 1) /2 , (n[2] + 1) /2) for n in mesh_vertex_normals]
 
         geom = Geom(vdata)
 
-        for face in primitive.faces:
+        for face in mesh_faces:
             if len(face) > 3:
-                for i in range(2):
+                for i in range(2): ## two triangles for one quad
                     triangle = GeomTriangles(Geom.UHStatic)
                     triangle.addVertices(face[0 + 2*i], face[1+ 2*i], face[(2+ 2*i)%4])
                     triangle.close_primitive()
@@ -112,7 +120,6 @@ class PandaRenderer(ShowBase):
         node.addGeom(geom)
         nodePath = NodePath(node)
         nodePath.setTwoSided(True)
-        nodePath.setScale(1,1,1)
 
         nodePath = self.render.attachNewNode(node)  
         nodePath.reparentTo(self.nodePath_meshes_group)
