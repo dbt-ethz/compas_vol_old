@@ -60,12 +60,15 @@ class VolBox(object):
         if self.radius == 0:
             return self.box.volume
         else:
+            xr = self.box.xsize - 2 * self.radius
+            yr = self.box.ysize - 2 * self.radius
+            zr = self.box.zsize - 2 * self.radius
             # box without the radius layer
-            inner = (self.box.xsize - self.radius) * (self.box.ysize - self.radius) * (self.box.xsize - self.radius)
+            inner = xr * yr * zr
             # sides
-            sides = self.box.area * self.radius
+            sides = Box.from_width_height_depth(xr, yr, zr).area * self.radius
             # cylinder along all edges, base circle x height
-            edges = (self.radius**2 * pi) * ((self.box.xsize + self.box.ysize + self.box.zsize) - 3 * self.radius)
+            edges = (self.radius**2 * pi) * (xr + yr + zr)
             # eight time corner, 1/8th of a sphere = 1 sphere
             corns = 4./3. * pi * self.radius**3
             return inner + sides + edges + corns
