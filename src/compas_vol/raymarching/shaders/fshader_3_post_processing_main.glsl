@@ -44,14 +44,14 @@ void main()
     vec3 world_pos_SDF = ro + rd * d; // position of intersection of ray with solid
 
     float dist_SDF = length(world_pos_SDF - camera_POS); //distance of SDF in current position from camera 
-    vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF));
+    vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
 
     // check depth and color accordingly
     vec3 color = vec3(0.);
     if (dist_object > dist_SDF && dist_SDF < 200){
        
         if (abs(world_pos_SDF.y - y_slice) < 0.1) {
-            color = vec3(1.);  // color white section
+            color = vec3(0.7, 0.7, 0.7);  // color white section
         } else {
             color = color_of_SDF ; }
     } else {

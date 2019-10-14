@@ -18,6 +18,7 @@ from direct.task import Task
 import compas_vol.raymarching.shaders.shader_path as shader_path
 import compas_vol.raymarching.translator as translator
 
+text_color_alpha = 0.5
 
 class RayMarchingFactory:
     """
@@ -227,9 +228,9 @@ class RayMarchingFactory:
         slider.setPos(0,0,-0.8- 0.065)
         slider.setScale(0.25,0.25,0.25)
 
-        title_of_slider = OnscreenText(text = name, pos = (-0.55, -0.816 - 0.065), scale = 0.045, fg = (1,1,1,.8))
-        min_of_slider   = OnscreenText(text = str(range_a), pos = (-0.3, -0.87- 0.065), scale = 0.035, fg = (1,1,1,.8))
-        max_of_slider   = OnscreenText(text = str(range_b), pos = (0.3, -0.87 - 0.065), scale = 0.035, fg = (1,1,1,.8))
+        title_of_slider = OnscreenText(text = name, pos = (-0.55, -0.816 - 0.065), scale = 0.045, fg = (0.,0.,0.,text_color_alpha))
+        min_of_slider   = OnscreenText(text = str(range_a), pos = (-0.3, -0.87- 0.065), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
+        max_of_slider   = OnscreenText(text = str(range_b), pos = (0.3, -0.87 - 0.065), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
 
         if self.ray_marching_quad:
             self.ray_marching_quad.setShaderInput("slider_value", slider_value) 
@@ -268,9 +269,9 @@ class RayMarchingFactory:
         slicing_slider.setPos(0,0,-0.8)
         slicing_slider.setScale(0.25,0.25,0.25)
 
-        title_of_slider = OnscreenText(text = "Slice model", pos = (-0.55, -0.8), scale = 0.045, fg = (1,1,1,.8))
-        min_of_slider = OnscreenText(text = str(range_a), pos = (-0.3, -0.8), scale = 0.035, fg = (1,1,1,.8))
-        max_of_slider = OnscreenText(text = str(range_b), pos = (0.3, -0.8), scale = 0.035, fg = (1,1,1,.8))
+        title_of_slider = OnscreenText(text = "Slice model", pos = (-0.55, -0.8), scale = 0.045, fg = (0.,0.,0.,text_color_alpha)) #fg = (1,1,1,.8),
+        min_of_slider = OnscreenText(text = str(range_a), pos = (-0.3, -0.8), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
+        max_of_slider = OnscreenText(text = str(range_b), pos = (0.3, -0.8), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
 
         ## display outline of slicing plane as dynamic geometry 
         generator_slice_plane = MeshDrawer()
@@ -279,7 +280,7 @@ class RayMarchingFactory:
         nodePath_slice_plane = generator_slice_plane.getRoot()
         nodePath_slice_plane.reparentTo(self.renderer.render)
         nodePath_slice_plane.setDepthWrite(False)
-        nodePath_slice_plane.setTransparency(True)
+        # nodePath_slice_plane.setTransparency(True)
         nodePath_slice_plane.setTwoSided(True)
         nodePath_slice_plane.setBin("fixed",0)
         nodePath_slice_plane.setLightOff(True)
@@ -313,7 +314,7 @@ class RayMarchingFactory:
             generator_slice_plane.crossSegment(LVector3(v[0], v[1], v[2]), \
                                                     LVector3(v_next[0], v_next[1], v_next[2]), \
                                                     LVector4(1,1,1,1), 0.02, \
-                                                    LVector4(1,1,1,1)) #start, stop, frame, thickness, color)
+                                                    LVector4(0.6,0.6,0.6,1.)) #start, stop, frame, thickness, color)
 
         generator_slice_plane.end()
         return task.cont  
@@ -332,6 +333,7 @@ class RayMarchingFactory:
         vdata = GeomVertexData('GUI_lines', format, Geom.UHStatic)
         vdata.setNumRows(20) # 20 vertices in total
         vertex_writer = GeomVertexWriter(vdata , 'vertex')
+        color_writer  = GeomVertexWriter(vdata , 'color')
 
         disp_parent = LVector3f (-0.06 ,0, -0.02)
         disp_self2 = LVector3f (-0.15,0, 0)
@@ -359,7 +361,8 @@ class RayMarchingFactory:
             button.setOthers(buttons)
 
         for i,v in enumerate(vertices): 
-            vertex_writer.addData3f(v[0] , v[1] , v[2])
+            vertex_writer.addData3f(v[0] , v[1] , v[2])     ###fg = (0.,0.,0.,text_color_alpha)
+            color_writer.addData4f(0. , 0. , 0., text_color_alpha) 
 
         ## Create lines connecting buttons 
         #create primitives 

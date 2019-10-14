@@ -16,6 +16,7 @@ from direct.gui.DirectGui import *
 
 from direct.task import Task
 
+text_color_alpha = 0.5
 
 class PandaRenderer(ShowBase):
     """
@@ -30,6 +31,7 @@ class PandaRenderer(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
+        self.setBackgroundColor(1,1,1)
         self.setFrameRateMeter(True)
         # self.cam.setPos(8,-40,5)   
 
@@ -175,23 +177,25 @@ class PandaRenderer(ShowBase):
         nodePath.reparentTo(self.nodePath_meshes_group)
         # nodePath.setMaterial(mtl)
 
-    def create_boundary_box(self, n):
+    def display_boundary_box(self, ub):
         """ Displays a wireframe box 
         
         Parameters
         ----------
-        n: (float) Upper boundary of the box. Lower boundary has to be 0 (SHOULD FIX THIS)
+        ub: (float) Upper boundary of the box. Lower boundary has to be 0 (SHOULD FIX THIS)
         """
 
-        format = GeomVertexFormat.getV3() # vec3 vertex
+        format = GeomVertexFormat.getV3c4() # vec3 vertex, vec4 color 
         vdata = GeomVertexData('bounding_box', format, Geom.UHStatic)
         vdata.setNumRows(8) # 8 points in total
         vertex_writer = GeomVertexWriter(vdata , 'vertex')
+        color_writer  = GeomVertexWriter(vdata , 'color')
 
         #write vertices
-        corners = [[0,0,0] , [n,0,0] , [n,n,0] , [0,n,0] , [0,0,n] , [n,0,n] , [n,n,n] , [0,n,n] ] 
+        corners = [[0,0,0] , [ub,0,0] , [ub,ub,0] , [0,ub,0] , [0,0,ub] , [ub,0,ub] , [ub,ub,ub] , [0,ub,ub] ] 
         for c in corners: 
             vertex_writer.addData3f(c[0] , c[1] , c[2])
+            color_writer.addData4f(0.,0.,0., text_color_alpha)
 
         #create primitives 
         geom = Geom(vdata)
@@ -342,8 +346,9 @@ class PandaRenderer(ShowBase):
         dz   : (float) Position z
         scale: (float) Scale of text
         """
-
+    
         textNode = TextNode('text_name')
+        textNode.setTextColor(0., 0., 0., text_color_alpha)
         textNode.setText(t)
         textNode.setTransform(Translation_matrix(dx/scale, dy/scale, dz/scale))
         textNodePath = self.render.attachNewNode(textNode)
@@ -351,7 +356,7 @@ class PandaRenderer(ShowBase):
         textNodePath.reparentTo(self.nodePath_text_group)
 
     def create_onscreen_text(self, t, pos_x, pos_y, s):
-        textObject = OnscreenText(text = t, pos = (pos_x, pos_y), scale = s)
+        textObject = OnscreenText(text = t, pos = (pos_x, pos_y), scale = s, fg = (0., 0., 0., text_color_alpha) )
         
 
 
