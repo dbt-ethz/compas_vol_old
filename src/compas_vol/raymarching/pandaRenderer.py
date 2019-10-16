@@ -67,7 +67,7 @@ class PandaRenderer(ShowBase):
         self.nodePath_meshes_group.setLight(self.ambient_light_node_path)
         self.nodePath_points_lines_group.setLight(self.ambient_light_node_path2)
 
-        self.display_axes_xyz(3)
+        # self.display_axes_xyz(3)
 
     def print_scene_graph_b(self, node):
         for path in node.children.getPaths():

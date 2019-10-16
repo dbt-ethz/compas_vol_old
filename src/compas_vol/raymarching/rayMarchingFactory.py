@@ -169,6 +169,10 @@ class RayMarchingFactory:
         f_shader_full_code = "\n".join(parts)
         myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
 
+        if myShader.getErrorFlag():
+            print ("EROR")
+
+
         self.ray_marching_quad.setShader(myShader)
         
         ### set shader inputs

@@ -51,7 +51,7 @@ void main()
     if (dist_object > dist_SDF && dist_SDF < 200){
        
         if (abs(world_pos_SDF.y - y_slice) < 0.1) {
-            color = vec3(0.7, 0.7, 0.7);  // color white section
+            color = vec3(0.1, 0.1, 0.1);  // color white section
         } else {
             color = color_of_SDF ; }
     } else {

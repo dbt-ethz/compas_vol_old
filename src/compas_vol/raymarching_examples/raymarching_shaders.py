@@ -46,19 +46,19 @@ if __name__ == "__main__":
     ## Create compas_vol primitives
     Spheres = []
     random.seed(1)
-    for i in range(10):
-        mySphere = VolSphere(Sphere(Point(random.randrange(lb+1,ub-1), random.randrange(lb+1,ub-1), random.randrange(lb+1,ub-1)), random.randrange(1,3)))
+    for i in range(3):
+        mySphere = VolSphere(Sphere(Point(random.randrange(lb,ub), random.randrange(lb,ub), random.randrange(lb,ub)), random.randrange(2,5)))
         Spheres.append(mySphere)
     union_spheres = Union(Spheres)
 
     torus = VolTorus(Torus(Plane((3, 3, 3), (1., 0., 1.)), 2.0, 1.0))
     sphere =  VolSphere(Sphere(Point(2, 2, 2), 2))
     cylinder = VolCylinder(Cylinder(Circle(Plane([2, 3, 4], [0.3, 0.4, 1.]), 2.0), 3.0))
-    box = VolBox(Box(Frame(Point(3., 3., 3.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 9, 10, 11), 1)
+    box = VolBox(Box(Frame(Point(5., 5., 5.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 6, 7, 8), 1)
     union = Union(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 2)))
     intersection = Intersection(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 9)))
-    sh = SmoothUnion(Shell(union, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
-    total_geom = union_spheres  #SmoothUnion(Shell(Union(sphere, box), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
+    sh = SmoothUnion(Shell(box, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
+    total_geom = Shell(union_spheres, 0.3, 0.5)  #SmoothUnion(Shell(Union(sphere, box), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
     
     ### panda3d visualisation
     renderer = PandaRenderer()
