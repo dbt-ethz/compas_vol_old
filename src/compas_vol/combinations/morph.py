@@ -21,7 +21,7 @@ class Morph(object):
     def __init__(self, a=None, b=None, f=0.5):
         self.a = a
         self.b = b
-        self.f = f
+        self.f = max(min(f, 1), 0)
 
     def get_distance(self, point):
         """

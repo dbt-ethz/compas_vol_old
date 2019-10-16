@@ -42,7 +42,7 @@ class Union(object):
         import numpy as np
 
         distances = ([o.get_distance_numpy(x, y, z) for o in self.objs])
-        return np.minimum.reduce((distances))
+        return np.minimum.reduce(distances)
         # alternative:
         # d = np.asarray([o.get_distance_numpy(x, y, z) for o in self.objs]).min(axis=0)
 

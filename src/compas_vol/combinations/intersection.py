@@ -39,7 +39,7 @@ class Intersection(object):
         # db = self.objs[1].get_distance_numpy(x, y, z)
         # return np.maximum(da, db)
         distances = ([o.get_distance_numpy(x, y, z) for o in self.objs])
-        return np.maximum.reduce((distances))
+        return np.maximum.reduce(distances)
 
 # ==============================================================================
 # Main
@@ -47,6 +47,9 @@ class Intersection(object):
 
 
 if __name__ == "__main__":
+    import numpy as np
+    import matplotlib.pyplot as plt
+
     from compas_vol.primitives import VolSphere, VolBox
     from compas.geometry import Box, Frame, Point, Sphere
 
@@ -55,6 +58,12 @@ if __name__ == "__main__":
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
     u = Intersection(vs, vb)
+
+    x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
+    d = u.get_distance_numpy(x, y, z)
+    plt.imshow(d[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+    plt.show()
+
     for y in range(-15, 15):
         s = ''
         for x in range(-30, 30):

@@ -85,6 +85,7 @@ class TPMS(object):
         py = y/self._factor
         pz = z/self._factor
 
+        d = 0
         if self.tpmstype == 'Gyroid':
             d = np.sin(px)*np.cos(py) + np.sin(py)*np.cos(pz) + np.sin(pz)*np.cos(px)
         elif self.tpmstype == 'SchwartzP':
