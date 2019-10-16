@@ -1,5 +1,5 @@
-class Overlay(object):
-    def __init__(self, a=None, b=None, f=0.1):
+class Morph(object):
+    def __init__(self, a=None, b=None, f=0.5):
         self.a = a
         self.b = b
         self.f = f
@@ -10,7 +10,7 @@ class Overlay(object):
         """
         da = self.a.get_distance(point)
         db = self.b.get_distance(point)
-        return da + self.f * db
+        return (1 - self.f) * da + self.f * db
 
     def get_distance_numpy(self, x, y, z):
         """
@@ -18,7 +18,7 @@ class Overlay(object):
         """
         da = self.a.get_distance_numpy(x, y, z)
         db = self.b.get_distance_numpy(x, y, z)
-        return da + self.f * db
+        return (1 - self.f) * da + self.f * db
 
 
 if __name__ == "__main__":
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     b = Box(Frame.worldXY(), 20, 15, 10)
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
-    f = Overlay(vs, vb, 0.2)
+    f = Morph(vs, vb, 0.5)
     for y in range(-15, 15):
         s = ''
         for x in range(-30, 30):

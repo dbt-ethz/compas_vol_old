@@ -61,11 +61,11 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    s = Sphere(Point(5, 6, 0), 9)
+    s = Sphere(Point(4, 5, 0), 7)
     b = Box(Frame.worldXY(), 20, 15, 10)
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
-    u = SmoothUnion(vs, vb, 3.5)
+    u = SmoothUnion(vs, vb, 6.5)
     # for y in range(-15, 15):
     #     s = ''
     #     for x in range(-30, 30):
@@ -76,9 +76,9 @@ if __name__ == "__main__":
     #             s += '.'
     #     print(s)
 
-    x, y, z = np.ogrid[-15:15:50j, -15:15:50j, -15:15:50j]
+    x, y, z = np.ogrid[-15:15:100j, -15:15:100j, -15:15:100j]
     d = u.get_distance_numpy(x, y, z)
-    m = d[:, :, 25].T
-    plt.imshow(np.tanh(m*5), cmap='Greys')
+    m = d[:, :, 50].T
+    plt.imshow(-np.tanh(m*5), cmap='Greys')
     # plt.colorbar()
     plt.show()

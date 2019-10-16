@@ -7,6 +7,20 @@ from compas.geometry import is_point_in_polygon_xy
 
 
 class VolExtrusion(object):
+    """A volumetric extrusion is defined by a polyline from `compas.geometry` and a height.
+
+    Parameters
+    ----------
+    polyline: sequence
+        A a sequence of (x,y,z) points describing the base polyline.
+    height: float
+        The height of the extrusion.
+
+    Examples
+    --------
+    >>> TODO
+    """
+
     def __init__(self, polyline, height=1.0, frame=None):
         self.polyline = polyline
         self.height = height
