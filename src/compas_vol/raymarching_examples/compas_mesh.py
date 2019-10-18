@@ -9,24 +9,17 @@ from panda3d.core import loadPrcFileData
 loadPrcFileData('', 'win-size 1024 760') 
 
 if __name__ == "__main__":
-    ## Create compas primitive
 
-
-
-    ### panda3d visualisation
     renderer = PandaRenderer()
 
-    ##############
-    ## NEED TO CALCULATE NORMALS PER FACE
-    ##############
     ground_box = Box(Frame(Point(0., 0., 0.), [1., 0, 0], [0, 1., 0]), 3., 3., .5)   
 
-    faces = ground_box.faces
-    vertices = ground_box.vertices
-    ground_box_mesh = Mesh.from_vertices_and_faces(vertices, faces) 
-    # print (mesh.summary())
+    ground_box_mesh = Mesh.from_vertices_and_faces(ground_box.vertices, ground_box.faces) 
+    print (ground_box_mesh.summary())
 
-    renderer.display_compas_mesh(ground_box_mesh, 'ground_box')
+    renderer.display_compas_mesh( mesh = ground_box_mesh, name = 'ground_box', normals = 'per face')
+
+    renderer.display_axes_xyz(3)
     renderer.show()
 
 

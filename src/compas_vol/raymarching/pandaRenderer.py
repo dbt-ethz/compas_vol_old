@@ -80,7 +80,7 @@ class PandaRenderer(ShowBase):
             print(path)
             self.print_scene_graph_b(path)
 
-    def display_compas_mesh(self, mesh, name):
+    def display_compas_mesh(self, mesh, name, normals = 'per face'):
         """
 
         TO DO
@@ -88,7 +88,6 @@ class PandaRenderer(ShowBase):
 
         mesh_faces = [mesh.face[key] for key in list(mesh.faces())]
         mesh_vertices = [mesh.vertex_coordinates(key) for key in list(mesh.vertices())]   
-        mesh_vertex_normals = [mesh.vertex_normal(key) for key in list(mesh.vertices())]
 
         format = GeomVertexFormat.getV3n3c4() # vec3 vertex, vec3 normal, vec4 color
         vdata = GeomVertexData('static_prim', format, Geom.UHStatic)
@@ -98,25 +97,62 @@ class PandaRenderer(ShowBase):
         color_writer  = GeomVertexWriter(vdata , 'color')
         normal_writer = GeomVertexWriter(vdata , 'normal')
 
-        [vertex_writer.addData3f(v[0] , v[1] , v[2]) for v in mesh_vertices]
-        [normal_writer.addData3f(n[0] , n[1] , n[2]) for n in mesh_vertex_normals]
-        [color_writer.addData3f(1, 1 ,1) for n in mesh_vertex_normals]
-        # [color_writer.addData3f((n[0] + 1) /2, (n[1] + 1) /2 , (n[2] + 1) /2) for n in mesh_vertex_normals]
 
-        geom = Geom(vdata)
 
-        for face in mesh_faces:
-            if len(face) > 3:
-                for i in range(2): ## two triangles for one quad
+        geom = Geom(vdata)    
+
+        if normals == 'per face':    
+            ### Per face normals
+            for face, fkey in zip(  mesh_faces, list(mesh.faces())):
+                face_normal = mesh.face_normal(fkey)
+
+                for vertex_key in face:
+                    vertex = mesh_vertices[vertex_key]
+                    vertex_writer.addData3f(vertex[0] , vertex[1] , vertex[2])
+                    normal_writer.addData3f(face_normal[0] , face_normal[1] , face_normal[2])
+                    color_writer.addData4f((1+face_normal[0])/2 , (1+face_normal[1])/2 , (1+face_normal[2])/2, 1.)
+
+                if len(face) > 3: 
+                    print (len(face))
+                    current_row_index = vdata.getNumRows() -1
+                    c = current_row_index - (len(face)-1)
+                    ## add more than one triangles
+                    for i in range(len(face) -2):
+                        triangle = GeomTriangles(Geom.UHStatic)
+                        triangle.addVertices(c, c + 1 + i, c + 2 + i)
+                        triangle.close_primitive()
+                        geom.addPrimitive(triangle)
+                else:   
+                    ## add single triangle 
+                    current_row_index = vdata.getNumRows() -1
                     triangle = GeomTriangles(Geom.UHStatic)
-                    triangle.addVertices(face[0 + 2*i], face[1+ 2*i], face[(2+ 2*i)%4])
+                    triangle.addVertices(current_row_index, current_row_index - 1, current_row_index -2)
                     triangle.close_primitive()
                     geom.addPrimitive(triangle)
+
+            ### Per vertex normals
             else: 
-                    triangle = GeomTriangles(Geom.UHStatic)
-                    triangle.addVertices(face[0], face[1], face[2])
-                    triangle.close_primitive()
-                    geom.addPrimitive(triangle)
+                mesh_vertex_normals = [mesh.vertex_normal(key) for key in list(mesh.vertices())]
+                [vertex_writer.addData3f(v[0] , v[1] , v[2]) for v in mesh_vertices]
+                [normal_writer.addData3f(n[0] , n[1] , n[2]) for n in mesh_vertex_normals]
+                [color_writer.addData3f(1, 1 ,1) for n in mesh_vertex_normals]
+                [color_writer.addData3f((n[0] + 1) /2, (n[1] + 1) /2 , (n[2] + 1) /2) for n in mesh_vertex_normals]
+
+        print (vdata)
+
+
+        # for face in mesh_faces:
+        #     if len(face) > 3:
+        #         for i in range(2): ## two triangles for one quad
+        #             triangle = GeomTriangles(Geom.UHStatic)
+        #             triangle.addVertices(face[0 + 2*i], face[1+ 2*i], face[(2+ 2*i)%4])
+        #             triangle.close_primitive()
+        #             geom.addPrimitive(triangle)
+        #     else: 
+        #             triangle = GeomTriangles(Geom.UHStatic)
+        #             triangle.addVertices(face[0], face[1], face[2])
+        #             triangle.close_primitive()
+        #             geom.addPrimitive(triangle)
 
         node = GeomNode(name)
         node.addGeom(geom)
