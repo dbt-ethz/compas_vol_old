@@ -111,3 +111,9 @@ Icon
 .class
 .pyc
 *.pyc
+
+
+# Added by Ioanna
+docs/
+temp/
+**/desktop.ini
