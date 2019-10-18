@@ -33,7 +33,7 @@ class VolPolyhedron(object):
         import numpy as np
 
         distances = ([p.get_distance_numpy(x, y, z) for p in self.planes])
-        return np.minimum.reduce((distances))
+        return np.maximum.reduce((distances))
 
 
 if __name__ == "__main__":

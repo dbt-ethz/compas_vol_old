@@ -34,8 +34,8 @@ class Subtraction(object):
         """
         import numpy as np
 
-        da = self.objs[0].get_distance_numpy(x, y, z)
-        db = self.objs[1].get_distance_numpy(x, y, z)
+        da = self.a.get_distance_numpy(x, y, z)
+        db = self.b.get_distance_numpy(x, y, z)
         return np.maximum(da, -db)
 
 # ==============================================================================
