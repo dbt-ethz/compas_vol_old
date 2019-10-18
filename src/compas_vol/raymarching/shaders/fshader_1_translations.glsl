@@ -23,7 +23,7 @@ uniform float[geom_data_max_num] v_object_geometries_data;
 
 uniform float y_slice;
 uniform int display_target_object;
-uniform float slider_value;
+// uniform float slider_value;
 
 ///---------------------------------------------------------------- 
 // list of all objects that will be filled in with values 
@@ -42,10 +42,10 @@ float random (vec2 st) {
 }
 
 vec3 animate_point(in int current_index){
-    float magnitude = random (vec2(current_index))  * 7.+ 1.;
-    float frequency1 = random (vec2(current_index/3.56))  * 0.45  + 0.1;
+    float magnitude = random (vec2(current_index))  * 5.+ 1.;
+    float frequency1 = random (vec2(current_index/3.56))  * 1.3  + 0.1;
     float offset  = random (vec2(current_index/3.56))  * 6.;
-    float frequency = frequency1 * slider_value;
+    float frequency = frequency1;
     // frequency *=  slider_value;
     return vec3(sin(osg_FrameTime * frequency) * magnitude, cos(offset +osg_FrameTime * frequency) * magnitude, sin(offset + osg_FrameTime * frequency) * magnitude);
 }
@@ -54,7 +54,7 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[20] geom
     //VolSphere
     if (id == VolSphere_id){
         vec3 center = vec3(geometry_data[0], geometry_data[1], geometry_data[2]);
-        // center = center + animate_point(current_index) ;
+        center = center + animate_point(current_index) ;
         float radius = geometry_data[3];
         return length(p - center) - radius;
     //VolBox     

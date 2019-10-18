@@ -58,6 +58,6 @@ void main()
         color = color_pixel.xyz;
     }
 
-    // color = vec3( total_steps / 70. ); // display number of steps 
+    // color = vec3( total_steps / 50. ); // display number of steps 
     gl_FragColor = vec4(color, 1.);
 }
