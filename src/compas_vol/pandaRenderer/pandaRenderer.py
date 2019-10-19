@@ -9,6 +9,7 @@ from direct.filter.CommonFilters import CommonFilters
 import numpy as np
 from compas_vol.raymarching.remapping_functions import map_values_to_colors
 
+import compas
 from direct.filter.CommonFilters import CommonFilters
 
 from direct.gui.DirectGui import DirectSlider
@@ -34,6 +35,7 @@ class PandaRenderer(ShowBase):
         self.setBackgroundColor(1,1,1)
         self.setFrameRateMeter(True)
         # self.cam.setPos(8,-40,5)   
+        self.filters = CommonFilters(self.win, self.cam)
 
         ## group GeomNodes
         self.Meshes_group_node = GeomNode("MESHES")
@@ -47,13 +49,18 @@ class PandaRenderer(ShowBase):
         self.nodePath_points_lines_group = self.render.attachNewNode(self.Points_lines_group_node)  
         self.nodePath_text_group = self.render.attachNewNode(self.Text_group_node) 
 
+        # self.display_axes_xyz(3)
+
+        self.create_lights()
+
+    def create_lights(self):
         ## Default Lights
         self.directional_light = DirectionalLight('directional_Light')
         self.directional_light_node_path = self.render.attachNewNode(self.directional_light)
         self.directional_light_node_path.reparentTo(self.nodePath_lights_group )
 
         self.ambient_light = AmbientLight('low_ambient_light')
-        self.ambient_light.setColor(VBase4(0.2,0.2,0.2,1))
+        self.ambient_light.setColor(VBase4(0.5,0.5,0.5,1))
         self.ambient_light_node_path = self.render.attachNewNode(self.ambient_light)
         self.ambient_light_node_path.reparentTo(self.nodePath_lights_group )
 
@@ -63,11 +70,11 @@ class PandaRenderer(ShowBase):
         self.ambient_light_node_path2.reparentTo(self.nodePath_lights_group )
 
         ## assign lights to group nodes
-        self.nodePath_meshes_group.setLight(self.directional_light_node_path)
         self.nodePath_meshes_group.setLight(self.ambient_light_node_path)
+        self.nodePath_meshes_group.setLight(self.directional_light_node_path)
         self.nodePath_points_lines_group.setLight(self.ambient_light_node_path2)
 
-        # self.display_axes_xyz(3)
+        
 
     def print_scene_graph_b(self, node):
         for path in node.children.getPaths():
@@ -82,34 +89,39 @@ class PandaRenderer(ShowBase):
 
     def display_compas_mesh(self, mesh, name, normals = 'per face'):
         """
+        Displays a compas mesh 
 
-        TO DO
+        Parameters
+        ----------
+        mesh   : (compas.datastructures.Mesh) compas Mesh
+        name   : (string) Name of the shape on the scene graph.  
+        normals: (string) If 'per face' : normals are displayed per face, then we see sharp corners. 
+                          In any other case normlas are displayed per vertex, then we see smooth corners. 
         """
+        assert isinstance(mesh, compas.datastructures.Mesh), "This is not a mesh, please change your input geometry"
 
         mesh_faces = [mesh.face[key] for key in list(mesh.faces())]
         mesh_vertices = [mesh.vertex_coordinates(key) for key in list(mesh.vertices())]   
 
         format = GeomVertexFormat.getV3n3c4() # vec3 vertex, vec3 normal, vec4 color
         vdata = GeomVertexData('static_prim', format, Geom.UHStatic)
-        vdata.setNumRows(len(mesh_vertices))
+        vdata.setNumRows(3)
 
         vertex_writer = GeomVertexWriter(vdata , 'vertex')
         color_writer  = GeomVertexWriter(vdata , 'color')
         normal_writer = GeomVertexWriter(vdata , 'normal')
-
-
-
         geom = Geom(vdata)    
 
+        ### Per face normals
         if normals == 'per face':    
-            ### Per face normals
-            for face, fkey in zip(  mesh_faces, list(mesh.faces())):
+            for face, fkey in zip(mesh_faces, list(mesh.faces())):
                 face_normal = mesh.face_normal(fkey)
 
                 for vertex_key in face:
                     vertex = mesh_vertices[vertex_key]
                     vertex_writer.addData3f(vertex[0] , vertex[1] , vertex[2])
                     normal_writer.addData3f(face_normal[0] , face_normal[1] , face_normal[2])
+                    # color_writer.addData4f(1., 1., 1., 1.)
                     color_writer.addData4f((1+face_normal[0])/2 , (1+face_normal[1])/2 , (1+face_normal[2])/2, 1.)
 
                 if len(face) > 3: 
@@ -123,36 +135,35 @@ class PandaRenderer(ShowBase):
                         triangle.close_primitive()
                         geom.addPrimitive(triangle)
                 else:   
-                    ## add single triangle 
                     current_row_index = vdata.getNumRows() -1
                     triangle = GeomTriangles(Geom.UHStatic)
                     triangle.addVertices(current_row_index, current_row_index - 1, current_row_index -2)
                     triangle.close_primitive()
                     geom.addPrimitive(triangle)
 
-            ### Per vertex normals
-            else: 
-                mesh_vertex_normals = [mesh.vertex_normal(key) for key in list(mesh.vertices())]
-                [vertex_writer.addData3f(v[0] , v[1] , v[2]) for v in mesh_vertices]
-                [normal_writer.addData3f(n[0] , n[1] , n[2]) for n in mesh_vertex_normals]
-                [color_writer.addData3f(1, 1 ,1) for n in mesh_vertex_normals]
-                [color_writer.addData3f((n[0] + 1) /2, (n[1] + 1) /2 , (n[2] + 1) /2) for n in mesh_vertex_normals]
+        ### Per vertex normals
+        else: 
+            mesh_vertex_normals = [mesh.vertex_normal(key) for key in list(mesh.vertices())]
+            [vertex_writer.addData3f(v[0] , v[1] , v[2]) for v in mesh_vertices]
+            [normal_writer.addData3f(n[0] , n[1] , n[2]) for n in mesh_vertex_normals]
+            # [color_writer.addData4f(1., 1., 1., 1.) for v in mesh_vertices]
+            [color_writer.addData3f((n[0] + 1) /2, (n[1] + 1) /2 , (n[2] + 1) /2) for n in mesh_vertex_normals]
 
-        print (vdata)
+            for face in mesh_faces:
+                if len(face) > 3:
+                    for i in range(2): ## two triangles for one quad
+                        triangle = GeomTriangles(Geom.UHStatic)
+                        triangle.addVertices(face[0 + 2*i], face[1+ 2*i], face[(2+ 2*i)%4])
+                        triangle.close_primitive()
+                        geom.addPrimitive(triangle)
+                else: 
+                        triangle = GeomTriangles(Geom.UHStatic)
+                        triangle.addVertices(face[0], face[1], face[2])
+                        triangle.close_primitive()
+                        geom.addPrimitive(triangle)
 
-
-        # for face in mesh_faces:
-        #     if len(face) > 3:
-        #         for i in range(2): ## two triangles for one quad
-        #             triangle = GeomTriangles(Geom.UHStatic)
-        #             triangle.addVertices(face[0 + 2*i], face[1+ 2*i], face[(2+ 2*i)%4])
-        #             triangle.close_primitive()
-        #             geom.addPrimitive(triangle)
-        #     else: 
-        #             triangle = GeomTriangles(Geom.UHStatic)
-        #             triangle.addVertices(face[0], face[1], face[2])
-        #             triangle.close_primitive()
-        #             geom.addPrimitive(triangle)
+        # print (vdata)
+        print ("number of primitives : ", geom.get_num_primitives())
 
         node = GeomNode(name)
         node.addGeom(geom)
@@ -161,6 +172,9 @@ class PandaRenderer(ShowBase):
 
         nodePath = self.render.attachNewNode(node)  
         nodePath.reparentTo(self.nodePath_meshes_group)
+
+        self.filters.setCartoonInk()
+        
         # nodePath.setMaterial(mtl)
 
     def create_mesh_from_marching_cubes(self, vertices, faces, normals, name):  #

@@ -13,7 +13,7 @@ from skimage.measure import marching_cubes_lewiner
 from compas.datastructures import Mesh
 from compas.geometry import Box, Frame, Point, Plane, Cylinder, Circle, Sphere, Torus
 
-from compas_vol.raymarching.pandaRenderer import PandaRenderer
+from compas_vol.pandaRenderer.pandaRenderer import PandaRenderer
 from compas_vol.raymarching.rayMarchingFactory import RayMarchingFactory
 from compas_vol.raymarching.translator import Translator
 

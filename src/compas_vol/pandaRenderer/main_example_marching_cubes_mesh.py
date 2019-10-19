@@ -12,7 +12,7 @@ from skimage.measure import marching_cubes_lewiner
 from compas.datastructures import Mesh
 from compas.geometry import Box, Frame, Point, Plane, Cylinder, Circle, Sphere, Torus
 
-from compas_vol.raymarching.pandaRenderer import PandaRenderer
+from compas_vol.pandaRenderer.pandaRenderer import PandaRenderer
 
 from compas_vol.raymarching.remapping_functions import remap
 
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     union = Union(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 2)))
     intersection = Intersection(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 9)))
     sh = SmoothUnion(Shell(union, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
-    total_geom =  SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
+    total_geom =  torus #SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
     
     ### panda3d visualisation
     renderer = PandaRenderer()
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
     renderer.create_mesh_from_marching_cubes(verts, faces, normals, 'marching_cubes_primitive')
 
-    renderer.create_boundary_box(ub) #lb has to be 0 for now
+    renderer.display_boundary_box(ub) #lb has to be 0 for now
     # renderer.print_scene_graph()
     # renderer.display_volumetric_grid(lb, ub, m, num, fact, True)
 
