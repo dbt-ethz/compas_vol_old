@@ -20,31 +20,34 @@ from compas_vol.raymarching.remapping_functions import remap
 from panda3d.core import loadPrcFileData     
 loadPrcFileData('', 'win-size 1024 760') 
 
-main_path = os.path.abspath(os.path.dirname(__file__))
-
-num = 30 # resolution of grid
 lb = 0   # lower boundary (for now keep to 0)
 ub = 10  # upper boundary 
-fact = (ub-lb)/(num-1) #size of grid-cell
 
+def discretize_distance_field_in_array(distance_field):
+    num = 30 # resolution of grid
+    fact = (ub-lb)/(num-1) #size of grid-cell
+
+    x, y, z = np.ogrid[lb:ub:30j, lb:ub:30j, lb:ub:30j]
+    m = distance_field.get_distance_numpy(x, y, z)
+    return m, fact
 
 def rand(lb_, ub_):
     value = np.random.rand(1)
     return remap(value, 0, 1, lb_, ub_)
 
+def create_marching_cubes_mesh(distance_field):
+    m, fact = discretize_distance_field_in_array(distance_field)
+    verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
+    return verts, faces, normals, values 
 
-def discretize_distance_field_in_array(distance_field):
-    x, y, z = np.ogrid[lb:ub:30j, lb:ub:30j, lb:ub:30j]
-    m = distance_field.get_distance_numpy(x, y, z)
-    
-    return m
 
 
 if __name__ == "__main__":
-    ## Create compas_vol primitives
+
+    ## Create compas_vol distance field
     Spheres = []
     for i in range(10):
-        mySphere = VolSphere(Sphere(Point(rand(lb+1,ub-1), rand(lb+1,ub-1), rand(lb+1,ub-1)), rand(2.,3.)))
+        mySphere = VolSphere(Sphere(Point(rand(1,9), rand(1,9), rand(1,9)), rand(2.,3.)))
         Spheres.append(mySphere)
     union_spheres = Union(Spheres)
 
@@ -56,18 +59,17 @@ if __name__ == "__main__":
     intersection = Intersection(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 9)))
     sh = SmoothUnion(Shell(union, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
     total_geom =  torus #SmoothUnion(Shell(Union(sphere, torus), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
+
+    verts, faces, normals, values = create_marching_cubes_mesh(total_geom)
     
-    ### panda3d visualisation
+
+
+    ###----  panda3d visualisation
     renderer = PandaRenderer()
-
-    m = discretize_distance_field_in_array(total_geom)
-    verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
     renderer.create_mesh_from_marching_cubes(verts, faces, normals, 'marching_cubes_primitive')
-
     renderer.display_boundary_box(ub) #lb has to be 0 for now
     # renderer.print_scene_graph()
     # renderer.display_volumetric_grid(lb, ub, m, num, fact, True)
-
     renderer.show()
 
 

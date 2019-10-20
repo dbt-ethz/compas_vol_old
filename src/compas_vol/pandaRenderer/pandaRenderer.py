@@ -50,8 +50,8 @@ class PandaRenderer(ShowBase):
         self.nodePath_text_group = self.render.attachNewNode(self.Text_group_node) 
 
         # self.display_axes_xyz(3)
-
         self.create_lights()
+
 
     def create_lights(self):
         ## Default Lights
@@ -97,6 +97,10 @@ class PandaRenderer(ShowBase):
         name   : (string) Name of the shape on the scene graph.  
         normals: (string) If 'per face' : normals are displayed per face, then we see sharp corners. 
                           In any other case normlas are displayed per vertex, then we see smooth corners. 
+
+        Returns
+        -------
+        TO DO
         """
         assert isinstance(mesh, compas.datastructures.Mesh), "This is not a mesh, please change your input geometry"
 
@@ -173,8 +177,8 @@ class PandaRenderer(ShowBase):
         nodePath = self.render.attachNewNode(node)  
         nodePath.reparentTo(self.nodePath_meshes_group)
 
-        self.filters.setCartoonInk()
-        
+        return nodePath
+        # self.filters.setCartoonInk()
         # nodePath.setMaterial(mtl)
 
     def create_mesh_from_marching_cubes(self, vertices, faces, normals, name):  #
@@ -187,6 +191,10 @@ class PandaRenderer(ShowBase):
         faces   : (array) Faces of mesh
         normals : (array) Normals of mesh. Attention normals are inverted because using the marching_cubes_lewiner from skimage.measure they came in inverted
         name    : (string) Name of the shape on the scene graph.  
+
+        Returns
+        -------
+        To Do
         """
 
         ## GeomVertexFormat
@@ -225,7 +233,7 @@ class PandaRenderer(ShowBase):
 
         nodePath = self.render.attachNewNode(node)  
         nodePath.reparentTo(self.nodePath_meshes_group)
-        # nodePath.setMaterial(mtl)
+        return nodePath
 
     def display_boundary_box(self, ub):
         """ Displays a wireframe box 
