@@ -423,13 +423,13 @@ class PandaRenderer(ShowBase):
     def display_onscreen_text(self, t, pos_x, pos_y, s):
         textObject = OnscreenText(text = t, pos = (pos_x, pos_y), scale = s, fg = (0., 0., 0., text_color_alpha) )
 
-    def apply_texture(self, nodePath, path_to_texture):
+    def apply_texture(self, nodePath, stage, path_to_texture):
         """
         TO DO
         """        
         ## test texture
         texture = self.loader.loadTexture(path_to_texture)
-        nodePath.setTexture(texture, 1)
+        nodePath.setTexture(texture, stage)
 
     def show(self):     
         """
@@ -442,6 +442,7 @@ class PandaRenderer(ShowBase):
 def zylindrical_uv_mapping(mesh_vertices):
         us = np.zeros(len(mesh_vertices))
         vs = np.zeros(len(mesh_vertices))
+        
         x_list = [v[0] for v in mesh_vertices]
         y_list = [v[1] for v in mesh_vertices]
         z_list = [v[2] for v in mesh_vertices]

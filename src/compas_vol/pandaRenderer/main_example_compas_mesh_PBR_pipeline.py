@@ -49,39 +49,45 @@ if __name__ == "__main__":
     ground_box = Box(Frame(Point(-30., -30., 0.), [1., 0, 0], [0, 1., 0]), 60., 60., .5)  
     ground_box_mesh = Mesh.from_vertices_and_faces(ground_box.vertices, ground_box.faces) 
     gb_nodepath = rendererPBR.display_compas_mesh_PBR( mesh = ground_box_mesh, name = 'ground_box', normals = 'per face')
-    rendererPBR.apply_texture(gb_nodepath, 'materials/grass_diffuse.jpg')
+    
 
-    # for i in range(10):
-    #     x = - 20 + 4 * i
-    #     y = -6
-    #     z = 1
-    #     torus = shapes_temporary.Torus( Plane(Point(x,y,z), Vector(0,0,1)), 1, 0.5)
-    #     verts, faces = torus.to_vertices_and_faces(u = 20, v = 20)
-    #     torus_mesh = Mesh.from_vertices_and_faces(verts, faces)
-    #     mtl = rendererPBR.materials_collection.find_material(str(i))
-    #     rendererPBR.display_compas_mesh_PBR( mesh = torus_mesh, name = 'torus', normals = 'per vertex', material = mtl) 
+    for i in range(10):
+        x = - 20 + 4 * i
+        y = -6
+        z = 1
+        torus = shapes_temporary.Torus( Plane(Point(x,y,z), Vector(0,0,1)), 1, 0.5)
+        verts, faces = torus.to_vertices_and_faces(u = 20, v = 20)
+        torus_mesh = Mesh.from_vertices_and_faces(verts, faces)
+        mtl = rendererPBR.materials_collection.find_material(str(i))
+        rendererPBR.display_compas_mesh_PBR( mesh = torus_mesh, name = 'torus', normals = 'per vertex', material = mtl) 
 
-    #     rendererPBR.display_text_3D(t = get_material_info(mtl) , dx=x-2 , dy=y + 1, dz=z+2, scale = 0.28)
+        rendererPBR.display_text_3D(t = get_material_info(mtl) , dx=x-2 , dy=y + 1, dz=z+2, scale = 0.28)
 
-    # for i in range(11):
-    #     x = - 20 + 4 * i
-    #     y = 3
-    #     z = 1.6
-    #     sphere = shapes_temporary.Sphere(Point(x,y,z), 1)
-    #     verts, faces = sphere.to_vertices_and_faces(u = 20, v = 20)
-    #     mesh = Mesh.from_vertices_and_faces(verts, faces)
-    #     mtl = rendererPBR.materials_collection.find_material(str(i + 10))
-    #     rendererPBR.display_compas_mesh_PBR( mesh = mesh, name = 'sphere', normals = 'per vertex', material = mtl) 
+    for i in range(11):
+        x = - 20 + 4 * i
+        y = 3
+        z = 1.6
+        sphere = shapes_temporary.Sphere(Point(x,y,z), 1)
+        verts, faces = sphere.to_vertices_and_faces(u = 20, v = 20)
+        mesh = Mesh.from_vertices_and_faces(verts, faces)
+        mtl = rendererPBR.materials_collection.find_material(str(i + 10))
+        rendererPBR.display_compas_mesh_PBR( mesh = mesh, name = 'sphere', normals = 'per vertex', material = mtl) 
 
-    #     rendererPBR.display_text_3D(t = get_material_info(mtl) , dx=x-2 , dy=y + 1, dz=z+2, scale = 0.28)
+        rendererPBR.display_text_3D(t = get_material_info(mtl) , dx=x-2 , dy=y + 1, dz=z+2, scale = 0.28)
 
-    cylinder = 
+    cylinder = shapes_temporary.Cylinder( Circle( Plane(Point(0,12,2), Vector(0,0,1)), 2),3)
+    verts, faces = cylinder.to_vertices_and_faces(u = 20, v = 20)
+    cylinder_mesh = Mesh.from_vertices_and_faces(verts, faces)
+    cylinder_nodepath = rendererPBR.display_compas_mesh_PBR( mesh = cylinder_mesh, name = 'cylinder', normals = 'per face') 
+
+    rendererPBR.apply_texture(cylinder_nodepath, 0, 'materials/MetalBasecolor.png')
+    rendererPBR.apply_texture(cylinder_nodepath, 1, 'materials/MetalNormal.png')
+    rendererPBR.apply_texture(cylinder_nodepath, 3, 'materials/MetalSpecular.png')
 
     ### marching cubes mesh
     # torus = VolTorus(Torus(Plane((0, 0, 0), (0., 0., 1.)), 1.5, 0.6))
     # verts, faces, normals, values = create_marching_cubes_mesh(torus)
     # rendererPBR.create_mesh_from_marching_cubes_PBR(verts, faces, normals, 'marching_cubes_primitive',  material = rendererPBR.materials_collection.find_material('metal'))
-
 
     rendererPBR.run()
 
