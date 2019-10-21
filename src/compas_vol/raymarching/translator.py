@@ -246,11 +246,12 @@ class Translator:
                 self.shader_start_vaues = []
 
                 self.orders = []
-                
-                self.translate_data(self.input_object, 0, union_id, 0) ## starting object, parent id = 0, 0 start_order
-                self.assign_children_to_combinations()
-                self.create_final_data()
-                self.print_out_all_data(False)
+
+                if input_object_:
+                        self.translate_data(self.input_object, 0, union_id, 0) ## starting object, parent id = 0, 0 start_order
+                        self.assign_children_to_combinations()
+                        self.create_final_data()
+                        self.print_out_all_data(False)
 
                 
         

@@ -47,7 +47,7 @@ class RayMarchingFactory:
         self.sliders = []
     
     ### ---------------------------------------------------------------- Ray marching shader
-    def ray_marching_shader(self): 
+    def ray_marching_shader(self, default_fragment_shader = True, custom_fragment_shader = None): 
         """
         Creates a quad and applies to it a vertex shader which makes it stick to the viewport as if it was 2D.
         It also applies a fragment shader which has the implementation raymarching, and sends to the fragment shader all the necessary data.
@@ -87,27 +87,24 @@ class RayMarchingFactory:
         self.shader_quad.setDepthWrite(False) 
         self.shader_quad.setDepthTest(False) 
 
- 
-        # print ("PATH : ",  shader_path.get_shader_path( self.main_path, "vshader_ray_marching.glsl") )
+        ### load ray marching shader
+        if default_fragment_shader: 
+            myShader = self.create_default_fragment_shader()
+        else: 
+            if custom_fragment_shader:
+                myShader = Shader.load(Shader.SL_GLSL , shader_path.get_shader_path(self.main_path, "vshader_ray_marching.glsl"),\
+                                                        shader_path.get_shader_path(self.main_path, custom_fragment_shader))    
+            else: 
+                print ("Attention! No shader provided for the post processing filter")
+                return None
 
-        ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
-        parts = [] 
-        #verterx shader
-        with open( shader_path.get_shader_path( self.main_path, "vshader_ray_marching.glsl") , 'r') as shader:
-            parts.append(shader.read())
-        v_shader_full_code = "\n".join(parts)
-        parts = []
-        #fragments shaders
-        with open(shader_path.get_shader_path( self.main_path, "fshader_1_translations.glsl"), "r") as shader:
-            parts.append(shader.read())
-        with open(shader_path.get_shader_path( self.main_path,"fshader_2_raymarching.glsl"), "r") as shader:
-            parts.append(shader.read())  
-        with open(shader_path.get_shader_path( self.main_path,"fshader_3_simple_shader_main.glsl"), "r") as shader:
-            parts.append(shader.read())          
-        f_shader_full_code = "\n".join(parts)
-        myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
+        if myShader.getErrorFlag():
+            print ("EROR") ## need to expand on this 
+
+        ### apply shader 
         self.shader_quad.setShader(myShader)
- 
+
+        ### set shader inputs 
         self.shader_quad.setShader(myShader)
         self.shader_quad.setShaderInput("u_resolution" , self.renderer.getSize())
         self.shader_quad.setShaderInput("camera_POS", self.renderer.camera.getPos())
@@ -135,27 +132,10 @@ class RayMarchingFactory:
             print (self.display_target_object[0])
         return task.cont 
 
-
-    ### ---------------------------------------------------------------- Ray marching in post-processing filter 
-    """
-    Creates a post processing filter of the scene, and applies to it a fragment shader with the implementation of raymarching.
-    Sends all the necessary data to the fragment shader and creates a task to update in every frame the data that needs to be updated.
-    The difference with the function 'ray_marching_shader' is that it alsso evaluates the depth buffer and performs depth culling. 
-    (So far) works only on Windows. 
-    """
-    def post_processing_ray_marching_filter(self):
-
-        manager = FilterManager(self.renderer.win, self.renderer.cam)
-
-        color_texture = Texture()
-        depth_buffer = Texture()
-
-        self.ray_marching_quad = manager.renderSceneInto(colortex = color_texture, depthtex = depth_buffer)
-
-        ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
+    def create_default_fragment_shader(self):
         parts = [] 
         #verterx shader
-        with open(shader_path.get_shader_path( self.main_path, "vshader.glsl") , 'r') as shader:
+        with open( shader_path.get_shader_path( self.main_path, "vshader_ray_marching.glsl") , 'r') as shader:
             parts.append(shader.read())
         v_shader_full_code = "\n".join(parts)
         parts = []
@@ -164,17 +144,47 @@ class RayMarchingFactory:
             parts.append(shader.read())
         with open(shader_path.get_shader_path( self.main_path,"fshader_2_raymarching.glsl"), "r") as shader:
             parts.append(shader.read())  
-        with open(shader_path.get_shader_path( self.main_path,"fshader_3_post_processing_main.glsl"), "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_3_simple_shader_main.glsl"), "r") as shader:
             parts.append(shader.read())          
         f_shader_full_code = "\n".join(parts)
         myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
 
+        return myShader
+
+
+    ### ---------------------------------------------------------------- Ray marching in post-processing filter 
+    """
+    Creates a post processing filter of the scene, and applies to it a fragment shader with the implementation of raymarching.
+    Sends all the necessary data to the fragment shader and creates a task to update in every frame the data that needs to be updated.
+    The difference with the function 'ray_marching_shader' is that it alsso evaluates the depth buffer and performs depth culling. 
+    (So far) works only on Windows. 
+    """
+    def post_processing_ray_marching_filter(self, default_fragment_shader = True, custom_fragment_shader = None):
+
+        manager = FilterManager(self.renderer.win, self.renderer.cam)
+
+        color_texture = Texture()
+        depth_buffer = Texture()
+
+        self.ray_marching_quad = manager.renderSceneInto(colortex = color_texture, depthtex = depth_buffer)
+
+        ### load ray marching shader
+        if default_fragment_shader: 
+            myShader = self.create_default_post_processing_fragment_shader()
+        else: 
+            if custom_fragment_shader:
+                myShader = Shader.load(Shader.SL_GLSL , shader_path.get_shader_path(self.main_path, "vshader.glsl"),\
+                                                        shader_path.get_shader_path(self.main_path, custom_fragment_shader))   
+            else: 
+                print ("Attention! No shader provided for the post processing filter")
+                return None
+
         if myShader.getErrorFlag():
-            print ("EROR")
+            print ("EROR") ## need to expand on this 
 
+        ### apply shader 
+        self.ray_marching_quad.setShader(myShader)    
 
-        self.ray_marching_quad.setShader(myShader)
-        
         ### set shader inputs
         self.ray_marching_quad.setShaderInput("u_resolution" , self.renderer.getSize())
         self.ray_marching_quad.setShaderInput("color_texture", color_texture)
@@ -207,6 +217,26 @@ class RayMarchingFactory:
 
         self.ray_marching_quad.set_shader_input("display_target_object", self.display_target_object[0]) ## ATTENTION< THIS SHOULD ONLY BE HAPPENING WHEN THE GUI BUTTONS ARE PRESSED!
         return task.cont   
+
+    def create_default_post_processing_fragment_shader(self):
+        ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
+        parts = [] 
+        #verterx shader
+        with open(shader_path.get_shader_path( self.main_path, "vshader.glsl") , 'r') as shader:
+            parts.append(shader.read())
+        v_shader_full_code = "\n".join(parts)
+        parts = []
+        #fragments shaders
+        with open(shader_path.get_shader_path( self.main_path, "fshader_1_translations.glsl"), "r") as shader:
+            parts.append(shader.read())
+        with open(shader_path.get_shader_path( self.main_path,"fshader_2_raymarching.glsl"), "r") as shader:
+            parts.append(shader.read())  
+        with open(shader_path.get_shader_path( self.main_path,"fshader_3_post_processing_main.glsl"), "r") as shader:
+            parts.append(shader.read())          
+        f_shader_full_code = "\n".join(parts)
+        myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
+
+        return myShader
 
 
     ###  ---------------------------------------------------------------- General purpose slider

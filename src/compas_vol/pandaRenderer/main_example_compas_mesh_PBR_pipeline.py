@@ -75,14 +75,14 @@ if __name__ == "__main__":
 
         rendererPBR.display_text_3D(t = get_material_info(mtl) , dx=x-2 , dy=y + 1, dz=z+2, scale = 0.28)
 
-    cylinder = shapes_temporary.Cylinder( Circle( Plane(Point(0,12,2), Vector(0,0,1)), 2),3)
+    cylinder = shapes_temporary.Cylinder( Circle( Plane(Point(0,12,6), Vector(0,0,1)), 2),3)
     verts, faces = cylinder.to_vertices_and_faces(u = 20, v = 20)
     cylinder_mesh = Mesh.from_vertices_and_faces(verts, faces)
-    cylinder_nodepath = rendererPBR.display_compas_mesh_PBR( mesh = cylinder_mesh, name = 'cylinder', normals = 'per face') 
+    cylinder_nodepath = rendererPBR.display_compas_mesh_PBR( mesh = cylinder_mesh, name = 'cylinder', normals = 'per face', uv_mapping = True) 
 
-    rendererPBR.apply_texture(cylinder_nodepath, 0, 'materials/MetalBasecolor.png')
-    rendererPBR.apply_texture(cylinder_nodepath, 1, 'materials/MetalNormal.png')
-    rendererPBR.apply_texture(cylinder_nodepath, 3, 'materials/MetalSpecular.png')
+    rendererPBR.apply_texture(cylinder_nodepath, 0, 'materials/debugging_texture.png')
+    # rendererPBR.apply_texture(cylinder_nodepath, 1, 'materials/MetalNormal.png')
+    # rendererPBR.apply_texture(cylinder_nodepath, 3, 'materials/MetalSpecular.png')
 
     ### marching cubes mesh
     # torus = VolTorus(Torus(Plane((0, 0, 0), (0., 0., 1.)), 1.5, 0.6))

@@ -89,7 +89,7 @@ class PandaRenderer(ShowBase):
             print(path)
             self.print_scene_graph_b(path)
 
-    def display_compas_mesh(self, mesh, name, normals = 'per face', uv_mapping = True):
+    def display_compas_mesh(self, mesh, name, normals = 'per face', uv_mapping = False):
         """
         Displays a compas mesh 
 
@@ -109,7 +109,7 @@ class PandaRenderer(ShowBase):
 
         mesh_faces = [mesh.face[key] for key in list(mesh.faces())]
         mesh_vertices = [mesh.vertex_coordinates(key) for key in list(mesh.vertices())]   
-        uvs = np.zeros(len(mesh_vertices))
+        uvs = np.zeros(shape = (len(mesh_vertices), 2))
 
         if uv_mapping:
             uvs = zylindrical_uv_mapping(mesh_vertices)
@@ -439,25 +439,47 @@ class PandaRenderer(ShowBase):
         
         self.run()
 
+
+
+
+
 def zylindrical_uv_mapping(mesh_vertices):
-        us = np.zeros(len(mesh_vertices))
-        vs = np.zeros(len(mesh_vertices))
+    us = np.zeros(len(mesh_vertices))
+    vs = np.zeros(len(mesh_vertices))
         
-        x_list = [v[0] for v in mesh_vertices]
-        y_list = [v[1] for v in mesh_vertices]
-        z_list = [v[2] for v in mesh_vertices]
+    x_list = [v[0] for v in mesh_vertices]
+    y_list = [v[1] for v in mesh_vertices]
+    z_list = [v[2] for v in mesh_vertices]
 
-        bounds = max(z_list) - min(z_list)
-        if bounds == 0:
-            bounds = 1
+    bounds_x = max(x_list) - min(x_list)
+    if bounds_x == 0:
+        bounds_x = 1 
 
-        for i, x, y, z in zip(range(len(mesh_vertices)), x_list, y_list, z_list):
-            a = math.atan2(y, -x)/math.pi
-            v = (z-min(z_list))/ bounds
-            us[i] = (a+1)/2
-            vs[i] = v
+    bounds_y = max(y_list) - min(y_list)
+    if bounds_y == 0:
+        bounds_y = 1
 
-        return np.stack((us, vs),axis = 1 )
+    bounds_z = max(z_list) - min(z_list)
+    if bounds_z == 0:
+        bounds_z = 1
+
+    x_list_normalized = [(x - min(x_list))/bounds_x for x in x_list]
+    y_list_normalized = [(y - min(y_list))/bounds_y for y in y_list]
+    z_list_normalized = [(z - min(z_list))/bounds_z for z in z_list]
+
+    for i, x, y, z in zip(range(len(mesh_vertices)), x_list_normalized, y_list_normalized, z_list_normalized):
+        a = math.atan2(y, -x)/math.pi
+        us[i] = ((a - 0.5)*2-0.5)*2  ## from -1 to 1
+        vs[i] = z ## from -1 to 1
+        
+    uvs = np.stack((us, vs),axis = 1 )
+
+    print("zylindrical_uv_mapping")
+    # print("length of vertices : ", len(mesh_vertices))
+    # print("uvs.shape : ", uvs.shape)
+    print ("min, max (u) : " , np.min(us), np.max(us))
+    print ("min, max (v) : " , np.min(vs), np.max(vs))
+    return uvs
 
 def Translation_matrix(dx, dy, dz):
     return LMatrix4(1,0,0,0 , 0,1,0,0 , 0,0,1,0 , dx,dy,dz,1)

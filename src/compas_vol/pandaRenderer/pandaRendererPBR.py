@@ -41,17 +41,17 @@ class PandaRendererPBR(PandaRenderer):
         self.render_pipeline.add_light(my_light)
             
 
-    def display_compas_mesh_PBR(self, mesh, name, normals = 'per face', material = None):
+    def display_compas_mesh_PBR(self, mesh, name, normals = 'per face', material = None, uv_mapping = False):
         """
         TO DO
         """
         if not material:
             material = self.materials_collection.find_material('default_material')
-        nodePath = self.display_compas_mesh(mesh, name, normals = normals)
+        nodePath = self.display_compas_mesh(mesh, name, normals = normals, uv_mapping = uv_mapping)
         self.render_pipeline.prepare_scene(nodePath)
         nodePath.setMaterial(material)
         # print (nodePath.findAllVertexColumns())   
-        return nodePath
+        return nodePath 
 
     def create_mesh_from_marching_cubes_PBR(self, vertices, faces, normals, name, material = None):
         """
