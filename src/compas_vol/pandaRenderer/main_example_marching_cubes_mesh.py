@@ -18,7 +18,8 @@ from compas_vol.raymarching.remapping_functions import remap
 
 ## window size
 from panda3d.core import loadPrcFileData     
-loadPrcFileData('', 'win-size 1024 760') 
+loadPrcFileData('', """ # win-size 1600 900 
+                          window-title PandaRenderer with marching cubes mesh example """) 
 
 lb = 0   # lower boundary (for now keep to 0)
 ub = 10  # upper boundary 

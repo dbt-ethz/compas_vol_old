@@ -155,7 +155,7 @@ class RayMarchingFactory:
         ### Create shader glsl files. This is done in order to be able to split the big shader in separate glsl files for better organisation
         parts = [] 
         #verterx shader
-        with open( shader_path.get_shader_path( self.main_path, "vshader.glsl") , 'r') as shader:
+        with open(shader_path.get_shader_path( self.main_path, "vshader.glsl") , 'r') as shader:
             parts.append(shader.read())
         v_shader_full_code = "\n".join(parts)
         parts = []

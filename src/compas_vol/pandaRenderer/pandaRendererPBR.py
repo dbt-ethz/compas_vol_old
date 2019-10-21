@@ -11,13 +11,12 @@ from rpcore import RenderPipeline
 
 from rpcore import PointLight
 
-# This is a helper class for better camera movement - see below.
 from rpcore.util.movement_controller import MovementController
+import materials.materialsPBR as materialsPBR
 
 
 class PandaRendererPBR(PandaRenderer):
     def __init__(self):
-
         self.render_pipeline = RenderPipeline()
         self.render_pipeline.pre_showbase_init()  
         
@@ -30,22 +29,7 @@ class PandaRendererPBR(PandaRenderer):
         self.controller.set_initial_position_hpr( Vec3(-17.2912578583, -13.290019989, 6.88211250305), Vec3(-39.7285499573, -14.6770210266, 0.0))
         self.controller.setup()
 
-        self.create_materials()
-
-
-    def create_materials(self):
-        self.metal = Material()
-        self.metal.setDiffuse((1, 1, 1, 1))
-        self.metal.setSpecular((0, 0, 0, 0))
-        self.metal.setShininess(-1.804294705390930)
-        self.metal.setAmbient((1, 1, 1, 1))
-        self.metal.setAmbient((0, 0.615175, 0, 1))
-        
-        self.metal.setRoughness(1.7879559993743896)
-        self.metal.setMetallic(0.0)
-        self.metal.setRefractiveIndex(1.5)
-        self.metal.setLocal(False)
-    
+        self.create_materials_collection()
 
     def create_lights_PBR(self):
         ## Default Lights
@@ -55,30 +39,60 @@ class PandaRendererPBR(PandaRenderer):
         my_light.energy = 1000.0
         my_light.casts_shadows = True
         self.render_pipeline.add_light(my_light)
+            
 
-
-
-
-    def display_compas_mesh_PBR(self, mesh, name, normals = 'per face'):
+    def display_compas_mesh_PBR(self, mesh, name, normals = 'per face', material = None):
         """
         TO DO
         """
+        if not material:
+            material = self.materials_collection.find_material('default_material')
         nodePath = self.display_compas_mesh(mesh, name, normals = normals)
         self.render_pipeline.prepare_scene(nodePath)
-        nodePath.setMaterial(self.metal)
+        nodePath.setMaterial(material)
         # print (nodePath.findAllVertexColumns())   
         return nodePath
 
-    def create_mesh_from_marching_cubes_PBR(self, vertices, faces, normals, name):
+    def create_mesh_from_marching_cubes_PBR(self, vertices, faces, normals, name, material = None):
         """
         TO DO
         """
+        if not material:
+            material = self.materials_collection.find_material('default_material')
+
         nodePath = self.create_mesh_from_marching_cubes(vertices, faces, normals, name)
         self.render_pipeline.prepare_scene(nodePath)
-        nodePath.setMaterial(self.metal)
+        nodePath.setMaterial(material)
         return nodePath
+
+
+
+    def create_materials_collection(self):
+        self.materials_collection = MaterialCollection()
+        materials = materialsPBR.create_materials()
+
+        [self.materials_collection.add_material(m) for m in materials]
+
+    
+        
+
+
+        
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
     pbr_renderer = PandaRendererPBR()
     pbr_renderer.run()
+
+
+
+
+
+######## Triplanar UV mapping
+###### https://www.martinpalko.com/triplanar-mapping/

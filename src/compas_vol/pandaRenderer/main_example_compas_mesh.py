@@ -7,7 +7,8 @@ from compas_vol.pandaRenderer.pandaRenderer import PandaRenderer
 
 ## window size
 from panda3d.core import loadPrcFileData     
-loadPrcFileData('', 'win-size 1024 760') 
+loadPrcFileData('', """ # win-size 1600 900 
+                          window-title PandaRenderer example """) 
 
 def extrude(mesh, label_to_extrude, new_label, distance, delete_old_face = True):
     keys_of_faces_to_extrude = []
@@ -111,10 +112,10 @@ if __name__ == "__main__":
 
     renderer.display_compas_mesh( mesh = ground_box_mesh, name = 'ground_box')
     renderer.display_compas_mesh( mesh = create_test_mesh_a(), name = 'mesh_a', normals = 'per face')
-    # renderer.display_compas_mesh( mesh = create_test_mesh_b(), name = 'mesh_b', normals = 'per face')
+    renderer.display_compas_mesh( mesh = create_test_mesh_b(), name = 'mesh_b', normals = 'per face')
 
     renderer.display_axes_xyz(3)
-    renderer.print_scene_graph()
+    # renderer.print_scene_graph()
 
     renderer.show()
 
