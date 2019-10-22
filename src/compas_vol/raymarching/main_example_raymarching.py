@@ -21,7 +21,8 @@ from compas_vol.raymarching.remapping_functions import remap
 
 ## window size
 from panda3d.core import loadPrcFileData     
-loadPrcFileData('', 'win-size 1024 760') 
+loadPrcFileData('', """ # win-size 1024 700
+                          window-title Raymarching example """) 
 
 main_path = os.path.abspath(os.path.dirname(__file__))
 
