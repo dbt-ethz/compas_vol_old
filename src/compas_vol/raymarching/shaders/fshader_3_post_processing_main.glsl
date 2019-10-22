@@ -22,7 +22,6 @@ vec3 World_position_from_depth(in float depth, in vec2 uv){
     return viewSpacePosition.xyz;
     }
 
-
 void main()
 {
     vec2 st = gl_FragCoord.xy / u_resolution.xy;
@@ -44,7 +43,14 @@ void main()
     vec3 world_pos_SDF = ro + rd * d; // position of intersection of ray with solid
 
     float dist_SDF = length(world_pos_SDF - camera_POS); //distance of SDF in current position from camera 
-    vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
+
+    // ------------- simple light
+    vec3 light = GetLight(GetNormal(world_pos_SDF), world_pos_SDF); 
+    vec3 object_material = vec3(0.18); // default material albedo
+    vec3 color_of_SDF = object_material * light; 
+    color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
+    // vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
+
 
     // check depth and color accordingly
     vec3 color = vec3(0.);
@@ -53,7 +59,8 @@ void main()
         if (abs(world_pos_SDF.y - y_slice) < 0.1) {
             color = vec3(0.1, 0.1, 0.1);  // color white section
         } else {
-            color = color_of_SDF ; }
+            color = color_of_SDF; 
+        }
     } else {
         color = color_pixel.xyz;
     }
@@ -61,3 +68,32 @@ void main()
     // color = vec3( total_steps / 50. ); // display number of steps 
     gl_FragColor = vec4(color, 1.);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

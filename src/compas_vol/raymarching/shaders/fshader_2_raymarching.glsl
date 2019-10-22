@@ -13,6 +13,10 @@ float y_slicing_Plane(vec3 p, float y_of_plane){
     return -(p.y - y_of_plane);
 }
 
+float z_ground_Plane(vec3 p, float z_of_plane){
+    return p.z - z_of_plane;
+}
+
 float GetDistance(vec3 p){ //union of shapes  
     int pos = 0;
     for (int i = 0; i < object_max_num -1; i++ ){ 
@@ -21,7 +25,7 @@ float GetDistance(vec3 p){ //union of shapes
         current_id = int(v_ids[i]);
         count = int(v_data_count_per_object[i]);
 
-        float [20] geometry_data ;
+        float [max_num_of_geom_data] geometry_data ;
         for (int j=0 ; j < v_data_count_per_object[i]; j++){
             geometry_data[j] = v_object_geometries_data[pos + j];
         }
@@ -46,9 +50,13 @@ float GetDistance(vec3 p){ //union of shapes
         if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
             dist_final = objects_values[display_target_object];
 
+            float ground_z = -3.;
+            dist_final = min(z_ground_Plane(p, ground_z), dist_final);
+
             // intersect wih slicing plane !!!!!!!!!!!!!!!HERE THIS SHOULD HAPPEN ONLY IF SLICING PLANE EXISTS
             float y_slice_plane_dist = y_slicing_Plane(p, y_slice);
-            return max(dist_final, y_slice_plane_dist);
+            dist_final =  max(dist_final, y_slice_plane_dist );
+
 
             return dist_final;
         }
@@ -70,7 +78,7 @@ float RayMarch(vec3 ro, vec3 rd){ // ray origin, ray direction
         float dS = GetDistance(p); // Get distance scene
         dO += dS;
         total_steps += 1;
-        if (dO> MAX_DIST || dS < SURF_DIST) break;
+        if (dO> MAX_DIST || abs(dS) < SURF_DIST) break;
     }
     return dO;
 }
@@ -88,34 +96,116 @@ vec3 GetNormal(vec3 p){
     return normalize(n);
 }
 
-float GetLight (vec3 p){ //gets the position of intersection of ray with shape
-    vec3 LightPos = vec3(0 , 5, 6);
-    // LightPos.xz += vec2( sin(u_time) , cos(u_time));
+// float GetLight_point (vec3 p){ //gets the position of intersection of ray with shape
+//     vec3 LightPos = vec3(0 , 5, 6);
+//     // LightPos.xz += vec2( sin(u_time) , cos(u_time));
 
-    vec3 l = normalize(LightPos - p); // vector from light source to position
-    vec3 n = GetNormal(p);
-    float dif = clamp(dot(n, l)  , 0., 1.);
+//     vec3 l = normalize(LightPos - p); // vector from light source to position
+//     vec3 n = GetNormal(p);
+//     float dif = clamp(dot(n, l)  , 0., 1.);
 
-    //compute shadows
-    float d = RayMarch(p+n * SURF_DIST,l);
-    if(d<length(LightPos -p)){
-        dif *= .3;
+//     //compute shadows
+//     float d = RayMarch(p+n * SURF_DIST,l);
+//     if(d < length(LightPos -p)){
+//         dif *= .3;
+//     }
+//     return dif;
+// }
+
+#define sun_shadow_dist 100; 
+vec3 GetLight(in vec3 normal, in vec3 pos){
+    vec3 sun_color        = vec3(7.0, 5.0, 3.0);
+    vec3 sky_color        = vec3(0.5, 0.8, 0.95);
+    vec3 bounce_color     = vec3(0.7, 0.3, 0.2);
+
+    vec3 sun_direction    = normalize(vec3(5, -3, 6));
+    vec3 sky_direction    = vec3(0.0, 0.0, 1.0);
+    vec3 bounce_direction = vec3(0.0, 0.0, -1.0);
+
+    float sun_dif    = clamp(dot(normal, sun_direction), 0.0, 1.0);
+    float sky_dif    = clamp(0.6 + 0.5 * dot(normal, sky_direction), 0.0, 1.0);
+    float bounce_dif = clamp(0.6 + 0.5 * dot(normal, bounce_direction), 0.0, 1.0);
+
+    // float sun_shadow = step( RayMarch(pos + normal * (SURF_DIST + 0.01) , -sun_direction), 0);
+    
+    float sun_shadow = 1.;
+    float len_sun_shadow = RayMarch(pos + normal * (SURF_DIST + 0.01) , sun_direction);
+    if(len_sun_shadow < MAX_DIST ){
+        sun_shadow *= .3;
     }
-    return dif;
+    return sun_color * sun_dif * sun_shadow + sky_color * sky_dif + bounce_color * bounce_dif;
+    // return sun_color * sun_dif * sun_shadow + sky_color * sky_dif + bounce_color * bounce_dif;
 }
 
-// float GetSunLight (vec3 p, vec3 normal){ //gets the position of intersection of ray with shape
-//     vec3 LightPos = vec3(5 , -5, 16);
-//     vec3 l = normalize(LightPos  - p); // vector from light source to position
-//     return clamp(dot(normal, l)  , 0., 1.);
-//     // //compute shadows
-//     // float d = RayMarch(p+n * SURF_DIST,l);
-//     // if(d<length(LightPos -p)){
-//     //     dif *= .3;
-//     // }
-// }
 
-// float GetSkyLight (vec3 p, vec3 normal){
-//     vec3 sunPos = vec3(0.,10.,0.);
-//     return clamp(dot(normal, sunPos), 0., 1.);
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

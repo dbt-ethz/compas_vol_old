@@ -171,6 +171,8 @@ class RayMarchingFactory:
         ### load ray marching shader
         if default_fragment_shader: 
             myShader = self.create_default_post_processing_fragment_shader()
+            # myShader = Shader.load(Shader.SL_GLSL , shader_path.get_shader_path(self.main_path, "vshader.glsl"),\
+            #                                         shader_path.get_shader_path(self.main_path, "TEMPORARY_fshader_postprocessing.glsl"))               
         else: 
             if custom_fragment_shader:
                 myShader = Shader.load(Shader.SL_GLSL , shader_path.get_shader_path(self.main_path, "vshader.glsl"),\

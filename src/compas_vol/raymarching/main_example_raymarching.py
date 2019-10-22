@@ -63,6 +63,7 @@ if __name__ == "__main__":
     
     ### panda3d visualisation
     renderer = PandaRenderer()
+    # renderer.display_axes_xyz(3)
 
     # m = discretize_distance_field_in_array(total_geom)
     # renderer.display_volumetric_grid(lb, ub, m, num, fact, True)
@@ -74,10 +75,11 @@ if __name__ == "__main__":
     translator = Translator(total_geom)
 
     rayMarcher = RayMarchingFactory( main_path , renderer, translator)
-    # rayMarcher.post_processing_ray_marching_filter()
-    rayMarcher.ray_marching_shader()
+    rayMarcher.post_processing_ray_marching_filter()
+    # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
     rayMarcher.create_slicing_slider(-7, 16 ,-7)
+
 
     renderer.show()
 

@@ -7,7 +7,6 @@ precision mediump float;
 #define object_max_num    30 // CAREFUL, MEMORY LIMITED
 #define geom_data_max_num 200
 #define max_num_of_children 30
-#define max_num_of_geom_data 30 // attention should be at least bigger than max_num_of_children
 
 #define resolution_of_texture 1024
 
@@ -51,7 +50,7 @@ vec3 animate_point(in int current_index){
     return vec3(sin(osg_FrameTime * frequency) * magnitude, cos(offset +osg_FrameTime * frequency) * magnitude, sin(offset + osg_FrameTime * frequency) * magnitude);
 }
 
-float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_of_geom_data] geometry_data){ //current_index only needed for 
+float VolPrimitive(in vec3 p, in int id, in int current_index, in float[20] geometry_data){ //current_index only needed for 
     //VolSphere
     if (id == VolSphere_id){
         vec3 center = vec3(geometry_data[0], geometry_data[1], geometry_data[2]);
@@ -105,7 +104,7 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_
 #define Intersection_id 201
 #define Smooth_Union_id 202
 
-float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in int count){
+float VolCombination(in int id, in float[max_num_of_children] geometry_data, in int count){
     //Union
     if (id == Union_id){
         float d = 10000.; // very big value
@@ -113,6 +112,7 @@ float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in
             float child_dist = objects_values[int(geometry_data[i])];
             d = min(d, child_dist); }
         return d;
+        
     //Intersection
     } else if (id == Intersection_id){
         float d = -10000.; // very small value
@@ -141,12 +141,12 @@ float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in
 ///// MODIFICATIONS
 #define Shell_id 300
 
-float VolModification(in int id, in int index, in float [max_num_of_geom_data] geometry_data){
+float VolModification(in int id, in int index, in float [20] data){
     // Shell
     if (id == Shell_id){ //// The shell theoretically needs to know the child. But practically it's always the next index 
         float current_dist = objects_values[index+1]; 
-        float d = geometry_data[0];
-        float s = geometry_data[1];
+        float d = data[0];
+        float s = data[1];
         return abs(current_dist + (s - 0.5) * d) - d/2.0;
     } else {
         return 0.;
@@ -155,7 +155,7 @@ float VolModification(in int id, in int index, in float [max_num_of_geom_data] g
 
 ///// MICROSTRUCTURES
 #define Lattice_id 400
-// float VolMicrostructure(in vec3 p, in int id, in int index, in float [max_num_of_geom_data] geometry_data){
+// float VolMicrostructure(in vec3 p, in int id, in int index, in float [100] geometry_data){
     // // Lattice
     // if (id == Lattice_id){ 
     //     float unitcell = geometry_data[0];
@@ -186,14 +186,172 @@ float VolModification(in int id, in int index, in float [max_num_of_geom_data] g
     // return 1.
 // }
 
+///// -------------------- Get distance 
+
+float dist_final;
+float dist;
+int current_index;
+int current_id;
+int parent_index; 
+int parent_id;
+int count;
 
 
+float y_slicing_Plane(vec3 p, float y_of_plane){
+    return -(p.y - y_of_plane);
+}
+
+float GetDistance(vec3 p){ //union of shapes  
+    int pos = 0;
+    for (int i = 0; i < object_max_num -1; i++ ){ 
+    //     //---- get data
+        current_index = int(v_indices[i]);
+        current_id = int(v_ids[i]);
+        count = int(v_data_count_per_object[i]);
+
+        float [20] geometry_data ;
+        for (int j=0 ; j < v_data_count_per_object[i]; j++){
+            geometry_data[j] = v_object_geometries_data[pos + j];
+        }
+
+        /////------ Get dist of current object
+        //primitive
+        if (current_id == VolSphere_id || current_id == VolBox_id || current_id == VolTorus_id || current_id == VolCylinder_id){
+            dist = VolPrimitive(p, current_id, current_index, geometry_data);
+            objects_values[current_index] = dist;
+        //combination
+        } else if (current_id == Union_id || current_id ==  Intersection_id ||current_id ==  Smooth_Union_id ){
+            dist = VolCombination(current_id, geometry_data, count); /// HERE!!!
+            objects_values[current_index] = dist;
+        //modification
+        } else if(current_id == Shell_id){ // Shell FIX HERE: UNIVERSAL MODIFICATION
+            dist = VolModification(current_id , current_index, geometry_data);
+            objects_values[current_index] = dist;  
+        }
+        pos += int(v_data_count_per_object[i]);
+
+        /////----- break loop once the necessary values have been calculated
+        if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
+            dist_final = objects_values[display_target_object];
+
+            // intersect wih slicing plane !!!!!!!!!!!!!!!HERE THIS SHOULD HAPPEN ONLY IF SLICING PLANE EXISTS
+            float y_slice_plane_dist = y_slicing_Plane(p, y_slice);
+            return max(dist_final, y_slice_plane_dist);
+
+            return dist_final;
+        }
+    }  
+}
 
 
+///// --------------------Raymarching
+int total_steps = 0;
+
+#define MAX_STEPS 200
+#define MAX_DIST 200.
+#define SURF_DIST 0.02
+float RayMarch(vec3 ro, vec3 rd){ // ray origin, ray direction
+    float dO = 0.; // distance from origin
+
+    for (int i = 0;  i< MAX_STEPS; i++){
+        vec3 p = ro + rd * dO;
+        float dS = GetDistance(p); // Get distance scene
+        dO += dS;
+        total_steps += 1;
+        if (dO> MAX_DIST || dS < SURF_DIST) break;
+    }
+    return dO;
+}
 
 
+///// --------------------Visualization functions
+
+vec3 GetNormal(vec3 p){
+    float d = GetDistance(p);
+    //evaluate distance of points around p
+    vec2 e = vec2(.01 , 0); // very small vector
+    vec3 n = d - vec3(GetDistance(p-e.xyy), // e.xyy = vec3(.01,0,0)
+                      GetDistance(p-e.yxy),
+                      GetDistance(p-e.yyx));
+    return normalize(n);
+}
+
+float GetLight (vec3 p){ //gets the position of intersection of ray with shape
+    vec3 LightPos = vec3(0 , 5, 6);
+    // LightPos.xz += vec2( sin(u_time) , cos(u_time));
+
+    vec3 l = normalize(LightPos - p); // vector from light source to position
+    vec3 n = GetNormal(p);
+    float dif = clamp(dot(n, l)  , 0., 1.);
+
+    //compute shadows
+    float d = RayMarch(p+n * SURF_DIST,l);
+    if(d<length(LightPos -p)){
+        dif *= .3;
+    }
+    return dif;
+}
 
 
+// ---- extra inputs for post-processing
+// buffers
+uniform sampler2D color_texture;
+uniform sampler2D depth_buffer;
+// transformationm matrix of perspective camera (can't use matrices of default orthographic camera)
+uniform mat4 transform_clip_plane_to_perspective_camera;
+
+vec3 findRayDirection(in vec2 uv){
+    vec4 pixel_world_coords =  transform_clip_plane_to_perspective_camera * vec4(uv.x, uv.y, 1., 1.);
+    vec3 rd = pixel_world_coords.xyz;
+    return normalize(rd);
+}
+
+///---------------------------------------------------------------- DEPTH  
+vec3 World_position_from_depth(in float depth, in vec2 uv){
+    vec2 st_ = uv * 2.0 - 1.0;          //translate 0s at the center of the image, range [-1,1]
+    depth =  depth * 2.0 - 1.0;   //do the same for depth values 
+    vec4 clipSpacePosition =  vec4(st_.x, st_.y, depth, 1.);
+    vec4 viewSpacePosition = transform_clip_plane_to_perspective_camera * clipSpacePosition;
+    viewSpacePosition /= viewSpacePosition.w; // Perspective division
+    return viewSpacePosition.xyz;
+    }
 
 
+void main()
+{
+    vec2 st = gl_FragCoord.xy / u_resolution.xy;
+    vec2 texture_uv = gl_FragCoord.xy / vec2(resolution_of_texture);
 
+    // ------------- get information from buffers
+    vec4 color_pixel = texture2D(color_texture, texture_uv.xy);  
+    vec4 depth_pixel = texture2D(depth_buffer, texture_uv.xy); 
+
+    // ------------- calculate distance of objects
+    vec3 world_pos_object = World_position_from_depth(depth_pixel.x, st.xy);
+    float dist_object = length(world_pos_object - camera_POS); //distance of rendered objects from camera 
+
+    // ------------- ray marching 
+    vec2 uv = 2*(st - vec2(0.5, 0.5)); //put 0 in the center of the window, range of values: [-1,1]
+    vec3 ro = camera_POS.xyz; // ray origin : camera position (world coordinates)
+    vec3 rd = findRayDirection(uv);
+    float d = RayMarch(ro, rd);
+    vec3 world_pos_SDF = ro + rd * d; // position of intersection of ray with solid
+
+    float dist_SDF = length(world_pos_SDF - camera_POS); //distance of SDF in current position from camera 
+    vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
+
+    // check depth and color accordingly
+    vec3 color = vec3(0.);
+    if (dist_object > dist_SDF && dist_SDF < 200){
+       
+        if (abs(world_pos_SDF.y - y_slice) < 0.1) {
+            color = vec3(0.1, 0.1, 0.1);  // color white section
+        } else {
+            color = color_of_SDF ; }
+    } else {
+        color = color_pixel.xyz;
+    }
+
+    // color = vec3( total_steps / 50. ); // display number of steps 
+    gl_FragColor = vec4(color, 1.);
+}
