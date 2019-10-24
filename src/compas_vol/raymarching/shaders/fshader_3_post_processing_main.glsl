@@ -45,17 +45,22 @@ void main()
     float dist_SDF = length(world_pos_SDF - camera_POS); //distance of SDF in current position from camera 
 
     // ------------- simple light
-    vec3 light = GetLight(GetNormal(world_pos_SDF), world_pos_SDF); 
-    vec3 object_material = vec3(0.18); // default material albedo
-    vec3 color_of_SDF = object_material * light; 
-    color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
-    // vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
+    // vec3 light = GetLight(GetNormal(world_pos_SDF), world_pos_SDF); 
+    // vec3 object_material = vec3(0.18); // default material albedo
+    // vec3 color_of_SDF = object_material * light; 
+    // color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
+
+    // ------------- color by normal
+    vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
 
 
-    // check depth and color accordingly
+
+    
+    
+
+    // check depth and pick what to display accordingly
     vec3 color = vec3(0.);
     if (dist_object > dist_SDF && dist_SDF < 200){
-       
         if (abs(world_pos_SDF.y - y_slice) < 0.1) {
             color = vec3(0.1, 0.1, 0.1);  // color white section
         } else {

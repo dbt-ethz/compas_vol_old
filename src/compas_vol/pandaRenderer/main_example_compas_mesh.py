@@ -43,7 +43,8 @@ def extrude(mesh, label_to_extrude, new_label, distance, delete_old_face = True)
             new_face = [v, v_new, v_next_new , v_next]
             new_face_key = mesh.add_face(new_face)
             new_face_keys.append(new_face_key)
-            mesh.set_face_attribute(new_face_key, 'ftype', new_label)
+            mesh.set_face_attribute(new_face_key, 'ftype', 
+            new_label)
             
             fourth_face_vertices.append(v_new)
         

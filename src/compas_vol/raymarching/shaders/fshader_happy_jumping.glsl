@@ -333,7 +333,6 @@ void main(){
 
 
     //// ------ Color correction
-
     color = pow( color, vec3(0.4545)); // square root. Gamma correction
 
     //add contrast

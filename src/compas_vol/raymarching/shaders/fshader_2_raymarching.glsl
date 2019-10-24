@@ -17,50 +17,57 @@ float z_ground_Plane(vec3 p, float z_of_plane){
     return p.z - z_of_plane;
 }
 
+float bounding_sphere(vec3 p, vec3 center, float radius){
+    return length(p - center) - radius;
+}
+
+
+
 float GetDistance(vec3 p){ //union of shapes  
     int pos = 0;
-    for (int i = 0; i < object_max_num -1; i++ ){ 
-    //     //---- get data
-        current_index = int(v_indices[i]);
-        current_id = int(v_ids[i]);
-        count = int(v_data_count_per_object[i]);
+    float bounding_sphere_distance = bounding_sphere(p, vec3(3.), 20.);
+    float dist_final = 5. ; // HERE THIS NEEDS ATTENTION, shouldn't be too big
+    if (bounding_sphere_distance < 0) { // if withing the bounding sphere. OPTIMIZATION. // HERE THIS NEEDS ATTENTION, how to find dimensions of bounding sphere
+    
+        for (int i = 0; i < object_max_num -1; i++ ){ 
+            //---- get data
+            current_index = int(v_indices[i]);
+            current_id = int(v_ids[i]);
+            count = int(v_data_count_per_object[i]);
 
-        float [max_num_of_geom_data] geometry_data ;
-        for (int j=0 ; j < v_data_count_per_object[i]; j++){
-            geometry_data[j] = v_object_geometries_data[pos + j];
-        }
+            float [max_num_of_geom_data] geometry_data ;
+            for (int j=0 ; j < v_data_count_per_object[i]; j++){
+                geometry_data[j] = v_object_geometries_data[pos + j];
+            }
 
-        /////------ Get dist of current object
-        //primitive
-        if (current_id == VolSphere_id || current_id == VolBox_id || current_id == VolTorus_id || current_id == VolCylinder_id){
-            dist = VolPrimitive(p, current_id, current_index, geometry_data);
-            objects_values[current_index] = dist;
-        //combination
-        } else if (current_id == Union_id || current_id ==  Intersection_id ||current_id ==  Smooth_Union_id ){
-            dist = VolCombination(current_id, geometry_data, count);
-            objects_values[current_index] = dist;
-        //modification
-        } else if(current_id == Shell_id){ // Shell FIX HERE: UNIVERSAL MODIFICATION
-            dist = VolModification(current_id , current_index, geometry_data);
-            objects_values[current_index] = dist;  
-        }
-        pos += int(v_data_count_per_object[i]);
+            /////------ Get dist of current object
+            //primitive
+            if (current_id == VolSphere_id || current_id == VolBox_id || current_id == VolTorus_id || current_id == VolCylinder_id){
+                dist = VolPrimitive(p, current_id, current_index, geometry_data);
+                objects_values[current_index] = dist;
+            //combination
+            } else if (current_id == Union_id || current_id ==  Intersection_id ||current_id ==  Smooth_Union_id ){
+                dist = VolCombination(current_id, geometry_data, count);
+                objects_values[current_index] = dist;
+            //modification
+            } else if(current_id == Shell_id){ // Shell FIX HERE: UNIVERSAL MODIFICATION
+                dist = VolModification(current_id , current_index, geometry_data);
+                objects_values[current_index] = dist;  
+            }
+            pos += int(v_data_count_per_object[i]);
 
-        /////----- break loop once the necessary values have been calculated
-        if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
-            dist_final = objects_values[display_target_object];
+            /////----- break loop once the necessary values have been calculated
+            if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
+                dist_final = objects_values[display_target_object];
 
-            float ground_z = -3.;
-            dist_final = min(z_ground_Plane(p, ground_z), dist_final);
-
-            // intersect wih slicing plane !!!!!!!!!!!!!!!HERE THIS SHOULD HAPPEN ONLY IF SLICING PLANE EXISTS
-            float y_slice_plane_dist = y_slicing_Plane(p, y_slice);
-            dist_final =  max(dist_final, y_slice_plane_dist );
-
-
-            return dist_final;
+                // intersect wih slicing plane // this should only happen if the slicing plane exists
+                float y_slice_plane_dist = y_slicing_Plane(p, y_slice); 
+                dist_final =  max(dist_final, y_slice_plane_dist );
+            }
+    
         }
     }  
+    return dist_final;
 }
 
 
@@ -78,6 +85,7 @@ float RayMarch(vec3 ro, vec3 rd){ // ray origin, ray direction
         float dS = GetDistance(p); // Get distance scene
         dO += dS;
         total_steps += 1;
+
         if (dO> MAX_DIST || abs(dS) < SURF_DIST) break;
     }
     return dO;
@@ -112,9 +120,23 @@ vec3 GetNormal(vec3 p){
 //     return dif;
 // }
 
+// float CalculateOcclusion( in vec3 pos, in vec3 normal){
+// 	float occ = 0.0;
+//     float sca = 1.0;
+//     for( int i=0; i<5; i++ )
+//     {
+//         float h = SURF_DIST + 0.11*float(i)/4.0;
+//         vec3 opos = pos + h * normal;
+//         float d = GetDistance(opos);
+//         occ += (h-d)*sca;
+//         sca *= 0.95;
+//     }
+//     return clamp( 1.0 - 2.0*occ, 0.0, 1.0 );
+// }
+
 #define sun_shadow_dist 100; 
 vec3 GetLight(in vec3 normal, in vec3 pos){
-    vec3 sun_color        = vec3(7.0, 5.0, 3.0);
+    vec3 sun_color        = vec3(7.0, 5.0, 3.0); //normalize?? Looks too dull...
     vec3 sky_color        = vec3(0.5, 0.8, 0.95);
     vec3 bounce_color     = vec3(0.7, 0.3, 0.2);
 
@@ -133,8 +155,14 @@ vec3 GetLight(in vec3 normal, in vec3 pos){
     if(len_sun_shadow < MAX_DIST ){
         sun_shadow *= .3;
     }
-    return sun_color * sun_dif * sun_shadow + sky_color * sky_dif + bounce_color * bounce_dif;
-    // return sun_color * sun_dif * sun_shadow + sky_color * sky_dif + bounce_color * bounce_dif;
+
+    // float occlusion = CalculateOcclusion(pos, normal);
+    // return vec3(occlusion * occlusion); // if use occlusion, multiply it with all returned colors 
+
+
+    return sun_color * sun_dif * sun_shadow + 
+           sky_color * sky_dif + 
+           bounce_color * bounce_dif ;
 }
 
 

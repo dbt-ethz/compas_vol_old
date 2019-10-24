@@ -16,7 +16,7 @@ if __name__ == "__main__":
     translator = Translator(None)
 
     rayMarcher = RayMarchingFactory( main_path , renderer, translator)
-    rayMarcher.ray_marching_shader( default_fragment_shader = False, custom_fragment_shader = "fshader_custom.glsl")
+    rayMarcher.ray_marching_shader( default_fragment_shader = False, custom_fragment_shader = "fshader_happy_jumping.glsl")
     # rayMarcher.post_processing_ray_marching_filter( default_fragment_shader = False, custom_fragment_shader = "fshader_deconstruction_tutorial.glsl")
 
     renderer.show()

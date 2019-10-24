@@ -128,8 +128,8 @@ class RayMarchingFactory:
     def task_update_ray_marching_shader (self, task):
         self.shader_quad.set_shader_input("camera_POS", self.renderer.camera.getPos())
         self.shader_quad.set_shader_input("display_target_object", self.display_target_object[0]) 
-        if task.time % 5 == 0:
-            print (self.display_target_object[0])
+        # if task.time % 5 == 0:
+        #     print (self.display_target_object[0])
         return task.cont 
 
     def create_default_fragment_shader(self):
