@@ -1,5 +1,4 @@
 ///// -------------------- Get distance 
-
 float dist_final;
 float dist;
 int current_index;
@@ -8,24 +7,9 @@ int parent_index;
 int parent_id;
 int count;
 
-
-float y_slicing_Plane(vec3 p, float y_of_plane){
-    return -(p.y - y_of_plane);
-}
-
-float z_ground_Plane(vec3 p, float z_of_plane){
-    return p.z - z_of_plane;
-}
-
-float bounding_sphere(vec3 p, vec3 center, float radius){
-    return length(p - center) - radius;
-}
-
-
-
 float GetDistance(vec3 p){ //union of shapes  
     int pos = 0;
-    float bounding_sphere_distance = bounding_sphere(p, vec3(3.), 20.);
+    float bounding_sphere_distance = bounding_sphere(p, vec3(5.), 90.);
     float dist_final = 5. ; // HERE THIS NEEDS ATTENTION, shouldn't be too big
     if (bounding_sphere_distance < 0) { // if withing the bounding sphere. OPTIMIZATION. // HERE THIS NEEDS ATTENTION, how to find dimensions of bounding sphere
     
@@ -164,30 +148,6 @@ vec3 GetLight(in vec3 normal, in vec3 pos){
            sky_color * sky_dif + 
            bounce_color * bounce_dif ;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -22,7 +22,8 @@ from compas_vol.raymarching.remapping_functions import remap
 ## window size
 from panda3d.core import loadPrcFileData     
 loadPrcFileData('', """ # win-size 1024 700
-                          window-title Raymarching example """) 
+                          window-title Raymarching example 
+                          sync-video 0 """) 
 
 main_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -55,13 +56,15 @@ if __name__ == "__main__":
     torus = VolTorus(Torus(Plane((3, 3, 3), (1., 0., 1.)), 2.0, 1.0))
     sphere =  VolSphere(Sphere(Point(2, 2, 2), 2))
     cylinder = VolCylinder(Cylinder(Circle(Plane([2, 3, 4], [0.3, 0.4, 1.]), 2.0), 3.0))
-    box = VolBox(Box(Frame(Point(4., 4., 4.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 7, 8, 9), 1)
+    # box = VolBox(Box(Frame(Point(4., 4., 4.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 7, 8, 9), 1)
+    box = VolBox(Box(Frame(Point(0., 0., 0.), [1., 0, 0], [0, 1., 0.]), 2, 2, 9), 2)
     union = Union(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 2)))
     intersection = Intersection(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 9)))
     sh = SmoothUnion(Shell(box, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
-    total_geom = sh  #SmoothUnion(Shell(Union(sphere, box), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
+    total_geom = box  #SmoothUnion(Shell(Union(sphere, box), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
     
     ### panda3d visualisation
+    # camera_start_position = (10,10, 10) 
     renderer = PandaRenderer()
     # renderer.display_axes_xyz(3)
 
@@ -74,9 +77,11 @@ if __name__ == "__main__":
 
     translator = Translator(total_geom)
 
-    rayMarcher = RayMarchingFactory( main_path , renderer, translator)
-    # rayMarcher.post_processing_ray_marching_filter()
-    rayMarcher.ray_marching_shader()
+    
+
+    rayMarcher = RayMarchingFactory(main_path, renderer, translator)
+    rayMarcher.post_processing_ray_marching_filter()
+    # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
     rayMarcher.create_slicing_slider(-7, 16 ,-7)
 

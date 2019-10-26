@@ -107,7 +107,8 @@ class RayMarchingFactory:
         ### set shader inputs 
         self.shader_quad.setShader(myShader)
         self.shader_quad.setShaderInput("u_resolution" , self.renderer.getSize())
-        self.shader_quad.setShaderInput("camera_POS", self.renderer.camera.getPos())
+        self.shader_quad.setShaderInput("camera_POS", self.renderer.camera.getPos() - self.renderer.camera_start_position)
+        self.shader_quad.setShaderInput("camera_START_POS", self.renderer.camera_start_position)
         
         self.shader_quad.setShaderInput("v_indices", self.translator.indices)
         self.shader_quad.setShaderInput("v_ids", self.translator.ids)
@@ -124,10 +125,13 @@ class RayMarchingFactory:
         self.shader_quad.node().setFinal(True)
         self.renderer.taskMgr.add(self.task_update_ray_marching_shader, "task_update_ray_marching_shader")
 
-
+##camera_START_POS
     def task_update_ray_marching_shader (self, task):
-        self.shader_quad.set_shader_input("camera_POS", self.renderer.camera.getPos())
+
+        
+        self.shader_quad.set_shader_input("camera_POS", self.renderer.camera.getPos() + self.renderer.camera_start_position )
         self.shader_quad.set_shader_input("display_target_object", self.display_target_object[0]) 
+
         # if task.time % 5 == 0:
         #     print (self.display_target_object[0])
         return task.cont 
@@ -142,9 +146,11 @@ class RayMarchingFactory:
         #fragments shaders
         with open(shader_path.get_shader_path( self.main_path, "fshader_1_translations.glsl"), "r") as shader:
             parts.append(shader.read())
-        with open(shader_path.get_shader_path( self.main_path,"fshader_2_raymarching.glsl"), "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_2_extras.glsl"), "r") as shader:
             parts.append(shader.read())  
-        with open(shader_path.get_shader_path( self.main_path,"fshader_3_simple_shader_main.glsl"), "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_3_raymarching.glsl"), "r") as shader:
+            parts.append(shader.read())  
+        with open(shader_path.get_shader_path( self.main_path,"fshader_4_simple_shader_main.glsl"), "r") as shader:
             parts.append(shader.read())          
         f_shader_full_code = "\n".join(parts)
         myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)
@@ -162,6 +168,9 @@ class RayMarchingFactory:
     def post_processing_ray_marching_filter(self, default_fragment_shader = True, custom_fragment_shader = None):
 
         manager = FilterManager(self.renderer.win, self.renderer.cam)
+        
+
+
 
         color_texture = Texture()
         depth_buffer = Texture()
@@ -231,9 +240,11 @@ class RayMarchingFactory:
         #fragments shaders
         with open(shader_path.get_shader_path( self.main_path, "fshader_1_translations.glsl"), "r") as shader:
             parts.append(shader.read())
-        with open(shader_path.get_shader_path( self.main_path,"fshader_2_raymarching.glsl"), "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_2_extras.glsl"), "r") as shader:
             parts.append(shader.read())  
-        with open(shader_path.get_shader_path( self.main_path,"fshader_3_post_processing_main.glsl"), "r") as shader:
+        with open(shader_path.get_shader_path( self.main_path,"fshader_3_raymarching.glsl"), "r") as shader:
+            parts.append(shader.read())  
+        with open(shader_path.get_shader_path( self.main_path,"fshader_4_post_processing_main.glsl"), "r") as shader:
             parts.append(shader.read())          
         f_shader_full_code = "\n".join(parts)
         myShader = Shader.make(Shader.SL_GLSL, v_shader_full_code, f_shader_full_code)

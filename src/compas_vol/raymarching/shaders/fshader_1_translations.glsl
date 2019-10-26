@@ -1,4 +1,5 @@
-#version 120
+// #version 120
+#version 140
 
 #ifdef GL_ES
 precision mediump float;
@@ -14,6 +15,7 @@ precision mediump float;
 ///---------------------------------------------------------------- INPUTS
 uniform vec2 u_resolution;
 uniform vec3 camera_POS;
+uniform vec3 camera_START_POS;
 uniform float osg_FrameTime;
 
 // v_data
@@ -185,8 +187,6 @@ float VolModification(in int id, in int index, in float [max_num_of_geom_data] g
     // }
     // return 1.
 // }
-
-
 
 
 

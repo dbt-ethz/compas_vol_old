@@ -32,12 +32,14 @@ class PandaRenderer(ShowBase):
 
     """
 
-    def __init__(self):
+    def __init__(self, camera_start_position_ = (0,0,0)):
         ShowBase.__init__(self)
         self.setBackgroundColor(1,1,1)
         self.setFrameRateMeter(True)
-        # self.cam.setPos(8,-40,5)   
         self.filters = CommonFilters(self.win, self.cam)
+
+        self.camera_start_position = camera_start_position_
+        self.cam.setPos(camera_start_position_)
 
         ## group GeomNodes
         self.Meshes_group_node = GeomNode("MESHES")

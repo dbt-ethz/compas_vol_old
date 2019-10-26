@@ -212,8 +212,7 @@ class VLattice_data:
                 #         self.geometry_data.append(tupl[0])
                 #         self.geometry_data.append(tupl[1])
 
-
-        
+ 
                 
 
 

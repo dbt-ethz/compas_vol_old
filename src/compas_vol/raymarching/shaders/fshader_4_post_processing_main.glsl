@@ -20,6 +20,7 @@ vec3 World_position_from_depth(in float depth, in vec2 uv){
     vec4 viewSpacePosition = transform_clip_plane_to_perspective_camera * clipSpacePosition;
     viewSpacePosition /= viewSpacePosition.w; // Perspective division
     return viewSpacePosition.xyz;
+
     }
 
 void main()
@@ -72,6 +73,7 @@ void main()
 
     // color = vec3( total_steps / 50. ); // display number of steps 
     gl_FragColor = vec4(color, 1.);
+    // out_Color = vec4(color, 1.);
 }
 
 

@@ -1,8 +1,16 @@
 //////// ------------------ Find Ray Direction
 uniform mat4 trans_clip_to_model;
-uniform mat4 p3d_ViewProjectionMatrixInverse;
+uniform mat4 p3d_ModelViewProjectionMatrixInverse;
+/// camera_START_POS
+
+mat4 camera_start_transformation = mat4(
+    1.,0.,0., camera_START_POS[0],
+    0.,1.,0., camera_START_POS[1],
+    0.,0.,1., camera_START_POS[2],
+    0.,0.,0., 1. );
 
 vec3 findRayDirection(in vec2 uv, in vec3 ro){
+    // mat4 c = transpose(camera_start_transformation);
     vec4 pixel_world_coords =  trans_clip_to_model * vec4(uv.x, uv.y, 1., 1.);
     vec3 rd = pixel_world_coords.xyz;
     return normalize(rd);
