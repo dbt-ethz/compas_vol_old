@@ -75,8 +75,9 @@ class VolBox(object):
 
     @property
     def data(self):
-        return {'box': self.box.data,
-                'radius': self.radius}
+        return {'type': self.__class__.__name__,
+                'geom': {'box': self.box.data,
+                         'radius': self.radius}}
 
     def to_data(self):
         return self.data
@@ -85,6 +86,33 @@ class VolBox(object):
     def data(self, data):
         self.box = Box.from_data(data['box'])
         self.radius = data['radius']
+
+    # ==========================================================================
+    # factory
+    # ==========================================================================
+
+    @classmethod
+    def from_data(cls, data):
+        """Construct a volumetric box from its data representation.
+
+        Parameters
+        ----------
+        data : :obj:`dict`
+            The data dictionary.
+
+        Returns
+        -------
+        VolBox
+            The constructed box.
+
+        Examples
+        --------
+        >>> 
+
+        """
+        box = Box.from_data(data['box'])
+        vbox = cls(box, data['radius'])
+        return vbox
 
     def get_distance(self, point):
         """
@@ -165,7 +193,7 @@ if __name__ == "__main__":
 
     box = Box(Frame(Point(3, 2, 0), [1, 0.2, 0.1], [-0.1, 1, 0.1]), 25, 10, 15)
     vb = VolBox(box, 3.0)
-    print(vb.volume)
+    print(vb.to_data())
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
     d = vb.get_distance_numpy(x, y, z)

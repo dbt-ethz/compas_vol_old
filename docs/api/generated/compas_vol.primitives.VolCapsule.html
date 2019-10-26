@@ -19,11 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="VolCapsule.__init__" href="compas_vol.primitives.VolCapsule.__init__.html" />
     
-    
-    
-        <link rel="prev" title="VolTorus.get_distance_numpy" href="compas_vol.primitives.VolTorus.get_distance_numpy.html" />
     
 
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -58,52 +54,6 @@
 
                     <div class="detail section" id="volcapsule">
 <h1>VolCapsule</h1>
-<dl class="class">
-<dt id="compas_vol.primitives.VolCapsule">
-<em class="property">class </em><code class="sig-prename descclassname">compas_vol.primitives.</code><code class="sig-name descname">VolCapsule</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">radius</em><span class="sig-paren">)</span></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>A volumetric capsule is defined by a line segment and a radius.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>segment</strong> (<em>list or tuple of two points</em>) – Start and end point of the line segment.</p></li>
-<li><p><strong>radius</strong> (<em>float</em>) – The radius of the capsule.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ep</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">segment</span> <span class="o">=</span> <span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">capsule</span> <span class="o">=</span> <span class="n">VolCapsule</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
-</code></pre></div>
-</div>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.primitives.VolCapsule.__init__.html#compas_vol.primitives.VolCapsule.__init__" title="compas_vol.primitives.VolCapsule.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(segment, radius)</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_vol.primitives.VolCapsule.get_distance.html#compas_vol.primitives.VolCapsule.get_distance" title="compas_vol.primitives.VolCapsule.get_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance</span></code></a>(point)</p></td>
-<td><p>single point distance function</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Inherited Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
                     
@@ -132,21 +82,11 @@
                         <div class="navbar-expand-md">
                             <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                            <ul class="nav flex-column active">
+                            <ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
-<li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
-<li class="nav-item active"><a class="nav-link reference internal" href="../compas_vol.html">compas_vol</a><ul class="nav active">
-<li class="nav-item active"><a class="nav-link reference internal" href="../compas_vol.primitives.html">compas_vol.primitives</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../compas_vol.combinations.html">compas_vol.combinations</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../compas_vol.modifications.html">compas_vol.modifications</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../compas_vol.microstructures.html">compas_vol.microstructures</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../compas_vol.analysis.html">compas_vol.analysis</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../license.html">License</a></li>
 </ul>
 
@@ -166,9 +106,7 @@
                 
 
                 <ul class="nav flex-column" id="compas-localnav">
-<li class="nav-item"><a class="nav-link reference internal" href="#">VolCapsule</a><ul class="nav">
-</ul>
-</li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">VolCapsule</a></li>
 </ul>
 
 
@@ -180,11 +118,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Sep 30, 2019.
+                Last updated on Oct 27, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
             
         </div>
     </footer>

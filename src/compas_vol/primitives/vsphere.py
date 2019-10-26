@@ -34,6 +34,19 @@ class VolSphere(object):
             raise ValueError
         self._sphere = sphere
 
+    @property
+    def data(self):
+        return {'type': self.__class__.__name__,
+                'geom': self.sphere.data}
+
+    def to_data(self):
+        return self.data
+
+    def from_data(cls, data):
+        sphere = Sphere.from_data(data['geom'])
+        vsphere = cls(sphere)
+        return vsphere
+
     def get_distance(self, point):
         if not isinstance(point, Point):
             point = Point(*point)
@@ -51,6 +64,8 @@ class VolSphere(object):
 if __name__ == "__main__":
     o = VolSphere(Sphere(Point(4, 2, 0), 8.5))
 
+    print(o.__dict__)
+
     for y in range(-15, 15):
         s = ''
         for x in range(-30, 30):
@@ -59,4 +74,4 @@ if __name__ == "__main__":
                 s += 'x'
             else:
                 s += '.'
-        print(s)
+        # print(s)

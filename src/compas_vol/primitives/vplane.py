@@ -22,6 +22,23 @@ class VolPlane(object):
     def __init__(self, plane):
         self.plane = plane
 
+    @property
+    def data(self):
+        return self.plane.to_data()
+
+    def to_data(self):
+        return self.data
+
+    @data.setter
+    def data(self, data):
+        self.plane = Plane.from_data(data)
+
+    @classmethod
+    def from_data(cls, data):
+        plane = Plane.from_data(data)
+        vplane = cls(plane)
+        return vplane
+
     def get_distance(self, point):
         """
         single point distance function

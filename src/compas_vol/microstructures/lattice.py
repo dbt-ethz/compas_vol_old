@@ -29,7 +29,7 @@ class Lattice(object):
     def __init__(self, ltype=0, unitcell=1.0, thickness=0.1):
         self.pointlist = self.create_points()
         self.types = self.create_types()
-        self.type = min(max(0,ltype), len(self.types)-1)
+        self.type = min(max(0, ltype), len(self.types) - 1)
         self.unitcell = unitcell
         self.thickness = thickness
         self.frame = Frame.worldXY()
@@ -49,7 +49,7 @@ class Lattice(object):
 
     @property
     def typenames(self):
-        tn = ['bigx', 'grid', 'star', 'cross', 'octagon', 'octet', 'vintile', 'dual', 'interlock', 'isotrop']
+        tn = ['bigx', 'grid', 'star', 'cross', 'octagon', 'octet', 'vintile', 'dual', 'interlock', 'isotrop', 'hexgrid']
         d = {}
         for i, n in enumerate(tn):
             d[i] = n
@@ -63,33 +63,38 @@ class Lattice(object):
         v1 = 0.0
         v2 = 0.5
         v3 = 0.25
+        v4 = 0.20
 
         points = []
 
-        points.append((v1, v1, v1))
-        points.append((v2, v1, v1))
-        points.append((v2, v2, v1))
-        points.append((v1, v2, v1))
+        points.append((v2, v1, v1))  #  1
+        points.append((v2, v2, v1))  #  2
+        points.append((v1, v1, v1))  #  0
+        points.append((v1, v2, v1))  #  3
 
-        points.append((v1, v1, v2))
-        points.append((v2, v1, v2))
-        points.append((v2, v2, v2))
-        points.append((v1, v2, v2))
+        points.append((v1, v1, v2))  #  4
+        points.append((v2, v1, v2))  #  5
+        points.append((v2, v2, v2))  #  6
+        points.append((v1, v2, v2))  #  7
 
-        points.append((v3, v1, v1))
-        points.append((v2, v3, v1))
-        points.append((v3, v2, v1))
-        points.append((v1, v3, v1))
+        points.append((v3, v1, v1))  #  8
+        points.append((v2, v3, v1))  #  9
+        points.append((v3, v2, v1))  # 10
+        points.append((v1, v3, v1))  # 11
 
-        points.append((v1, v1, v3))
-        points.append((v2, v1, v3))
-        points.append((v2, v2, v3))
-        points.append((v1, v2, v3))
+        points.append((v1, v1, v3))  # 12
+        points.append((v2, v1, v3))  # 13
+        points.append((v2, v2, v3))  # 14
+        points.append((v1, v2, v3))  # 15
 
-        points.append((v3, v1, v2))
-        points.append((v2, v3, v2))
-        points.append((v3, v2, v2))
-        points.append((v1, v3, v2))
+        points.append((v3, v1, v2))  # 16
+        points.append((v2, v3, v2))  # 17
+        points.append((v3, v2, v2))  # 18
+        points.append((v1, v3, v2))  # 19
+
+        points.append((v4, v1, v1))  # 20
+        points.append((v1, v4, v1))  # 21
+        points.append((v1, v1, v4))  # 22
 
         return points
 
@@ -108,8 +113,9 @@ class Lattice(object):
         dual = [(0, 1), (0, 3), (0, 4)]
         interlock = grid+dual
         isotrop = [(0, 1), (2, 1), (5, 1), (7, 1), (3, 7), (6, 7), (4, 7)]
+        hexgrid = [(6, 20), (6, 21), (6, 22)]
 
-        types = [bigx, grid, star, cross, octagon, octet, vintile, dual, interlock, isotrop]
+        types = [bigx, grid, star, cross, octagon, octet, vintile, dual, interlock, isotrop, hexgrid]
         return types
 
     def get_distance(self, point):
@@ -167,7 +173,7 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    lat = Lattice(6, 5.0, 0.5)
+    lat = Lattice(10, 5.0, 0.5)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
     print(lat.typenames)

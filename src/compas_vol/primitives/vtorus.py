@@ -29,6 +29,23 @@ class VolTorus(object):
     def __init__(self, torus):
         self.torus = torus
 
+    @property
+    def data(self):
+        return self.torus.to_data()
+    
+    def to_data(self):
+        return self.data
+
+    @data.setter
+    def data(self, data):
+        self.torus = Torus.from_data(data)
+
+    @classmethod
+    def from_data(cls, data):
+        torus = Torus.from_data(data)
+        vtorus = cls(torus)
+        return vtorus
+
     def get_distance(self, point):
         """
         single point distance function

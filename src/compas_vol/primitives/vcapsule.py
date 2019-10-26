@@ -25,6 +25,26 @@ class VolCapsule(object):
         self.segment = segment
         self.radius = radius
 
+    @property
+    def data(self):
+        return {'segment': self.segment,
+                'radius': self.radius}
+
+    def to_data(self):
+        return self.data
+
+    @data.setter
+    def data(self, data):
+        self.segment = data['segment']
+        self.radius = data['radius']
+
+    @classmethod
+    def from_data(cls, data):
+        segment = data['segment']
+        radius = data['radius']
+        vcapsule = cls(segment, radius)
+        return vcapsule
+
     def get_distance(self, point):
         """
         single point distance function
