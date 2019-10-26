@@ -35,10 +35,11 @@ vec3 finite_repetition(in vec3 p, in vec3 c, in vec3 l){
 
 
 
-
-
-
-
+float ripples_sin(in vec3 p, float current_dist, float amplitude, float frequency){ //0.02, 50 
+    current_dist -= amplitude* 0.5;
+    float ripples_y = p.z; // - height * p.x * p.x; //along they y-height, minus parabola for curve
+    return current_dist - amplitude * abs(sin(ripples_y * frequency)) ;// * (1 - smoothstep(0.0, 0.15, abs(ripples_y)));
+}
 
 
 

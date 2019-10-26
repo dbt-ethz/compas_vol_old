@@ -47,8 +47,9 @@ float GetDistance(vec3 p){ //union of shapes
                 // intersect wih slicing plane // this should only happen if the slicing plane exists
                 float y_slice_plane_dist = y_slicing_Plane(p, y_slice); 
                 dist_final =  max(dist_final, y_slice_plane_dist );
+
+                // dist_final = ripples_sin(p, dist_final, 0.02, 50 ); //float amplitude, float frequency
             }
-    
         }
     }  
     return dist_final;

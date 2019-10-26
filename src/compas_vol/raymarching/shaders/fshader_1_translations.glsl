@@ -141,10 +141,10 @@ float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in
     //Subtraction
     } else if (id == Subtraction_id){
         float d = 100000.; // very big value
-        float d1 = objects_values[int(geometry_data[0])];
-        float d2 = objects_values[int(geometry_data[1])];
-        d = max(d1, -d2); 
-        return d;
+        float a = objects_values[int(geometry_data[0])];
+        float b = objects_values[int(geometry_data[1])];
+        d = max(a, -b);
+        return d; 
     } else {
         return 0.;
     }

@@ -46,8 +46,15 @@ if __name__ == "__main__":
     for i in range(height_num): #height
         for corner in box_corners: # corner
             height = i * box_dim_h/(height_num-1) - box_dim_h/2
-            sphere = VolSphere(Sphere(Point(corner[0], corner[1], height), 1. + i* 0.25))
+            radius = 1. + i * 0.25
+            sphere = VolSphere(Sphere(Point(corner[0], corner[1], height),  radius ))
             spheres_list.append(sphere)
+
+            # if i < height_num -1:
+            #     height_center_sphere = height + 0.5 * box_dim_h/(height_num-1)
+            #     center_sphere = VolSphere(Sphere(Point(0, 0, height_center_sphere), radius/3))
+            #     spheres_list.append(center_sphere)
+
     spheres = Union(spheres_list)
 
     total_geom = Subtraction(box, spheres)
