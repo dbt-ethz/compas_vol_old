@@ -18,7 +18,8 @@ cylinder_id = 103
 union_id = 200
 intersection_id = 201
 smooth_union_id = 202
-combinations_id = [union_id, intersection_id, smooth_union_id]
+subtraction_id = 203
+combinations_id = [union_id, intersection_id, smooth_union_id, subtraction_id]
 
 #modifications id
 shell_id = 300
@@ -34,6 +35,8 @@ def  get_obj_name(id):
             return "Intersection"
     elif id == smooth_union_id:
             return "Smooth Union"
+    elif id == subtraction_id:
+            return "Subtraction"
     elif id == sphere_id:
             return "Sphere"
     elif id == box_id:
@@ -55,8 +58,10 @@ def is_vIntersection(input_object):
         return isinstance(input_object, compas_vol.combinations.intersection.Intersection)
 def is_vSmooth_Union(input_object):
         return isinstance(input_object, compas_vol.combinations.smoothunion.SmoothUnion)
+def is_vSubtraction(input_object):
+        return isinstance(input_object, compas_vol.combinations.subtraction.Subtraction)
 def is_vCOMBINATION(input_object):
-        return is_vUnion(input_object) or is_vIntersection(input_object) or is_vSmooth_Union(input_object)
+        return is_vUnion(input_object) or is_vIntersection(input_object) or is_vSmooth_Union(input_object) or is_vSubtraction(input_object)
 
 
 def is_vSphere(input_object):
@@ -75,6 +80,7 @@ def is_vShell(input_object):
         return isinstance(input_object, compas_vol.modifications.shell.Shell)
 def is_vMODIFICATION(input_object):
         return is_vShell(input_object)
+
 
 def is_vLattice(input_object):
         return isinstance(input_object, compas_vol.microstructures.lattice.Lattice)
@@ -164,7 +170,15 @@ class VSmooth_Union_data:
                 self.geometry_data = [] ## this takes the list of all the children
                 self.geometry_data.append(vCurrentObject.r)
 
-
+class VSubtraction_data:
+        def __init__(self, index, vCurrentObject, parent_index, parent_id, order): #add parent id 
+                self.index = index
+                self.id = subtraction_id
+                self.parent_index = parent_index
+                self.parent_id = parent_id
+                self.order = order
+                self.children = []
+                self.geometry_data = [] ## this takes the list of all the children
 
 ################### modifications
 class VShell_data:
@@ -222,7 +236,7 @@ class VLattice_data:
 class Translator:
         """
         Creates arrays of floats that can be sent to the fragment shader
-        (INDEX AND ID ARRAYS SHOULD BE INTEGERS)
+        (INDEX AND ID ARRAYS SHOULD BE INTEGERS ? fix this )
 
         Parameters
         ----------
@@ -293,6 +307,13 @@ class Translator:
                                 objects = [in_obj.a , in_obj.b]
                                 for o in objects:
                                         self.translate_data(o, current_index, smooth_union_id, parent_order +1)
+                        elif is_vSubtraction(in_obj):
+                                new = VSubtraction_data(current_index, in_obj, parent_index, parent_id,  parent_order + 1)
+                                self.objects_unwrapped_list.append(new)
+                                objects = [in_obj.a , in_obj.b]
+                                for o in objects:
+                                        self.translate_data(o, current_index, intersection_id, parent_order +1)
+
 
                 elif is_vMODIFICATION(in_obj):
                         if is_vShell(in_obj):

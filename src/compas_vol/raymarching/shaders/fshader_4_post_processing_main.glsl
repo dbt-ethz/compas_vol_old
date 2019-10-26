@@ -46,13 +46,13 @@ void main()
     float dist_SDF = length(world_pos_SDF - camera_POS); //distance of SDF in current position from camera 
 
     // ------------- simple light
-    // vec3 light = GetLight(GetNormal(world_pos_SDF), world_pos_SDF); 
-    // vec3 object_material = vec3(0.18); // default material albedo
-    // vec3 color_of_SDF = object_material * light; 
-    // color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
+    vec3 light = GetLight(GetNormal(world_pos_SDF), world_pos_SDF); 
+    vec3 object_material = vec3(0.18); // default material albedo
+    vec3 color_of_SDF = object_material * light; 
+    color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
 
     // ------------- color by normal
-    vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
+    // vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
 
 
 

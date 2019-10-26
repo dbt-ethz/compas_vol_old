@@ -45,41 +45,38 @@ def discretize_distance_field_in_array(distance_field):
 
 
 if __name__ == "__main__":
-    ## Create compas_vol primitives
+
+
+    ## --------------------------- Geometry
     Spheres = []
     # random.seed(1)
-    for i in range(7):
+    for i in range(10):
         mySphere = VolSphere(Sphere(Point(random.randrange(lb,ub), random.randrange(lb,ub), random.randrange(lb,ub)), random.randrange(1,3)))
         Spheres.append(mySphere)
     union_spheres = Union(Spheres)
 
-    torus = VolTorus(Torus(Plane((3, 3, 3), (1., 0., 1.)), 2.0, 1.0))
-    sphere =  VolSphere(Sphere(Point(2, 2, 2), 2))
-    cylinder = VolCylinder(Cylinder(Circle(Plane([2, 3, 4], [0.3, 0.4, 1.]), 2.0), 3.0))
-    # box = VolBox(Box(Frame(Point(4., 4., 4.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 7, 8, 9), 1)
-    box = VolBox(Box(Frame(Point(0., 0., 0.), [1., 0, 0], [0, 1., 0.]), 2, 2, 9), 2)
+    # torus = VolTorus(Torus(Pla
+    # ne((3, 3, 3), (1., 0., 1.)), 2.0, 1.0))
+    # sphere =  VolSphere(Sphere(Point(2, 2, 2), 2))
+    # cylinder = VolCylinder(Cylinder(Circle(Plane([2, 3, 4], [0.3, 0.4, 1.]), 2.0), 3.0))
+    box = VolBox(Box(Frame(Point(4., 4., 4.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 10, 8, 9), 1)
     union = Union(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 2)))
     intersection = Intersection(VolSphere(Sphere(Point(5, 6, 3), 3)), VolSphere(Sphere(Point(1, 2, 3), 9)))
     sh = SmoothUnion(Shell(box, 0.3, 0.5) , Shell(union_spheres, 0.1, 0.5), 2.) 
-    total_geom = box  #SmoothUnion(Shell(Union(sphere, box), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
-    
-    ### panda3d visualisation
-    # camera_start_position = (10,10, 10) 
+    total_geom = sh  #SmoothUnion(Shell(Union(sphere, box), 0.3, 0.5), Shell(union_spheres, 0.3, 0.5), 2.) 
+
+    ## --------------------------- Visualization
     renderer = PandaRenderer()
-    # renderer.display_axes_xyz(3)
+    # renderer.display_axes_xyz(3)  
 
     # m = discretize_distance_field_in_array(total_geom)
     # renderer.display_volumetric_grid(lb, ub, m, num, fact, True)
-
     # renderer.display_boundary_box(ub)
     # verts, faces, normals, values = marching_cubes_lewiner(m, 0.0, spacing=(fact, fact, fact))
     # renderer.create_mesh_from_marching_cubes(verts, faces, normals, 'marching_cubes_primitive')
 
     translator = Translator(total_geom)
-
-    
-
-    rayMarcher = RayMarchingFactory(main_path, renderer, translator)
+    rayMarcher = RayMarchingFactory(main_path, renderer, translator, bounding_sphere = [4., 4., 4., 17.])
     rayMarcher.post_processing_ray_marching_filter()
     # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()

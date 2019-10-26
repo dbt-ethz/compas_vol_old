@@ -6,7 +6,7 @@ float z_ground_Plane(vec3 p, float z_of_plane){
     return p.z - z_of_plane;
 }
 
-float bounding_sphere(vec3 p, vec3 center, float radius){
+float bounding_sphere_primitive(vec3 p, vec3 center, float radius){
     return length(p - center) - radius;
 }
 
@@ -32,6 +32,7 @@ vec3 finite_repetition(in vec3 p, in vec3 c, in vec3 l){
     vec3 new_position =  p-c*clamp (round(p/c),-l,l);
     return new_position;  
 }
+
 
 
 

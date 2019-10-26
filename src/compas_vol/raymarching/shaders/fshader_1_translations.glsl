@@ -24,6 +24,7 @@ uniform float[object_max_num] v_ids;
 uniform float[object_max_num] v_data_count_per_object;  
 uniform float[geom_data_max_num] v_object_geometries_data;  
 
+uniform vec4 bounding_sphere;
 uniform float y_slice;
 uniform int display_target_object;
 // uniform float slider_value;
@@ -46,7 +47,7 @@ float random (vec2 st) {
 
 vec3 animate_point(in int current_index){
     float magnitude = random (vec2(current_index))  * 5.+ 1.;
-    float frequency1 = random (vec2(current_index/3.56))  * 1.3  + 0.1;
+    float frequency1 = random (vec2(current_index/3.56))  * 1.1  + 0.5;
     float offset  = random (vec2(current_index/3.56))  * 6.;
     float frequency = frequency1;
     // frequency *=  slider_value;
@@ -57,7 +58,7 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_
     //VolSphere
     if (id == VolSphere_id){
         vec3 center = vec3(geometry_data[0], geometry_data[1], geometry_data[2]);
-        center = center + animate_point(current_index) ;
+        // center = center + animate_point(current_index) ;
         float radius = geometry_data[3];
         return length(p - center) - radius;
     //VolBox     
@@ -106,6 +107,8 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_
 #define Union_id 200
 #define Intersection_id 201
 #define Smooth_Union_id 202
+#define Subtraction_id 203
+
 
 float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in int count){
     //Union
@@ -134,6 +137,13 @@ float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in
             float b = child_dist;
             float h = min(max(0.5 + 0.5 * (b - a) / r, 0), 1);
             d = (b * (1 - h) + h * a) - r * h * (1 - h);}
+        return d;
+    //Subtraction
+    } else if (id == Subtraction_id){
+        float d = 100000.; // very big value
+        float d1 = objects_values[int(geometry_data[0])];
+        float d2 = objects_values[int(geometry_data[1])];
+        d = max(d1, -d2); 
         return d;
     } else {
         return 0.;
@@ -187,13 +197,3 @@ float VolModification(in int id, in int index, in float [max_num_of_geom_data] g
     // }
     // return 1.
 // }
-
-
-
-
-
-
-
-
-
-

@@ -9,7 +9,7 @@ int count;
 
 float GetDistance(vec3 p){ //union of shapes  
     int pos = 0;
-    float bounding_sphere_distance = bounding_sphere(p, vec3(5.), 90.);
+    float bounding_sphere_distance = bounding_sphere_primitive(p, bounding_sphere.xyz, bounding_sphere.w);
     float dist_final = 5. ; // HERE THIS NEEDS ATTENTION, shouldn't be too big
     if (bounding_sphere_distance < 0) { // if withing the bounding sphere. OPTIMIZATION. // HERE THIS NEEDS ATTENTION, how to find dimensions of bounding sphere
     
@@ -30,7 +30,7 @@ float GetDistance(vec3 p){ //union of shapes
                 dist = VolPrimitive(p, current_id, current_index, geometry_data);
                 objects_values[current_index] = dist;
             //combination
-            } else if (current_id == Union_id || current_id ==  Intersection_id ||current_id ==  Smooth_Union_id ){
+            } else if (current_id == Union_id || current_id ==  Intersection_id || current_id ==  Smooth_Union_id || current_id ==  Subtraction_id){
                 dist = VolCombination(current_id, geometry_data, count);
                 objects_values[current_index] = dist;
             //modification

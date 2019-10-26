@@ -32,7 +32,7 @@ class RayMarchingFactory:
 
     """
 
-    def __init__(self, main_path_ , renderer_, translator_):
+    def __init__(self, main_path_ , renderer_, translator_, bounding_sphere = [0,0,0,20]):
 
         self.main_path = main_path_
 
@@ -41,6 +41,9 @@ class RayMarchingFactory:
 
         self.shader_quad = None
         self.ray_marching_quad = None
+
+        self.bounding_sphere = bounding_sphere
+        print ("self.bounding_sphere : ", self.bounding_sphere)
 
         ## GUI 
         self.display_target_object = [1]
@@ -109,6 +112,7 @@ class RayMarchingFactory:
         self.shader_quad.setShaderInput("u_resolution" , self.renderer.getSize())
         self.shader_quad.setShaderInput("camera_POS", self.renderer.camera.getPos() - self.renderer.camera_start_position)
         self.shader_quad.setShaderInput("camera_START_POS", self.renderer.camera_start_position)
+        self.shader_quad.setShaderInput("bounding_sphere" , self.bounding_sphere)
         
         self.shader_quad.setShaderInput("v_indices", self.translator.indices)
         self.shader_quad.setShaderInput("v_ids", self.translator.ids)
@@ -201,6 +205,7 @@ class RayMarchingFactory:
         self.ray_marching_quad.setShaderInput("color_texture", color_texture)
         self.ray_marching_quad.setShaderInput("depth_buffer", depth_buffer)
         self.ray_marching_quad.set_shader_input("camera_POS", self.renderer.camera.getPos())
+        self.ray_marching_quad.setShaderInput("bounding_sphere" , self.bounding_sphere)
         self.ray_marching_quad.setShaderInput('myCamera', self.renderer.camera)
 
         proj_matrix_inv =  self.renderer.camLens.getProjectionMatInv()
@@ -350,18 +355,19 @@ class RayMarchingFactory:
 
         ## update dynamic geometry 
         generator_slice_plane.begin(self.renderer.cam, self.renderer.render)
-        z1 = -5
+        z1 = -15
         z2 = 15
-        x1 = -5
+        x1 = -15
         x2 = 15
 
-        vertices = [[x1, y_slice, z1] , [x2, y_slice, z1] , [x2, y_slice, z2] , [x1, y_slice, z2]]
+        # vertices = [[x1, y_slice, z1] , [x2, y_slice, z1] , [x2, y_slice, z2] , [x1, y_slice, z2]]
+        vertices = [[x1, y_slice, z1], [x2, y_slice, z1]]
         for i, v in enumerate(vertices):
             v_next = vertices[(i+1)% len(vertices)]
             generator_slice_plane.crossSegment(LVector3(v[0], v[1], v[2]), \
-                                                    LVector3(v_next[0], v_next[1], v_next[2]), \
-                                                    LVector4(1,1,1,1), 0.02, \
-                                                    LVector4(0.6,0.6,0.6,1.)) #start, stop, frame, thickness, color)
+                                               LVector3(v_next[0], v_next[1], v_next[2]), \
+                                               LVector4(1,1,1,1), 0.04, \
+                                               LVector4(0.6,0.6,0.6,1.)) #start, stop, frame, thickness, color)
 
         generator_slice_plane.end()
         return task.cont  
