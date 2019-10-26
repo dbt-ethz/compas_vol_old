@@ -49,6 +49,8 @@ float GetDistance(vec3 p){ //union of shapes
                 dist_final =  max(dist_final, y_slice_plane_dist );
 
                 // dist_final = ripples_sin(p, dist_final, 0.02, 50 ); //float amplitude, float frequency
+                dist_final = ripples_fract(p, dist_final, 0.02, 20 ); //float amplitude, float frequency
+                
             }
         }
     }  
@@ -61,7 +63,7 @@ int total_steps = 0;
 
 #define MAX_STEPS 200
 #define MAX_DIST 200.
-#define SURF_DIST 0.02
+#define SURF_DIST 0.01
 float RayMarch(vec3 ro, vec3 rd){ // ray origin, ray direction
     float dO = 0.; // distance from origin
 

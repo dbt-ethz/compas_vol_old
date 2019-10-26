@@ -38,7 +38,7 @@ void main(){
 
     vec3 color = normal;
     // color section white
-    if (abs(p.y - y_slice) < 0.1) {
+    if (abs(p.y - y_slice) < 0.06) {
         color = vec3(0.7, 0.7, 0.7);  // so that section becomes white
     }
     gl_FragColor = vec4 (color, alpha);

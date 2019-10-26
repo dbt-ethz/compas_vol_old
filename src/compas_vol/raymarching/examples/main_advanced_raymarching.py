@@ -50,10 +50,11 @@ if __name__ == "__main__":
             sphere = VolSphere(Sphere(Point(corner[0], corner[1], height),  radius ))
             spheres_list.append(sphere)
 
-            # if i < height_num -1:
-            #     height_center_sphere = height + 0.5 * box_dim_h/(height_num-1)
-            #     center_sphere = VolSphere(Sphere(Point(0, 0, height_center_sphere), radius/3))
-            #     spheres_list.append(center_sphere)
+        if i < height_num -1:
+            radius = 1.5 - i * 0.25
+            height_center_sphere = height + 0.45 * box_dim_h/(height_num-1)
+            center_sphere = VolSphere(Sphere(Point(0, 0, height_center_sphere), radius))
+            spheres_list.append(center_sphere)
 
     spheres = Union(spheres_list)
 
@@ -64,7 +65,7 @@ if __name__ == "__main__":
     # renderer.display_axes_xyz(3)  
 
     translator = Translator(total_geom)
-    rayMarcher = RayMarchingFactory(main_path, renderer, translator, bounding_sphere = [box_dim_w/2, box_dim_w/2, box_dim_h/2, 15.])
+    rayMarcher = RayMarchingFactory(main_path, renderer, translator, bounding_sphere = [0, 0, 0, 10.])
     rayMarcher.post_processing_ray_marching_filter()
     # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
