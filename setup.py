@@ -50,8 +50,11 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
-    keywords=[],
-    project_urls={},
+    keywords=['architecture', 'volumetric modelling', 'signed distance fields', 'function representation', '3d printing'],
+    project_urls={
+        "Documentation": "https://dbt-ethz.github.io/compas_vol/",
+        "Repository": "https://github.com/dbt-ethz/compas_vol"
+    },
     packages=['compas_vol'],
     package_dir={'': 'src'},
     package_data={},
