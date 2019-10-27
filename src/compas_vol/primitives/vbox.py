@@ -75,12 +75,12 @@ class VolBox(object):
 
     @property
     def data(self):
-        return {'type': self.__class__.__name__,
-                'geom': {'box': self.box.data,
-                         'radius': self.radius}}
+        return {'box': self.box.data,
+                'radius': self.radius}
 
     def to_data(self):
-        return self.data
+        return {'type': self.__class__.__name__,
+                'content': self.data}
 
     @data.setter
     def data(self, data):

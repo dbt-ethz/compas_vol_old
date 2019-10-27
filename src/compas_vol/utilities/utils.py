@@ -9,25 +9,60 @@ __all__ = [
     'export_layer',
     'get_random_vector_2D',
     'get_random_vector_3D',
-    'get_iso_mesh'
+    'get_iso_mesh',
+    'get_iso_vfs'
     ]
 
 
-def get_iso_mesh(distobj):
+def get_iso_mesh(distobj, bounds):
     # for RPC
     from skimage.measure import marching_cubes_lewiner
     import numpy as np
     from compas_vol.primitives import VolBox
     from compas.geometry import Box
 
-    x, y, z = np.ogrid[-15:15:30j, -15:15:30j, -15:15:30j]
+    bx = bounds[0]
+    by = bounds[1]
+    bz = bounds[2]
+    x, y, z = np.ogrid[bx[0]:bx[1]:bx[2]*1j, by[0]:by[1]:by[2]*1j, bz[0]:bz[1]:bz[2]*1j]
+    #x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
+    # spacing: (max-min)/num (or num-1?)
+    sx = (bx[1]-bx[0])/(bx[2]-1)
+    sy = (by[1]-by[0])/(by[2]-1)
+    sz = (bz[1]-bz[0])/(bz[2]-1)
     b = Box.from_data(distobj['box'])
-    vb = VolBox(b)
+    vb = VolBox(b, distobj['radius'])
     vb.data = distobj
     dm = vb.get_distance_numpy(x, y, z)
-    verts, faces, norms, vals = marching_cubes_lewiner(dm, 0.0)
+    verts, faces, norms, vals = marching_cubes_lewiner(dm, 0.0, spacing=(sx, sy, sz))
     mesh = get_compas_mesh(verts, faces)
-    return str(mesh.number_of_vertices())
+    #return str(mesh.number_of_vertices())
+    return str(mesh.to_data())
+    #return mesh.to_json()
+    #return verts, faces
+
+
+def get_iso_vfs(distobj, bounds):
+    from skimage.measure import marching_cubes_lewiner
+    import numpy as np
+    from compas_vol.primitives import VolBox
+    from compas.geometry import Box
+
+    bx = bounds[0]
+    by = bounds[1]
+    bz = bounds[2]
+    x, y, z = np.ogrid[bx[0]:bx[1]:bx[2]*1j, by[0]:by[1]:by[2]*1j, bz[0]:bz[1]:bz[2]*1j]
+    #x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
+    # spacing: (max-min)/num (or num-1?)
+    sx = (bx[1]-bx[0])/(bx[2]-1)
+    sy = (by[1]-by[0])/(by[2]-1)
+    sz = (bz[1]-bz[0])/(bz[2]-1)
+    b = Box.from_data(distobj['box'])
+    vb = VolBox(b, distobj['radius'])
+    vb.data = distobj
+    dm = vb.get_distance_numpy(x, y, z)
+    verts, faces, norms, vals = marching_cubes_lewiner(dm, 0.0, spacing=(sx, sy, sz))
+    return (verts, faces)
 
 
 def export_ski_mesh(vs, fs, ns=None, filename='ski_mesh.obj'):
