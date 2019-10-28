@@ -48,8 +48,8 @@ float GetDistance(vec3 p){ //union of shapes
             }
         }
 
-        dist_final = segmentation_offset(dist_final, 0.02);
-        dist_final = segmentation_plane_z(p, dist_final, 0.025, 200, -5.);
+        // dist_final = segmentation_offset(dist_final, 0.02);
+        // dist_final = segmentation_plane_z(p, dist_final, 0.025, 200, -5.);
 
 
 
@@ -61,7 +61,6 @@ float GetDistance(vec3 p){ //union of shapes
         // dist_final = ripples_fract(p, dist_final, 0.02, 20 ); //float amplitude, float frequency                 
     }  
     
-
     // dist_final = ripples_sin(p, dist_final, 0.02, 30 ); //float amplitude, float frequency
     return dist_final;
 }

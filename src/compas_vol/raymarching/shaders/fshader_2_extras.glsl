@@ -29,7 +29,7 @@ vec3 infinite_repetition(in vec3 p, in vec3 c){
 }
 
 vec3 finite_repetition(in vec3 p, in vec3 c, in vec3 l){
-    vec3 new_position =  p-c*clamp (round(p/c),-l,l);
+    vec3 new_position =  p - c*clamp (round(p/c),-l,l);
     return new_position;  
 }
 
@@ -87,26 +87,12 @@ float segmentation_offset (in float start_dist, in float shell_thickness){
     return result;
 }
 
-
-// fast version 
+// fast version
 float segmentation_plane_z(in vec3 p, in float start_dist, in float thickness, in int iterations_num, in float start_z){
-    float result =  1000;  // big number
-    // float current_height_z = start_z;
-
     vec3 pos_repeated = vec3(p.x, p.y, mod(p.z, thickness * 3)  + p.z ); // REPETITION OF ELEMENTS, mod, fract
-
-
-    // for (int i=0; i<iterations_num; i++){
-
-        float slicing_plane = shell(p.z - pos_repeated.z , thickness);
-
-        float slice = smooth_subtraction(start_dist, slicing_plane, 0.015);
-
-        // current_height_z += 3.5 * thickness;
-
-        result = min(result, slice);
-    // }
-    return result;
+    float slicing_plane = shell(p.z - pos_repeated.z , thickness);
+    float slice = smooth_subtraction(start_dist, slicing_plane, 0.015);
+    return slice;
 }
 
 // // slow version 

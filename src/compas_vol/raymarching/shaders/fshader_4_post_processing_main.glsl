@@ -51,7 +51,7 @@ void main()
     // color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
 
     // ------------- color by normal
-    vec3 color_of_SDF = 0.7 + 0.3 * vec3(GetNormal(world_pos_SDF));
+    vec3 color_of_SDF = 0.7 + 0.3 * vec3(-GetNormal(world_pos_SDF));
 
     // ------------- simple light by normal  
     // vec3 color_of_SDF =vec3(0.8) * (0.5 + 0.5 * GetNormal(world_pos_SDF).z);

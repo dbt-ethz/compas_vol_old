@@ -18,8 +18,11 @@ The RayMarchingPactory adds a shader to the PandaRenderer that displays the isos
 
 #### Compas-vol classes supported in RayMarchingFactory (will change soon)
 Primitives: VolSphere, VolBox, VolCylinder, VolTorus
-Combinations: Union, Intersection, SmoothUnion
+
+Combinations: Union, Intersection, SmoothUnion, Subtraction
+
 Modifications: Shell
+
 
 Extras: CSG tree interactive UI, volumetric colored grid with distance values, slicing slider, general purpose slider
 
