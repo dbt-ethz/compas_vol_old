@@ -55,8 +55,9 @@ vec3 staircase_z(in vec3 p, in float frequency){
     // float f3 = p.z - f2;
     // float f4 = pow(f3  - 0.5 , 5) * pow(2,6)  + 0.5;
     // float z_scaled = f2 + f4;
-    float z_scaled = floor(p.z * frequency) / frequency ;
-    return vec3(p.x, p.y, z_scaled);
+    // float z_scaled = floor(p.z * frequency) / frequency ;
+    // return vec3(p.x, p.y, z_scaled);
+    return vec3(p.x, p.y, p.z - mod(p.z, frequency) * 0.5 );
 } 
 
 float shell(in float start_dist, in float thickness){
@@ -107,12 +108,6 @@ float segmentation_plane_z(in vec3 p, in float start_dist, in float thickness, i
 //     }
 //     return result;
 // }
-
-
-
-
-
-
 
 
 

@@ -8,6 +8,7 @@ int parent_id;
 int count;
 
 float GetDistance(vec3 p){ //union of shapes  
+
     int pos = 0;
     float bounding_sphere_distance = bounding_sphere_primitive(p, bounding_sphere.xyz, bounding_sphere.w);
     float dist_final = abs(bounding_sphere_distance) + 1. ; // HERE THIS NEEDS ATTENTION, shouldn't be too big
@@ -47,8 +48,7 @@ float GetDistance(vec3 p){ //union of shapes
                 break;
             }
         }
-
-        // dist_final = segmentation_offset(dist_final, 0.02);
+        dist_final = segmentation_offset(dist_final, 0.02);
         // dist_final = segmentation_plane_z(p, dist_final, 0.025, 200, -5.);
 
 
