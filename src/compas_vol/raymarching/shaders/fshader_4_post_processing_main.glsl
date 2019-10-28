@@ -20,7 +20,6 @@ vec3 World_position_from_depth(in float depth, in vec2 uv){
     vec4 viewSpacePosition = transform_clip_plane_to_perspective_camera * clipSpacePosition;
     viewSpacePosition /= viewSpacePosition.w; // Perspective division
     return viewSpacePosition.xyz;
-
     }
 
 void main()
@@ -40,8 +39,8 @@ void main()
     vec2 uv = 2*(st - vec2(0.5, 0.5)); //put 0 in the center of the window, range of values: [-1,1]
     vec3 ro = camera_POS.xyz; // ray origin : camera position (world coordinates)
     vec3 rd = findRayDirection(uv);
-    float d = RayMarch(ro, rd);
-    vec3 world_pos_SDF = ro + rd * d; // position of intersection of ray with solid
+    float t = RayMarch(ro, rd);
+    vec3 world_pos_SDF = ro + rd * t; // position of intersection of ray with solid
 
     float dist_SDF = length(world_pos_SDF - camera_POS); //distance of SDF in current position from camera 
 
@@ -52,18 +51,18 @@ void main()
     // color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
 
     // ------------- color by normal
-    vec3 color_of_SDF = vec3(GetNormal(world_pos_SDF) * -1.);
+    vec3 color_of_SDF = 0.7 + 0.3 * vec3(GetNormal(world_pos_SDF));
 
+    // ------------- simple light by normal  
+    // vec3 color_of_SDF =vec3(0.8) * (0.5 + 0.5 * GetNormal(world_pos_SDF).z);
+    // color_of_SDF = pow( color_of_SDF, vec3(0.4545)); // square root. Gamma correction
 
-
-    
-    
 
     // check depth and pick what to display accordingly
     vec3 color = vec3(0.);
-    if (dist_object > dist_SDF && dist_SDF < 200){
-        if (abs(world_pos_SDF.y - y_slice) < 0.06) {
-            color = vec3(0.1, 0.1, 0.1);  // color white section
+    if (dist_object > dist_SDF && dist_SDF < MAX_DIST -1.){
+        if (abs(world_pos_SDF.y - y_slice) < 0.016 || abs(world_pos_SDF.z - z_slice) < 0.016  ) {
+            color = vec3(0.1, 0.1, 0.1);  // color section
         } else {
             color = color_of_SDF; 
         }
@@ -73,7 +72,6 @@ void main()
 
     // color = vec3( total_steps / 50. ); // display number of steps 
     gl_FragColor = vec4(color, 1.);
-    // out_Color = vec4(color, 1.);
 }
 
 

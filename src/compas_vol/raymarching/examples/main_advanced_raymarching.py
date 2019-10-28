@@ -22,7 +22,7 @@ from compas_vol.raymarching.remapping_functions import remap
 
 ## window size
 from panda3d.core import loadPrcFileData     
-loadPrcFileData('', """ # win-size 1024 700
+loadPrcFileData('', """ # win-size 1900 200
                           window-title Raymarching example 
                           sync-video 0 """) 
 
@@ -32,11 +32,13 @@ sqrt2 = 1.41421
 
 if __name__ == "__main__":
     ## --------------------------- Geometry
+    # torus = VolTorus(Torus(Plane((3, 3, 3), (1., 0., 1.)), 2.0, 1.0))
+    # boxb = VolBox(Box(Frame(Point(0., 0., 0.), [3., 3.5, 0.1], [2.5, 1., 2.1]), 10, 8, 9), 1)
 
     ## box
     box_dim_w = 3.5
     box_dim_h = 12.
-    box = VolBox(Box(Frame(Point(0., 0., 0.), [1, 0, 0], [0, 1., 0]), box_dim_w, box_dim_w, box_dim_h), 0.1)
+    box = VolBox(Box(Frame(Point(0., 0., 0.), [1, 0, 0], [0, 1., 0]), box_dim_w, box_dim_w, box_dim_h), 0.3)
     b = box_dim_w/2
     box_corners = [[b , -b], [-b, -b], [-b, b], [b, b]]
 
@@ -46,12 +48,12 @@ if __name__ == "__main__":
     for i in range(height_num): #height
         for corner in box_corners: # corner
             height = i * box_dim_h/(height_num-1) - box_dim_h/2
-            radius = 1. + i * 0.25
+            radius = 1.2 + i * 0.25
             sphere = VolSphere(Sphere(Point(corner[0], corner[1], height),  radius ))
             spheres_list.append(sphere)
 
         if i < height_num -1:
-            radius = 1.5 - i * 0.25
+            radius = 1.65 - i * 0.25
             height_center_sphere = height + 0.45 * box_dim_h/(height_num-1)
             center_sphere = VolSphere(Sphere(Point(0, 0, height_center_sphere), radius))
             spheres_list.append(center_sphere)
@@ -65,10 +67,12 @@ if __name__ == "__main__":
     # renderer.display_axes_xyz(3)  
 
     translator = Translator(total_geom)
-    rayMarcher = RayMarchingFactory(main_path, renderer, translator, bounding_sphere = [0, 0, 0, 10.])
+    rayMarcher = RayMarchingFactory(main_path, renderer, translator, bounding_sphere = [0, 0, 0, 8.])
     rayMarcher.post_processing_ray_marching_filter()
     # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
-    rayMarcher.create_slicing_slider(-7, 16 ,-7)
+
+    rayMarcher.create_slicer(range_a = -7, range_b = 12 , start_value = 12, axis = 'y', screen_position = -0.75)
+    rayMarcher.create_slicer(range_a = -7, range_b = 12 , start_value = 12, axis = 'z', screen_position = -0.85)
 
     renderer.show()

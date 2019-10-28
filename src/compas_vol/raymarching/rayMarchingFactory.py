@@ -47,7 +47,7 @@ class RayMarchingFactory:
 
         ## GUI 
         self.display_target_object = [1]
-        self.sliders = []
+        self.slicers = []
     
     ### ---------------------------------------------------------------- Ray marching shader
     def ray_marching_shader(self, default_fragment_shader = True, custom_fragment_shader = None): 
@@ -100,9 +100,6 @@ class RayMarchingFactory:
             else: 
                 print ("Attention! No shader provided for the post processing filter")
                 return None
-
-        if myShader.getErrorFlag():
-            print ("EROR") ## need to expand on this 
 
         ### apply shader 
         self.shader_quad.setShader(myShader)
@@ -257,56 +254,12 @@ class RayMarchingFactory:
         return myShader
 
 
-    ###  ---------------------------------------------------------------- General purpose slider
-    def create_general_purpose_slider(self, range_a = 0., range_b = 2., start_value = 1., name = "slider"):
-        """
-        Creates a slider for general purpose whose value is sent to the fragment shader and updated in everry frame.
-        For example you can use it to alpha / color /motion speed of objects. You can create more that one.
-        It also creates a task to send data to the fragment shader every frame. (SHOULD INSTEAD BE AN EVENT) 
-        HASN'T BEEN PROPERLY TESTED YET
-
-        Parameters
-        ----------
-        range_a     : (float) Lower boundary of slider values.
-        range_b     : (float) Upper boundary of slider values.
-        start_value : (float), the start value of the slider.
-        name        : (string) Name of the slider that will appear on the scene.
-        """
-
-        slider = DirectSlider(range=(range_a,range_b), value = start_value, pageSize=3) #command=showValue
-        self.sliders.append(slider) 
-
-        slider.reparentTo(self.renderer.aspect2d)
-        slider.setPos(0,0,-0.8- 0.065)
-        slider.setScale(0.25,0.25,0.25)
-
-        title_of_slider = OnscreenText(text = name, pos = (-0.55, -0.816 - 0.065), scale = 0.045, fg = (0.,0.,0.,text_color_alpha))
-        min_of_slider   = OnscreenText(text = str(range_a), pos = (-0.3, -0.87- 0.065), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
-        max_of_slider   = OnscreenText(text = str(range_b), pos = (0.3, -0.87 - 0.065), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
-
-        if self.ray_marching_quad:
-            self.ray_marching_quad.setShaderInput("slider_value", slider_value) 
-        if self.shader_quad: 
-            self.shader_quad.setShaderInput("slider_value", slider_value) 
-        
-        self.renderer.taskMgr.add (self.task_update_general_slicer, "task_update_general_slicer", extraArgs = [Task, self.sliders.index(slider)]) 
-
-    def task_update_general_slicer(self, task, s_index): # THIS SHOULD ONLY HAPPEN WHEN THE SLIDER IS CHANGED
-        slider = self.sliders[s_index]
-        slider_value = slider['value'] 
-        if self.ray_marching_quad:
-            self.ray_marching_quad.setShaderInput("slider_value", slider_value) 
-        if self.shader_quad: 
-            self.shader_quad.setShaderInput("slider_value", slider_value) 
-        return task.cont 
-
     ### ---------------------------------------------------------------- Slicing y plane
-
-    def create_slicing_slider(self, range_a = 0, range_b = 100, start_value = 0):
+    def create_slicer(self, range_a = 0, range_b = 100, start_value = 0, axis = 'y', screen_position = -0.8):
         """
         Creates a slider that slices the model with a plane parallel to the y axis.
-        It also creates a white frame at the position of the slicing plane.
-        Finally it creates a task to send data to the fragment shader every frame. (SHOULD INSTEAD BE AN EVENT) 
+        (removed) It also creates a line to show the position of the slicing plane.
+        Finally it sends data to the fragment shader every time the slider is modified.
 
         Parameters
         ----------
@@ -314,63 +267,80 @@ class RayMarchingFactory:
         range_b     : (float) Upper boundary of slider values.
         start_value : (float) Start value of the slider.
         """
+        generator_slice_plane = None
+        # generator_slice_plane = self.create_slicer_dynamic_geom_generator()
 
-        slicing_slider = DirectSlider(range=(range_a,range_b), value = start_value, pageSize=3) #command=showValue
+        slicer_index = len(self.slicers)
 
-        slicing_slider.reparentTo(self.renderer.aspect2d)
-        slicing_slider.setPos(0,0,-0.8)
-        slicing_slider.setScale(0.25,0.25,0.25)
+        slicer = DirectSlider(range=(range_a,range_b), value=start_value, pageSize=3, command=self.event_update_slicer, extraArgs = [generator_slice_plane , axis, slicer_index])
 
-        title_of_slider = OnscreenText(text = "Slice model", pos = (-0.55, -0.8), scale = 0.045, fg = (0.,0.,0.,text_color_alpha)) #fg = (1,1,1,.8),
+        slicer.reparentTo(self.renderer.aspect2d)
+        slicer.setPos(0,0, screen_position)
+        slicer.setScale(0.25,0.25,0.25)
+
+        self.slicers.append(slicer)
+
+        title_of_slider = OnscreenText(text = "Slice model, axis : " + axis , pos = (-0.55, screen_position), scale = 0.045, fg = (0.,0.,0.,text_color_alpha)) ,
         min_of_slider = OnscreenText(text = str(range_a), pos = (-0.3, -0.8), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
         max_of_slider = OnscreenText(text = str(range_b), pos = (0.3, -0.8), scale = 0.035, fg = (0.,0.,0.,text_color_alpha))
 
-        ## display outline of slicing plane as dynamic geometry 
-        generator_slice_plane = MeshDrawer()
-        generator_slice_plane.setBudget(100)
-
-        nodePath_slice_plane = generator_slice_plane.getRoot()
-        nodePath_slice_plane.reparentTo(self.renderer.render)
-        nodePath_slice_plane.setDepthWrite(False)
-        # nodePath_slice_plane.setTransparency(True)
-        nodePath_slice_plane.setTwoSided(True)
-        nodePath_slice_plane.setBin("fixed",0)
-        nodePath_slice_plane.setLightOff(True)
-
-        pos = LVector3f(1.0, 1.0, 1.0)
-        frame = LVector4(0,1,1,0)
-        size = 10
-
-        # task = Task()
-        self.renderer.taskMgr.add(self.task_update_slicer, "task_update_slicer", extraArgs = [Task, generator_slice_plane, slicing_slider])
-        
-
-    def task_update_slicer(self, task, generator_slice_plane, slicing_slider):
-        ## update y value 
-        y_slice = slicing_slider['value']
+        ## initialize slicer values on shader 
         if self.ray_marching_quad:
-            self.ray_marching_quad.setShaderInput("y_slice", y_slice)
+            self.ray_marching_quad.setShaderInput("y_slice", -19)
+            self.ray_marching_quad.setShaderInput("z_slice", 19)
         if self.shader_quad: 
-            self.shader_quad.setShaderInput("y_slice", y_slice)
+            self.ray_marching_quad.setShaderInput("y_slice", -19)
+            self.ray_marching_quad.setShaderInput("z_slice", 19)
 
-        ## update dynamic geometry 
-        generator_slice_plane.begin(self.renderer.cam, self.renderer.render)
-        z1 = -15
-        z2 = 15
-        x1 = -15
-        x2 = 15
+    def event_update_slicer(self, generator_slice_plane, axis, slicer_index):
+        my_slice = self.slicers[slicer_index]['value']
 
-        # vertices = [[x1, y_slice, z1] , [x2, y_slice, z1] , [x2, y_slice, z2] , [x1, y_slice, z2]]
-        vertices = [[x1, y_slice, z1], [x2, y_slice, z1]]
-        for i, v in enumerate(vertices):
-            v_next = vertices[(i+1)% len(vertices)]
-            generator_slice_plane.crossSegment(LVector3(v[0], v[1], v[2]), \
-                                               LVector3(v_next[0], v_next[1], v_next[2]), \
-                                               LVector4(1,1,1,1), 0.04, \
-                                               LVector4(0.6,0.6,0.6,1.)) #start, stop, frame, thickness, color)
+        if axis == 'y':
+            if self.ray_marching_quad:
+                self.ray_marching_quad.setShaderInput("y_slice", my_slice)
+            if self.shader_quad: 
+                self.shader_quad.setShaderInput("y_slice", my_slice)
+        else: # axis = 'z':
+            if self.ray_marching_quad:
+                self.ray_marching_quad.setShaderInput("z_slice", my_slice)
+            if self.shader_quad: 
+                self.shader_quad.setShaderInput("z_slice", my_slice)                   
 
-        generator_slice_plane.end()
-        return task.cont  
+        # self.update_slicer_dynamic_geom(generator_slice_plane, my_slice)
+
+
+    # def create_slicer_dynamic_geom_generator(self):
+    #     ## display outline of slicing plane as dynamic geometry 
+    #     generator_slice_plane = MeshDrawer()
+    #     generator_slice_plane.setBudget(100)
+
+    #     nodePath_slice_plane = generator_slice_plane.getRoot()
+    #     nodePath_slice_plane.reparentTo(self.renderer.render)
+    #     nodePath_slice_plane.setDepthWrite(False)
+    #     # nodePath_slice_plane.setTransparency(True)
+    #     nodePath_slice_plane.setTwoSided(True)
+    #     nodePath_slice_plane.setBin("fixed",0)
+    #     nodePath_slice_plane.setLightOff(True)
+    #     return generator_slice_plane
+
+    # def update_slicer_dynamic_geom(self,generator_slice_plane, y_slice):
+    #     ## update dynamic geometry 
+    #     generator_slice_plane.begin(self.renderer.cam, self.renderer.render)
+    #     z1 = -10
+    #     z2 = 10
+    #     x1 = -10
+    #     x2 = 10
+
+    #     # vertices = [[x1, y_slice, z1] , [x2, y_slice, z1] , [x2, y_slice, z2] , [x1, y_slice, z2]]
+    #     vertices = [[x1, y_slice, z1], [x2, y_slice, z1]]
+    #     for i, v in enumerate(vertices):
+    #         v_next = vertices[(i+1)% len(vertices)]
+    #         generator_slice_plane.crossSegment(LVector3(v[0], v[1], v[2]), \
+    #                                            LVector3(v_next[0], v_next[1], v_next[2]), \
+    #                                            LVector4(1,1,1,1), 0.04, \
+    #                                            LVector4(0.6,0.6,0.6,1.)) #start, stop, frame, thickness, color)
+
+    #     generator_slice_plane.end()
 
 
 ### ---------------------------------------------------------------- GUI

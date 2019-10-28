@@ -1,9 +1,9 @@
 // #version 120
 #version 140
 
-#ifdef GL_ES
-precision mediump float;
-#endif
+// #ifdef GL_ES
+// precision mediump float;
+// #endif
 
 #define object_max_num    30 // CAREFUL, MEMORY LIMITED
 #define geom_data_max_num 200
@@ -26,6 +26,7 @@ uniform float[geom_data_max_num] v_object_geometries_data;
 
 uniform vec4 bounding_sphere;
 uniform float y_slice;
+uniform float z_slice;
 uniform int display_target_object;
 // uniform float slider_value;
 
@@ -40,6 +41,7 @@ float[object_max_num] objects_values = v_indices; // We initialize this to some 
 #define VolBox_id 101
 #define VolTorus_id 102
 #define VolCylinder_id 103
+
 
 float random (vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233)))* 43758.5453123);
@@ -60,6 +62,7 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_
         vec3 center = vec3(geometry_data[0], geometry_data[1], geometry_data[2]);
         // center = center + animate_point(current_index) ;
         float radius = geometry_data[3];
+        // vec3 pp = staircase_z(p, 1);        
         return length(p - center) - radius;
     //VolBox     
     }else if (id == VolBox_id){
@@ -69,7 +72,6 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_
                             vec4(geometry_data[8], geometry_data[9], geometry_data[10], geometry_data[11]),
                             vec4(geometry_data[12], geometry_data[13], geometry_data[14], geometry_data[15]),
                             vec4(geometry_data[16], geometry_data[17], geometry_data[18], geometry_data[19]) );
-
         vec4 pos_transformed =  transpose(matrix) * vec4(p , 1.);
         vec3 d = abs(pos_transformed.xyz) - (size_xyz.xyz * 0.5 - radius);
         return length(max(d, 0.0)) - radius + min(max(d.x,max(d.y,d.z)), 0.0);
@@ -80,7 +82,7 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_
         mat4 matrix = mat4( vec4(geometry_data[2], geometry_data[3], geometry_data[4], geometry_data[5]),
                             vec4(geometry_data[6], geometry_data[7], geometry_data[8], geometry_data[9]),
                             vec4(geometry_data[10], geometry_data[11], geometry_data[12], geometry_data[13]),
-                            vec4(geometry_data[14], geometry_data[15], geometry_data[16], geometry_data[17]) );
+                            vec4(geometry_data[14], geometry_data[15], geometry_data[16], geometry_data[17]));
 
         vec4 pos_transformed = transpose(matrix)  * vec4(p , 1.);
         float dxy = length(pos_transformed.xy);
@@ -109,7 +111,6 @@ float VolPrimitive(in vec3 p, in int id, in int current_index, in float[max_num_
 #define Smooth_Union_id 202
 #define Subtraction_id 203
 
-
 float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in int count){
     //Union
     if (id == Union_id){
@@ -129,8 +130,6 @@ float VolCombination(in int id, in float[max_num_of_geom_data] geometry_data, in
     } else if (id == Smooth_Union_id){
         float d = 100000.; // very big value
         float r = geometry_data[0];
-        // // 
-        // // 
         for (int i=1; i<count; i++){
             float child_dist = objects_values[int(geometry_data[i])];
             float a = d;
@@ -197,3 +196,4 @@ float VolModification(in int id, in int index, in float [max_num_of_geom_data] g
     // }
     // return 1.
 // }
+

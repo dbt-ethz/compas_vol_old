@@ -10,7 +10,7 @@ int count;
 float GetDistance(vec3 p){ //union of shapes  
     int pos = 0;
     float bounding_sphere_distance = bounding_sphere_primitive(p, bounding_sphere.xyz, bounding_sphere.w);
-    float dist_final = 5. ; // HERE THIS NEEDS ATTENTION, shouldn't be too big
+    float dist_final = abs(bounding_sphere_distance) + 1. ; // HERE THIS NEEDS ATTENTION, shouldn't be too big
     if (bounding_sphere_distance < 0) { // if withing the bounding sphere. OPTIMIZATION. // HERE THIS NEEDS ATTENTION, how to find dimensions of bounding sphere
     
         for (int i = 0; i < object_max_num -1; i++ ){ 
@@ -23,6 +23,7 @@ float GetDistance(vec3 p){ //union of shapes
             for (int j=0 ; j < v_data_count_per_object[i]; j++){
                 geometry_data[j] = v_object_geometries_data[pos + j];
             }
+
 
             /////------ Get dist of current object
             //primitive
@@ -43,17 +44,25 @@ float GetDistance(vec3 p){ //union of shapes
             /////----- break loop once the necessary values have been calculated
             if (current_index ==  display_target_object || current_index == 1 ){ //display_target_object
                 dist_final = objects_values[display_target_object];
-
-                // intersect wih slicing plane // this should only happen if the slicing plane exists
-                float y_slice_plane_dist = y_slicing_Plane(p, y_slice); 
-                dist_final =  max(dist_final, y_slice_plane_dist );
-
-                // dist_final = ripples_sin(p, dist_final, 0.02, 50 ); //float amplitude, float frequency
-                dist_final = ripples_fract(p, dist_final, 0.02, 20 ); //float amplitude, float frequency
-                
+                break;
             }
         }
+
+        dist_final = segmentation_offset(dist_final, 0.025);
+        dist_final = segmentation_plane_z(p, dist_final, 0.025, 30);
+
+
+
+        // intersect with slicing planes 
+        dist_final =  max(dist_final, y_slicing_Plane(p, y_slice));
+        dist_final =  max(dist_final, z_slicing_Plane(p, z_slice));
+
+        // dist_final = ripples_sin(p, dist_final, 0.02, 50 ); //float amplitude, float frequency
+        // dist_final = ripples_fract(p, dist_final, 0.02, 20 ); //float amplitude, float frequency                 
     }  
+    
+
+    // dist_final = ripples_sin(p, dist_final, 0.02, 30 ); //float amplitude, float frequency
     return dist_final;
 }
 
@@ -61,21 +70,37 @@ float GetDistance(vec3 p){ //union of shapes
 ///// --------------------Raymarching
 int total_steps = 0;
 
-#define MAX_STEPS 200
-#define MAX_DIST 200.
-#define SURF_DIST 0.01
+#define MAX_STEPS 100
+#define MAX_DIST 100.
+#define SURF_DIST 0.001
 float RayMarch(vec3 ro, vec3 rd){ // ray origin, ray direction
-    float dO = 0.; // distance from origin
+    float t = 0.; // distance from origin
 
     for (int i = 0;  i< MAX_STEPS; i++){
-        vec3 p = ro + rd * dO;
-        float dS = GetDistance(p); // Get distance scene
-        dO += dS;
+
+        vec3 p = ro + rd * t;
+        float distance_sdf = GetDistance(p); // Get distance scene
+
+        // if (0< distance_sdf && distance_sdf< 1.){
+        //     t += distance_sdf * 0.03;
+        // }else {
+
+        if (distance_sdf < SURF_DIST){
+            distance_sdf = 0.;
+        }
+        
+        // if (0 < distance_sdf && distance_sdf< 1.){
+        //     t +=  distance_sdf *0.1;
+        // } else{
+        //     t += distance_sdf;    
+        // }
+
+        t += distance_sdf;    
         total_steps += 1;
 
-        if (dO> MAX_DIST || abs(dS) < SURF_DIST) break;
+        if (t> MAX_DIST || abs(distance_sdf) < SURF_DIST) break;
     }
-    return dO;
+    return t;
 }
 
 
@@ -107,19 +132,19 @@ vec3 GetNormal(vec3 p){
 //     return dif;
 // }
 
-// float CalculateOcclusion( in vec3 pos, in vec3 normal){
-// 	float occ = 0.0;
-//     float sca = 1.0;
-//     for( int i=0; i<5; i++ )
-//     {
-//         float h = SURF_DIST + 0.11*float(i)/4.0;
-//         vec3 opos = pos + h * normal;
-//         float d = GetDistance(opos);
-//         occ += (h-d)*sca;
-//         sca *= 0.95;
-//     }
-//     return clamp( 1.0 - 2.0*occ, 0.0, 1.0 );
-// }
+float CalculateOcclusion( in vec3 pos, in vec3 normal){
+	float occ = 0.0;
+    float sca = 1.0;
+    for( int i=0; i<5; i++ )
+    {
+        float h = SURF_DIST + 0.03 * float(i)/4.0;
+        vec3 opos = pos + h * normal;
+        float d = GetDistance(opos);
+        occ += (h-d)*sca;
+        sca *= 0.95;
+    }
+    return clamp( 1.0 - 3.0*occ, 0.0, 1.0 );
+}
 
 #define sun_shadow_dist 100; 
 vec3 GetLight(in vec3 normal, in vec3 pos){
@@ -151,24 +176,6 @@ vec3 GetLight(in vec3 normal, in vec3 pos){
            sky_color * sky_dif + 
            bounce_color * bounce_dif ;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
