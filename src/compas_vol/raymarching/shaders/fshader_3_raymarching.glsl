@@ -48,8 +48,8 @@ float GetDistance(vec3 p){ //union of shapes
             }
         }
 
-        dist_final = segmentation_offset(dist_final, 0.025);
-        dist_final = segmentation_plane_z(p, dist_final, 0.025, 30);
+        dist_final = segmentation_offset(dist_final, 0.02);
+        dist_final = segmentation_plane_z(p, dist_final, 0.025, 200, -5.);
 
 
 

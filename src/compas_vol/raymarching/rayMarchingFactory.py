@@ -223,7 +223,7 @@ class RayMarchingFactory:
     def update_filter (self, task):       
         self.ray_marching_quad.set_shader_input("camera_POS", self.renderer.camera.getPos())
         proj_matrix_inv =  self.renderer.camLens.getProjectionMatInv()
-        transform_coordinate_system =  LMatrix4.convertMat( self.renderer.camLens.getCoordinateSystem() , self.renderer.win.getGsg().getCoordinateSystem())
+        transform_coordinate_system = LMatrix4.convertMat( self.renderer.camLens.getCoordinateSystem() , self.renderer.win.getGsg().getCoordinateSystem())
         view_matrix = self.renderer.camera.getTransform(self.renderer.render).getMat()
         transform_clip_plane_to_perspective_camera = transform_coordinate_system * proj_matrix_inv * view_matrix 
         self.ray_marching_quad.setShaderInput("transform_clip_plane_to_perspective_camera", transform_clip_plane_to_perspective_camera)
@@ -372,7 +372,7 @@ class RayMarchingFactory:
             position = LVector3f(0.8 + order * 0.09, 0 ,0.95 - i * 0.06)
 
             buttons.append( DirectRadioButton(text = " " + str(i)  + " " + translator.get_obj_name(id) + " " ,\
-                                              variable = self.display_target_object, value= [i], scale=0.03,                        \
+                                              variable = self.display_target_object, value= [i], scale=0.03,\
                                               pos= position ) ) #, command = set_input_of_shader(i)
             
             if i>1 : #then connect object with parent 

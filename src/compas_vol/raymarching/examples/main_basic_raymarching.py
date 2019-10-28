@@ -80,7 +80,9 @@ if __name__ == "__main__":
     rayMarcher.post_processing_ray_marching_filter()
     # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
-    rayMarcher.create_slicing_slider(-7, 16 ,-7)
+
+    rayMarcher.create_slicer(range_a = -7, range_b = 12 , start_value = 12, axis = 'y', screen_position = -0.75)
+    rayMarcher.create_slicer(range_a = -7, range_b = 12 , start_value = 12, axis = 'z', screen_position = -0.85)
 
 
     renderer.show()

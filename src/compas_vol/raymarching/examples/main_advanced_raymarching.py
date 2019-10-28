@@ -72,7 +72,7 @@ if __name__ == "__main__":
     # rayMarcher.ray_marching_shader()
     rayMarcher.show_csg_tree_GUI()
 
-    rayMarcher.create_slicer(range_a = -7, range_b = 12 , start_value = 12, axis = 'y', screen_position = -0.75)
-    rayMarcher.create_slicer(range_a = -7, range_b = 12 , start_value = 12, axis = 'z', screen_position = -0.85)
+    rayMarcher.create_slicer(range_a = -3, range_b = 3 , start_value = 3, axis = 'y', screen_position = -0.75)
+    rayMarcher.create_slicer(range_a = -7, range_b = 7 , start_value = 7, axis = 'z', screen_position = -0.85)
 
     renderer.show()

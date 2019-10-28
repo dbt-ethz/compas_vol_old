@@ -63,6 +63,10 @@ float shell(in float start_dist, in float thickness){
     return abs(start_dist + thickness) - thickness;
 }
 
+float smooth_union(in float a, in float b, float k){
+    float h = max(k - abs(a-b), 0.0);
+    return min(a,b) - h*h/(k*4.0);
+}
 
 float smooth_subtraction(in float a, in float b, float k){
     float h = max(k - abs(a-b), 0.0);
@@ -76,24 +80,139 @@ float segmentation_offset (in float start_dist, in float shell_thickness){
 
     for (int i=0; i<25; i++){
         current_shell = shell(start_dist + current_offset, shell_thickness);
-        current_offset += shell_thickness * 3.0;
+        current_offset += shell_thickness * 3.5;
         result = min(result, current_shell);
         if (current_offset < start_dist) break;
     }
     return result;
 }
 
-float segmentation_plane_z(in vec3 p, in float start_dist, in float thickness, in int iterations_num){
+
+// fast version 
+float segmentation_plane_z(in vec3 p, in float start_dist, in float thickness, in int iterations_num, in float start_z){
     float result =  1000;  // big number
-    float current_height_z = 0;
-    for (int i=0; i<iterations_num; i++){
+    // float current_height_z = start_z;
 
-        float slicing_plane = shell(p.z - current_height_z , thickness);
-        float slice = max(start_dist, slicing_plane);
+    vec3 pos_repeated = vec3(p.x, p.y, mod(p.z, thickness * 3)  + p.z ); // REPETITION OF ELEMENTS, mod, fract
 
-        current_height_z += 4* thickness;
+
+    // for (int i=0; i<iterations_num; i++){
+
+        float slicing_plane = shell(p.z - pos_repeated.z , thickness);
+
+        float slice = smooth_subtraction(start_dist, slicing_plane, 0.015);
+
+        // current_height_z += 3.5 * thickness;
 
         result = min(result, slice);
-    }
+    // }
     return result;
 }
+
+// // slow version 
+// float segmentation_plane_z(in vec3 p, in float start_dist, in float thickness, in int iterations_num, in float start_z){
+//     float result =  1000;  // big number
+//     float current_height_z = start_z;
+//     for (int i=0; i<iterations_num; i++){
+//         float slicing_plane = shell(p.z - pos_repeated.z , thickness);
+//         float slice = smooth_subtraction(start_dist, slicing_plane, 0.015);
+//         current_height_z += 3.5 * thickness;
+//         result = min(result, slice);
+//     }
+//     return result;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
