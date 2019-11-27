@@ -28,8 +28,9 @@ class Lattice(object):
     """
     def __init__(self, ltype=0, unitcell=1.0, thickness=0.1):
         self.pointlist = self.create_points()
-        self.types = self.create_types()
-        self.type = min(max(0, ltype), len(self.types) - 1)
+        self.ltypes = self.create_types()
+        self._ltype = None
+        self.ltype = ltype
         self.unitcell = unitcell
         self.thickness = thickness
         self.frame = Frame.worldXY()
@@ -46,6 +47,18 @@ class Lattice(object):
     @frame.setter
     def frame(self, frame):
         self._frame = Frame(frame[0], frame[1], frame[2])
+
+    @property
+    def ltype(self):
+        return self._ltype
+    
+    @property
+    def lattice_type(self):
+        return self.ltype, self.typenames[self.ltype]
+
+    @ltype.setter
+    def ltype(self, ltype):
+        self._ltype = min(max(0, ltype), len(self.ltypes) - 1)
 
     @property
     def typenames(self):
@@ -133,7 +146,7 @@ class Lattice(object):
 
         up = [abs((p % self.unitcell) - self.unitcell/2) for p in pt]
         dmin = 9999999.
-        for l in self.types[self.type]:
+        for l in self.ltypes[self.ltype]:
             sp = [self.pointlist[l[0]][i] * self.unitcell for i in range(3)]
             ep = [self.pointlist[l[1]][i] * self.unitcell for i in range(3)]
             v = [ep[i]-sp[i] for i in range(3)]
@@ -161,7 +174,7 @@ class Lattice(object):
         mg = abs((mg % self.unitcell) - self.unitcell/2)
 
         distances = []
-        for l in self.types[self.type]:
+        for l in self.ltypes[self.ltype]:
             A = np.array([self.pointlist[l[0]][i] * self.unitcell for i in range(3)])
             B = np.array([self.pointlist[l[1]][i] * self.unitcell for i in range(3)])
             d = np.linalg.norm(np.cross(B-A, mg-A), axis=-1)/np.linalg.norm(B-A)
@@ -176,7 +189,7 @@ if __name__ == "__main__":
     lat = Lattice(10, 5.0, 0.5)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
-    print(lat.typenames)
+    print(lat.typenames, lat.lattice_type)
 
     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 
