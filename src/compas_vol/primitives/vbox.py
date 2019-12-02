@@ -6,6 +6,7 @@ from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
+from compas import PRECISION
 
 __all__ = ['VolBox']
 
@@ -86,6 +87,9 @@ class VolBox(object):
     def data(self, data):
         self.box = Box.from_data(data['box'])
         self.radius = data['radius']
+
+    def __repr__(self):
+        return 'VolBox({0}, {1:.{2}f})'.format(str(self.box), self.radius, PRECISION[:1])
 
     # ==========================================================================
     # factory
@@ -194,6 +198,7 @@ if __name__ == "__main__":
     box = Box(Frame(Point(3, 2, 0), [1, 0.2, 0.1], [-0.1, 1, 0.1]), 25, 10, 15)
     vb = VolBox(box, 3.0)
     print(vb.to_data())
+    print(vb)
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
     d = vb.get_distance_numpy(x, y, z)

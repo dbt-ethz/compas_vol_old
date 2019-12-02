@@ -39,12 +39,16 @@ class VolCylinder(object):
     @data.setter
     def data(self, data):
         self.cylinder = Cylinder.from_data(data)
-    
+
     @classmethod
     def from_data(cls, data):
         cylinder = Cylinder.from_data(data)
         vcylinder = cls(cylinder)
         return vcylinder
+
+    def __repr__(self):
+        return 'VolCylinder({})'.format(str(self.cylinder))
+
 
     # ==========================================================================
     # distance functions
@@ -95,6 +99,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
     o = VolCylinder(Cylinder(Circle(Plane([1, 2, 3], [0.3, 0.4, 1.]), 5.0), 7.0))
+    print(o)
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
     d = o.get_distance_numpy(x, y, z)

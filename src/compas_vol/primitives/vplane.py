@@ -39,6 +39,9 @@ class VolPlane(object):
         vplane = cls(plane)
         return vplane
 
+    def __repr__(self):
+        return 'VolPlane({})'.format(str(self.plane))
+
     def get_distance(self, point):
         """
         single point distance function

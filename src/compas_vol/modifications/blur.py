@@ -4,7 +4,7 @@ from scipy.ndimage.filters import gaussian_filter
 class Blur(object):
     """
     A `Blur` object is composed of a distance matrix and a radius
-    
+
     Parameters
     ----------
     distance_matrix :class:`numpy.ndarray` of shape (nx, ny, nz)

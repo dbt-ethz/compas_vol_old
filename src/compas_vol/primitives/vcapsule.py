@@ -1,5 +1,6 @@
 from compas.geometry import Point
 from compas.geometry.distance import closest_point_on_segment
+from compas import PRECISION
 
 __all__ = ['VolCapsule']
 
@@ -45,6 +46,10 @@ class VolCapsule(object):
         vcapsule = cls(segment, radius)
         return vcapsule
 
+    def __repr__(self):
+        segment = 'hallo'
+        return 'VolSegment({0},{1:.{2}f})'.format(segment, self.radius, PRECISION[:1])
+
     def get_distance(self, point):
         """
         single point distance function
@@ -85,6 +90,7 @@ if __name__ == "__main__":
 
     s = ((-9, -6, 0), (6, 9, 0))
     capsule = VolCapsule(s, 5.0)
+    print(capsule)
 
     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 

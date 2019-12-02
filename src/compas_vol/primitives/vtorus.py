@@ -32,7 +32,7 @@ class VolTorus(object):
     @property
     def data(self):
         return self.torus.to_data()
-    
+
     def to_data(self):
         return self.data
 
@@ -46,6 +46,9 @@ class VolTorus(object):
         vtorus = cls(torus)
         return vtorus
 
+    def __repr__(self):
+        return 'VolTorus({})'.format(str(self.torus))
+
     def get_distance(self, point):
         """
         single point distance function
@@ -58,7 +61,7 @@ class VolTorus(object):
         mi = matrix_inverse(m)
         point.transform(mi)
 
-        dxy = length_vector_xy(point) #distance_point_point_xy(self.torus.center, point)
+        dxy = length_vector_xy(point)  # distance_point_point_xy(self.torus.center, point)
         d2 = sqrt((dxy - self.torus.radius_axis)**2 + point.z**2)
         return d2 - self.torus.radius_pipe
 
@@ -88,6 +91,7 @@ if __name__ == "__main__":
     import numpy as np
 
     o = VolTorus(Torus(Plane((2, 3, 0), (0.3, 0.2, 1)), 7.0, 4.0))
+    print(o)
 
     # x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
     # d = o.get_distance_numpy(x, y, z)
