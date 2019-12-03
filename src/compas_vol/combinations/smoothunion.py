@@ -1,3 +1,6 @@
+from compas import PRECISION
+
+
 class SmoothUnion(object):
     """The smooth union between two volumetric objects.
 
@@ -22,6 +25,9 @@ class SmoothUnion(object):
         self.a = a
         self.b = b
         self.r = r
+
+    def __repr__(self):
+        return 'SmoothUnion({0},{1},{2:.{3}f})'.format(str(self.a), str(self.b), self.r, PRECISION[:1])
 
     def get_distance_alt(self, x, y, z):
         da = self.a.get_distance(x, y, z)

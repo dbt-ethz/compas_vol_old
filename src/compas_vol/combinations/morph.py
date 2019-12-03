@@ -23,6 +23,9 @@ class Morph(object):
         self.b = b
         self.f = max(min(f, 1), 0)
 
+    def __repr__(self):
+        return 'Morph({},{},{})'.format(str(self.a), str(self.b), self.f)
+
     def get_distance(self, point):
         """
         single point distance function

@@ -3,7 +3,7 @@ from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
-
+from compas import PRECISION
 
 class Lattice(object):
     """A lattice is defined by it's type, size of a unit cell and its strut diameter.
@@ -26,14 +26,15 @@ class Lattice(object):
     >>> lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
     """
-    def __init__(self, ltype=0, unitcell=1.0, thickness=0.1):
+    def __init__(self, ltype=0, unitcell=1.0, thickness=0.1, frame=Frame.worldXY()):
         self.pointlist = self.create_points()
         self.ltypes = self.create_types()
         self._ltype = None
         self.ltype = ltype
         self.unitcell = unitcell
         self.thickness = thickness
-        self.frame = Frame.worldXY()
+        self._frame = None
+        self.frame = frame
 
     # ==========================================================================
     # descriptors
@@ -131,6 +132,9 @@ class Lattice(object):
         types = [bigx, grid, star, cross, octagon, octet, vintile, dual, interlock, isotrop, hexgrid]
         return types
 
+    def __repr__(self):
+        return "Lattice({0},{1:.{4}f},{2:.{4}f},{3})".format(self.ltype, self.unitcell, self.thickness, str(self.frame), PRECISION[:1])
+
     def get_distance(self, point):
         """
         single point distance function
@@ -185,15 +189,18 @@ class Lattice(object):
 if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
+    from compas.geometry import Vector, Frame
 
     lat = Lattice(10, 5.0, 0.5)
     lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
     print(lat.typenames, lat.lattice_type)
+    print(lat)
+    lat2 = eval(str(lat))
 
     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 
-    m = lat.get_distance_numpy(x, y, z)
+    m = lat2.get_distance_numpy(x, y, z)
 
     # num = 200
     # m = np.empty((num, num))

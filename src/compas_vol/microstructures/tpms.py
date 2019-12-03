@@ -1,5 +1,5 @@
 from math import pi, sin, cos
-
+from compas import PRECISION
 
 class TPMS(object):
     """A triply periodic minimal surface (TPMS) is defined by a type and a wavelength.
@@ -15,7 +15,9 @@ class TPMS(object):
     --------
     >>> a = TPMS(tpmstype='Gyroid', wavelength=5.0)
     """
-    def __init__(self, tpmstype='Gyroid', wavelength=1.0):
+    def __init__(self, tpmstype=0, wavelength=1.0):
+        self.tpmstypes = ['gyroid', 'schwartzp', 'diamond', 'neovius', 'lidinoid', 'fischerkoch']
+        self._tpmstype = None
         self.tpmstype = tpmstype
         self._wavelength = None
         self.wavelength = wavelength
@@ -26,6 +28,20 @@ class TPMS(object):
     # ==========================================================================
 
     @property
+    def tpmstype(self):
+        return self._tpmstype
+
+    @tpmstype.setter
+    def tpmstype(self, tpmstype):
+        if type(tpmstype) == str:
+            if tpmstype.lower() in self.tpmstypes:
+                self._tpmstype = self.tpmstypes.index(tpmstype.lower())
+            else:
+                self._tpmstype = 0
+        elif type(tpmstype) == int:
+            self._tpmstype = max(0, min(tpmstype, len(self.tpmstypes) - 1))
+
+    @property
     def wavelength(self):
         """float: The wavelength of the TPMS."""
         return self._wavelength
@@ -33,6 +49,10 @@ class TPMS(object):
     @wavelength.setter
     def wavelength(self, wavelength):
         self._wavelength = float(wavelength)
+        self._factor = self.wavelength/pi
+
+    def __repr__(self):
+        return 'TPMS({0},{1:.{2}f})'.format(self.tpmstype, self.wavelength, PRECISION[:1])
 
     # ==========================================================================
     # distance function
@@ -48,28 +68,28 @@ class TPMS(object):
         pz = z/self._factor
 
         d = 0
-        if self.tpmstype == 'Gyroid':
+        if self.tpmstype == 0:  # 'Gyroid':
             d = sin(px)*cos(py) + sin(py)*cos(pz) + sin(pz)*cos(px)
-        elif self.tpmstype == 'SchwartzP':
+        elif self.tpmstype == 1:  #  'SchwartzP':
             d = cos(px) + cos(py) + cos(pz)
-        elif self.tpmstype == 'Diamond':
+        elif self.tpmstype == 2:  #  'Diamond':
             d = (
                 sin(px) * sin(py) * sin(pz) +
                 sin(px) * cos(py) * cos(pz) +
                 cos(px) * sin(py) * cos(pz) +
                 cos(px) * cos(py) * sin(pz)
             )
-        elif self.tpmstype == 'Neovius':
+        elif self.tpmstype == 3:  #  'Neovius':
             d = (3 * cos(px) + cos(py) + cos(pz) +
                  4 * cos(px) * cos(py) * cos(pz))
-        elif self.tpmstype == 'Lidinoid':
+        elif self.tpmstype == 4:  #  'Lidinoid':
             d = (0.5 * (sin(2*px) * cos(py) * sin(pz) +
                  sin(2*py) * cos(py) * sin(px) +
                  sin(2*pz) * cos(px) * sin(pz)) -
                  0.5 * (cos(2*px) * cos(2*py) +
                  cos(2*py) * cos(2*pz) +
                  cos(2*pz) * cos(2*px)) + 0.15)
-        elif self.tpmstype == 'FischerKoch':
+        elif self.tpmstype == 5:  #  'FischerKoch':
             d = (cos(2*px) * sin(py) * cos(pz) +
                  cos(2*py) * sin(pz) * cos(px) +
                  cos(2*pz) * sin(px) * cos(py))
@@ -86,28 +106,28 @@ class TPMS(object):
         pz = z/self._factor
 
         d = 0
-        if self.tpmstype == 'Gyroid':
+        if self.tpmstype == 0: #'Gyroid':
             d = np.sin(px)*np.cos(py) + np.sin(py)*np.cos(pz) + np.sin(pz)*np.cos(px)
-        elif self.tpmstype == 'SchwartzP':
+        elif self.tpmstype == 1: #'SchwartzP':
             d = np.cos(px) + np.cos(py) + np.cos(pz)
-        elif self.tpmstype == 'Diamond':
+        elif self.tpmstype == 2: #'Diamond':
             d = (
                 np.sin(px) * np.sin(py) * np.sin(pz) +
                 np.sin(px) * np.cos(py) * np.cos(pz) +
                 np.cos(px) * np.sin(py) * np.cos(pz) +
                 np.cos(px) * np.cos(py) * np.sin(pz)
             )
-        elif self.tpmstype == 'Neovius':
+        elif self.tpmstype == 3: #'Neovius':
             d = (3 * np.cos(px) + np.cos(py) + np.cos(pz) +
                  4 * np.cos(px) * np.cos(py) * np.cos(pz))
-        elif self.tpmstype == 'Lidinoid':
+        elif self.tpmstype == 4: #'Lidinoid':
             d = (0.5 * (np.sin(2*px) * np.cos(py) * np.sin(pz) +
                  np.sin(2*py) * np.cos(py) * np.sin(px) +
                  np.sin(2*pz) * np.cos(px) * np.sin(pz)) -
                  0.5 * (np.cos(2*px) * np.cos(2*py) +
                  np.cos(2*py) * np.cos(2*pz) +
                  np.cos(2*pz) * np.cos(2*px)) + 0.15)
-        elif self.tpmstype == 'FischerKoch':
+        elif self.tpmstype == 5: #'FischerKoch':
             d = (np.cos(2*px) * np.sin(py) * np.cos(pz) +
                  np.cos(2*py) * np.sin(pz) * np.cos(px) +
                  np.cos(2*pz) * np.sin(px) * np.cos(py))
@@ -119,7 +139,8 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    b = TPMS(tpmstype='Gyroid', wavelength=5)
+    b = TPMS(tpmstype='schwartzP', wavelength=5)
+    print(b)
 
     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 

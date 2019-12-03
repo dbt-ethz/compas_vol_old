@@ -28,6 +28,10 @@ class Union(object):
         """
         self.objs.append(o)
 
+    def __repr__(self):
+        obj_strings = [str(o) for o in self.objs]
+        return 'Union([{}])'.format(', '.join(obj_strings))
+
     def get_distance(self, point):
         """
         single point distance function
@@ -60,6 +64,7 @@ if __name__ == "__main__":
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
     u = Union(vs, vb)
+    print(u)
     for y in range(-15, 15):
         s = ''
         for x in range(-30, 30):

@@ -1,3 +1,6 @@
+from compas import PRECISION
+
+
 class SmoothIntersection(object):
     """The smooth union between two volumetric objects.
 
@@ -22,6 +25,9 @@ class SmoothIntersection(object):
         self.a = a
         self.b = b
         self.r = r
+
+    def __repr__(self):
+        return 'SmoothIntersection({0},{1},{2:.{3}f})'.format(str(self.a), str(self.b), self.r, PRECISION[:1])
 
     def get_distance(self, point):
         """
@@ -51,7 +57,7 @@ class SmoothIntersection(object):
 
 if __name__ == "__main__":
     from compas_vol.primitives import VolSphere, VolBox
-    from compas.geometry import Box, Frame, Point, Sphere
+    from compas.geometry import Box, Frame, Point, Sphere, Vector
     import numpy as np
     import matplotlib.pyplot as plt
 
@@ -60,6 +66,7 @@ if __name__ == "__main__":
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
     u = SmoothIntersection(vs, vb, 2.5)
+    u2 = eval(str(u))
     # for y in range(-15, 15):
     #     s = ''
     #     for x in range(-30, 30):
@@ -71,7 +78,7 @@ if __name__ == "__main__":
     #     print(s)
 
     x, y, z = np.ogrid[-15:15:50j, -15:15:50j, -15:15:50j]
-    d = u.get_distance_numpy(x, y, z)
+    d = u2.get_distance_numpy(x, y, z)
     plt.imshow(d[:, :, 25].T, cmap='RdBu')
     plt.colorbar()
     plt.show()

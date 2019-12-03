@@ -1,8 +1,14 @@
+from compas import PRECISION
+
+
 class Overlay(object):
     def __init__(self, a=None, b=None, f=0.1):
         self.a = a
         self.b = b
         self.f = f
+
+    def __repr__(self):
+        return "Overlay({0},{1},{2:.{3}f})".format(str(self.a), str(self.b), self.f, PRECISION[:1])
 
     def get_distance(self, point):
         """
@@ -30,6 +36,7 @@ if __name__ == "__main__":
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
     f = Overlay(vs, vb, 0.2)
+    print(f)
     for y in range(-15, 15):
         s = ''
         for x in range(-30, 30):

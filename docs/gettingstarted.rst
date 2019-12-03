@@ -1,5 +1,9 @@
 ********************************************************************************
-Introduction
+Getting Started in Docs Folder
 ********************************************************************************
 
-introduction on volumetric modelling, dbt research, axolotl
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    gettingstarted/installation
