@@ -14,9 +14,10 @@ compas_vol.modifications
     Twist
 
 """
+from .blur import *
+from .multishell import *
 from .overlay import *
 from .shell import *
 from .twist import *
-from .blur import *
 
 __all__ = [name for name in dir() if not name.startswith('_')]
