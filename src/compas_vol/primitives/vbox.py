@@ -195,14 +195,15 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
 
-    box = Box(Frame(Point(3, 2, 0), [1, 0.2, 0.1], [-0.1, 1, 0.1]), 25, 10, 15)
+    box = Box(Frame(Point(0, 0, 0), [1, 0.2, 0], [-0.1, 1, 0]), 20, 15, 15)
     vb = VolBox(box, 3.0)
-    print(vb.to_data())
-    print(vb)
+    # print(vb.to_data())
+    # print(vb)
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
     d = vb.get_distance_numpy(x, y, z)
-    plt.imshow(d[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+    m = np.tanh(d[:, :, 25].T)
+    plt.imshow(m, cmap='Greys', interpolation='nearest')  # transpose because numpy indexing is 1)row 2) column instead of x y
     # plt.colorbar()
     plt.axis('equal')
     plt.show()

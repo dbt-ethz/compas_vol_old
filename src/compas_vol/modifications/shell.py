@@ -1,3 +1,6 @@
+from compas import PRECISION
+
+
 class Shell(object):
     """A shell object converts a solid volumetric object into a constant thickness boundary volume.
 
@@ -22,6 +25,9 @@ class Shell(object):
         self.o = obj
         self.thickness = thickness
         self.side = side
+
+    def __repr__(self):
+        return 'Shell({0},{1:.{3}f},{2:.{3}f})'.format(str(self.o), self.thickness, self.side, PRECISION[:1])
 
     def get_distance(self, point):
         """
