@@ -28,6 +28,9 @@ class VolTorus(object):
     """
     def __init__(self, torus):
         self.torus = torus
+        frame = Frame.from_plane(self.torus.plane)
+        transform = matrix_from_frame(frame)
+        self.inversetransform = matrix_inverse(transform)
 
     @property
     def data(self):
@@ -56,10 +59,7 @@ class VolTorus(object):
         if not isinstance(point, Point):
             point = Point(*point)
 
-        frame = Frame.from_plane(self.torus.plane)
-        m = matrix_from_frame(frame)
-        mi = matrix_inverse(m)
-        point.transform(mi)
+        point.transform(self.inversetransform)
 
         dxy = length_vector_xy(point)  # distance_point_point_xy(self.torus.center, point)
         d2 = sqrt((dxy - self.torus.radius_axis)**2 + point.z**2)
@@ -71,11 +71,8 @@ class VolTorus(object):
         """
         import numpy as np
 
-        frame = Frame.from_plane(self.torus.plane)
-        m = matrix_from_frame(frame)
-        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
-        xt, yt, zt, _ = np.dot(mi, p)
+        xt, yt, zt, _ = np.dot(self.inversetransform, p)
 
         # d = np.sqrt((xt - self.torus.center.x)**2 +
         #             (yt - self.torus.center.y)**2) - self.torus.radius_axis
@@ -93,10 +90,10 @@ if __name__ == "__main__":
     o = VolTorus(Torus(Plane((2, 3, 0), (0.3, 0.2, 1)), 7.0, 4.0))
     print(o)
 
-    # x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
-    # d = o.get_distance_numpy(x, y, z)
-    # plt.imshow(d[:, :, 30], cmap='RdBu')
-    # plt.show()
+    x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
+    d = o.get_distance_numpy(x, y, z)
+    plt.imshow(d[:, :, 30], cmap='RdBu')
+    plt.show()
 
     for y in range(-15, 15):
         s = ''

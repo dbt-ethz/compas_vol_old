@@ -33,9 +33,9 @@ class Twist(object):
         from compas.geometry import matrix_inverse
         import numpy as np
 
-        plane = Plane(self.frame.point, self.frame.normal)
-        vp = VolPlane(plane)
-        dm = vp.get_distance_numpy(x, y, z)
+        # plane = Plane(self.frame.point, self.frame.normal)
+        # vp = VolPlane(plane)
+        # dm = vp.get_distance_numpy(x, y, z)
 
         m = matrix_from_axis_and_angle(self.frame.normal, 10, self.frame.point)
         mi = matrix_inverse(m)

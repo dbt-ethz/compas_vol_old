@@ -5,6 +5,7 @@ from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
 from compas import PRECISION
 
+
 class Lattice(object):
     """A lattice is defined by it's type, size of a unit cell and its strut diameter.
     Optionally, a frame can be specified to modify orientation and origin.
@@ -35,6 +36,8 @@ class Lattice(object):
         self.thickness = thickness
         self._frame = None
         self.frame = frame
+        transform = matrix_from_frame(self.frame)
+        self.inversetransform = matrix_inverse(transform)
 
     # ==========================================================================
     # descriptors
@@ -143,10 +146,8 @@ class Lattice(object):
             pt = Point(*point)
         else:
             pt = point
-        # frame to frame: box to world
-        m = matrix_from_frame(self.frame)
-        mi = matrix_inverse(m)
-        pt.transform(mi)
+
+        pt.transform(self.inversetransform)
 
         up = [abs((p % self.unitcell) - self.unitcell/2) for p in pt]
         dmin = 9999999.
@@ -170,10 +171,8 @@ class Lattice(object):
         """
         import numpy as np
 
-        m = matrix_from_frame(self.frame)
-        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
-        md = np.dot(mi, p)
+        md = np.dot(self.inversetransform, p)
         mg = np.stack(([md[0], md[1], md[2]]), axis=-1)
         mg = abs((mg % self.unitcell) - self.unitcell/2)
 

@@ -34,8 +34,9 @@ class VolBox(object):
     """
     def __init__(self, box, radius=0.0):
         self._box = None
-        self.box = box
+        self.inversetransform = None
         self._radius = None
+        self.box = box
         self.radius = max(radius, 0)
 
     @property
@@ -47,6 +48,8 @@ class VolBox(object):
         if not isinstance(box, Box):
             raise ValueError
         self._box = box
+        transform = matrix_from_frame(self.box.frame)
+        self.inversetransform = matrix_inverse(transform)
 
     @property
     def radius(self):
@@ -136,9 +139,7 @@ class VolBox(object):
         else:
             p = point
 
-        m = matrix_from_frame(self.box.frame)
-        mi = matrix_inverse(m)
-        p.transform(mi)
+        p.transform(self.inversetransform)
 
         dx = abs(p.x) - (self.box.xsize / 2.0 - self.radius)
         dy = abs(p.y) - (self.box.ysize / 2.0 - self.radius)
@@ -168,12 +169,9 @@ class VolBox(object):
             The distances from the query points to the surface of the object.
         """
         import numpy as np
-        from compas.geometry import matrix_from_frame, matrix_inverse
 
-        m = matrix_from_frame(self.box.frame)
-        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
-        xt, yt, zt, _ = np.dot(mi, p)
+        xt, yt, zt, _ = np.dot(self.inversetransform, p)
 
         # dx = np.abs(xt - self.box.frame.point.x) - (self.box.xsize / 2.0 - self.radius)
         # dy = np.abs(yt - self.box.frame.point.y) - (self.box.ysize / 2.0 - self.radius)
@@ -208,12 +206,12 @@ if __name__ == "__main__":
     plt.axis('equal')
     plt.show()
 
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = vb.get_distance((x * 0.5, -y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '.'
-    #     print(s)
+    for y in range(-15, 15):
+        s = ''
+        for x in range(-30, 30):
+            d = vb.get_distance((x * 0.5, -y, 0))
+            if d < 0:
+                s += 'x'
+            else:
+                s += '.'
+        print(s)

@@ -1,6 +1,7 @@
 from math import pi, sin, cos
 from compas import PRECISION
 
+
 class TPMS(object):
     """A triply periodic minimal surface (TPMS) is defined by a type and a wavelength.
 

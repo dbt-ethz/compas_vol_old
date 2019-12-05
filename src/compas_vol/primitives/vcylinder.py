@@ -28,6 +28,9 @@ class VolCylinder(object):
 
     def __init__(self, cylinder):
         self.cylinder = cylinder
+        frame = Frame.from_plane(self.cylinder.plane)
+        transform = matrix_from_frame(frame)
+        self.inversetransform = matrix_inverse(transform)
 
     @property
     def data(self):
@@ -49,7 +52,6 @@ class VolCylinder(object):
     def __repr__(self):
         return 'VolCylinder({})'.format(str(self.cylinder))
 
-
     # ==========================================================================
     # distance functions
     # ==========================================================================
@@ -61,10 +63,7 @@ class VolCylinder(object):
         if not isinstance(point, Point):
             point = Point(*point)
 
-        frame = Frame.from_plane(self.cylinder.plane)
-        m = matrix_from_frame(frame)
-        mi = matrix_inverse(m)
-        point.transform(mi)
+        point.transform(self.inversetransform)
 
         dxy = length_vector_xy(point)  # distance_point_point_xy(self.cylinder.center, point)
         d = dxy - self.cylinder.radius
@@ -76,13 +75,9 @@ class VolCylinder(object):
         vectorized distance function
         """
         import numpy as np
-        from compas.geometry import matrix_from_frame
 
-        frame = Frame.from_plane(self.cylinder.plane)
-        m = matrix_from_frame(frame)
-        mi = matrix_inverse(m)
         p = np.array([x, y, z, 1])
-        xt, yt, zt, _ = np.dot(mi, p)
+        xt, yt, zt, _ = np.dot(self.inversetransform, p)
 
         d = np.sqrt(xt**2 + yt**2) - self.cylinder.radius
         out = np.maximum(d, np.abs(zt) - self.cylinder.height / 2.0)
