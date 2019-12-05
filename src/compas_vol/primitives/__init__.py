@@ -21,6 +21,7 @@ Classes
     VolPlane
     VolExtrusion
     VolPolyhedron
+    VolEllipsoid
 
 """
 
@@ -31,9 +32,10 @@ from __future__ import print_function
 from .gdf import *
 from .heart import *
 from .vbox import *
-# from .vcapsule import *
+from .vcapsule import *
 from .vcone import *
 from .vcylinder import *
+from .vellipsoid import *
 from .vextrusion import *
 from .vplane import *
 from .vpolyhedron import *
