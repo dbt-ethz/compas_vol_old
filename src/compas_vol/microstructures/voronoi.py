@@ -69,7 +69,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     from compas.geometry import pointcloud_xy
 
-    points = pointcloud_xy(90, (0, 300))
+    points = pointcloud_xy(70, (0, 300))
     b = Voronoi(points=points, thickness=2.5)
 
     # b.get_distance((2,3,4))
@@ -86,7 +86,7 @@ if __name__ == "__main__":
         s = ''
         for x in range(300):
             d = b.get_distance(Point(x, y, 0))
-            m[y,x] = d
+            m[y, x] = d
             #print(d)
         #     if d < 0:
         #         s += 'x'
