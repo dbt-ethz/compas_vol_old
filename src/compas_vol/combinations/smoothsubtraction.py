@@ -36,8 +36,8 @@ class SmoothSubtraction(object):
         da = self.a.get_distance(point)
         db = self.b.get_distance(point)
         k = self.r
-        h = min(max(0.5 - 0.5 * (db + da) / k, 0), 1)
-        return (db * (1 - h) + h * -da) + k * h * (1 - h)
+        h = min(max(0.5 - 0.5 * (da + db) / k, 0), 1)
+        return (da * (1 - h) + h * -db) + k * h * (1 - h)
 
     def get_distance_numpy(self, x, y, z):
         """
@@ -47,8 +47,8 @@ class SmoothSubtraction(object):
 
         da = self.a.get_distance_numpy(x, y, z)
         db = self.b.get_distance_numpy(x, y, z)
-        h = np.minimum(np.maximum(0.5 - 0.5 * (db + da)/self.r, 0), 1)
-        return (db * (1 - h) + h * -da) + self.r * h * (1 - h)
+        h = np.minimum(np.maximum(0.5 - 0.5 * (da + db)/self.r, 0), 1)
+        return (da * (1 - h) + h * -db) + self.r * h * (1 - h)
 
 
 # ==============================================================================
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     b = Box(Frame.worldXY(), 20, 15, 10)
     vs = VolSphere(s)
     vb = VolBox(b, 2.5)
-    u = SmoothSubtraction(vs, vb, 2.5)
+    u = SmoothSubtraction(vb, vs, 2.5)
     # for y in range(-15, 15):
     #     s = ''
     #     for x in range(-30, 30):
