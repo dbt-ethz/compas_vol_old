@@ -173,6 +173,7 @@ def export_layer(distfield, resolution, level, filename='layerimage.png'):
 
     import numpy as np
     from skimage import io
+    # add support for marching squares > outline
 
     # x, y = np.ogrid[-10:10:resolution+0j, -10:10:resolution+0j]
     y, x = np.ogrid[-10:10:resolution*1j, -10:10:resolution*1j]

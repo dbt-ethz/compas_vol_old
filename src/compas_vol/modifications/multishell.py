@@ -48,7 +48,7 @@ if __name__ == "__main__":
     sh = MultiShell(u, 1.0, 2.5)
 
     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
-    dm = sh.get_distance_numpy(x,y,z)
+    dm = sh.get_distance_numpy(x, y, z)
     plt.imshow(dm[:, :, 20], cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
     plt.show()
 

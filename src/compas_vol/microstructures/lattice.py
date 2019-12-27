@@ -55,7 +55,7 @@ class Lattice(object):
     @property
     def ltype(self):
         return self._ltype
-    
+
     @property
     def lattice_type(self):
         return self.ltype, self.typenames[self.ltype]
