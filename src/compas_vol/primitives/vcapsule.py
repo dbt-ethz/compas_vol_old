@@ -1,5 +1,5 @@
 from compas.geometry import Point
-from compas.geometry.distance import closest_point_on_segment
+from compas.geometry import closest_point_on_segment
 from compas import PRECISION
 
 __all__ = ['VolCapsule']

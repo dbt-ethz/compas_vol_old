@@ -1,5 +1,5 @@
 from compas.geometry import Plane
-from compas.geometry.distance import distance_point_plane_signed
+from compas.geometry import distance_point_plane_signed
 
 
 __all__ = ['VolPlane']
