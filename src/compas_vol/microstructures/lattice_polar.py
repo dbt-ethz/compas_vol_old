@@ -148,15 +148,6 @@ class LatticePolar(object):
         else:
             pt = point
 
-        '''
-        double radius = Math.Sqrt(x * x + y * y);
-        double pX = Math.Abs(ModuloPositive(radius, cellsize) - halfCellsize);
-        double angle = (Math.Atan2(y, x) + Math.PI) / (2 * Math.PI); // normalized 0 : 1
-        double pY = (angle * this.polar) % 1;
-        pY = Math.Abs((pY - 0.5) * this.cellsize);
-        double pZ = Math.Abs(ModuloPositive(z, cellsize) - halfCellsize);
-        '''
-
         pt.transform(self.inversetransform)
 
         radius = math.sqrt(pt.x * pt.x + pt.y * pt.y)
@@ -168,7 +159,6 @@ class LatticePolar(object):
 
         up = [polx, poly, polz]
 
-        #up = [abs((p % self.unitcell) - self.unitcell/2) for p in pt]
         dmin = 9999999.
         for l in self.ltypes[self.ltype]:
             sp = [self.pointlist[l[0]][i] * self.unitcell for i in range(3)]
@@ -195,12 +185,11 @@ class LatticePolar(object):
 
         radius = np.sqrt(md[0]**2 + md[1]**2)
         polx = abs((radius % self.unitcell) - self.unitcell/2)
-        angle = np.arctan2(md[1], md[2])
+        angle = (np.arctan2(md[1], md[0]) + math.pi) / (2 * math.pi)
         poly = (angle * self.polarnumber) % 1
         poly = abs((poly - 0.5) * self.unitcell)
         polz = abs((md[2] % self.unitcell) - self.unitcell/2)
         mg = np.stack(([polx, poly, polz]), axis=-1)
-        #mg = abs((mg % self.unitcell) - self.unitcell/2)
 
         distances = []
         for l in self.ltypes[self.ltype]:
@@ -212,20 +201,28 @@ class LatticePolar(object):
 
 
 if __name__ == "__main__":
-    # import numpy as np
-    # import matplotlib.pyplot as plt
+    import numpy as np
+    import matplotlib.pyplot as plt
     # from compas.geometry import Vector, Frame
 
-    lat = LatticePolar(5, 7.0, 2.5, 6)
-    print(lat.ltype)
-    #lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = lat.get_distance(Point(x*0.5, y, 2))
-            #print(d)
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+    lat = LatticePolar(1, 7.0, 2.5, 8)
+
+    x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
+    m = lat.get_distance_numpy(x, y, z)
+    plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+    plt.colorbar()
+    plt.axis('equal')
+    plt.show()
+
+    # print(lat.ltype)
+    # #lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
+    # for y in range(-15, 15):
+    #     s = ''
+    #     for x in range(-30, 30):
+    #         d = lat.get_distance(Point(x*0.5, y, 2))
+    #         #print(d)
+    #         if d < 0:
+    #             s += 'x'
+    #         else:
+    #             s += '.'
+    #     print(s)

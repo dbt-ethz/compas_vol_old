@@ -2,7 +2,7 @@ from compas.geometry import Point
 from compas.geometry import closest_point_on_segment
 from compas import PRECISION
 
-__all__ = ['VolCapsule']
+#__all__ = ['VolCapsule']
 
 
 class VolCapsule(object):
