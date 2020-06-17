@@ -23,4 +23,4 @@ The example notebooks use ipyvolume (https://ipyvolume.readthedocs.io/en/latest/
 
 ::
 
-    $ conda install -c conda-forge ipyvolume`
+    $ conda install -c conda-forge ipyvolume
