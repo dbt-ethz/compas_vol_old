@@ -107,31 +107,39 @@ class TPMS(object):
         pz = z/self._factor
 
         d = 0
-        if self.tpmstype == 0: #'Gyroid':
-            d = np.sin(px)*np.cos(py) + np.sin(py)*np.cos(pz) + np.sin(pz)*np.cos(px)
-        elif self.tpmstype == 1: #'SchwartzP':
+        # Gyroid
+        if self.tpmstype == 0:
+            d = np.sin(px) * np.cos(py) + np.sin(py)*np.cos(pz) + np.sin(pz)*np.cos(px)
+        # SchwartzP
+        elif self.tpmstype == 1:
             d = np.cos(px) + np.cos(py) + np.cos(pz)
-        elif self.tpmstype == 2: #'Diamond':
+        # Diamond
+        elif self.tpmstype == 2:
             d = (
                 np.sin(px) * np.sin(py) * np.sin(pz) +
                 np.sin(px) * np.cos(py) * np.cos(pz) +
                 np.cos(px) * np.sin(py) * np.cos(pz) +
                 np.cos(px) * np.cos(py) * np.sin(pz)
             )
-        elif self.tpmstype == 3: #'Neovius':
+        # Neovius
+        elif self.tpmstype == 3:
             d = (3 * np.cos(px) + np.cos(py) + np.cos(pz) +
                  4 * np.cos(px) * np.cos(py) * np.cos(pz))
-        elif self.tpmstype == 4: #'Lidinoid':
+        # Lidinoid
+        elif self.tpmstype == 4:
             d = (0.5 * (np.sin(2*px) * np.cos(py) * np.sin(pz) +
                  np.sin(2*py) * np.cos(py) * np.sin(px) +
                  np.sin(2*pz) * np.cos(px) * np.sin(pz)) -
                  0.5 * (np.cos(2*px) * np.cos(2*py) +
                  np.cos(2*py) * np.cos(2*pz) +
                  np.cos(2*pz) * np.cos(2*px)) + 0.15)
-        elif self.tpmstype == 5: #'FischerKoch':
+        # FischerKoch
+        elif self.tpmstype == 5:
             d = (np.cos(2*px) * np.sin(py) * np.cos(pz) +
                  np.cos(2*py) * np.sin(pz) * np.cos(px) +
                  np.cos(2*pz) * np.sin(px) * np.cos(py))
+        # IWP?
+
         return d
 
 
