@@ -1,7 +1,7 @@
 # compas_vol
 ## Volumetric Modelling
 
-volumetric modelling with function representations
+volumetric modelling with signed distance functions
 
 ## Installation Instructions
 
@@ -10,3 +10,21 @@ volumetric modelling with function representations
 - With the newly created environment active, make sure you have git installed. If not, in the terminal (Mac) or Anaconda Prompt (Win) run `conda install git`.
 - Then install `compas_vol` directly from source, running `pip install git+https://github.com/dbt-ethz/compas_vol`
 - The example notebooks use [ipyvolume](https://ipyvolume.readthedocs.io/en/latest/index.html) for isosurfacing and mesh display. Install it with `conda install -c conda-forge ipyvolume`
+
+## Functionality
+
+All the objects have a `get_distance` function, a lot of them also have a faster `get_distance_numpy` function. The following table gives an overview:
+
+Folder | Class | Numpy available
+--- | --- | ---
+Primitives | VolBox | √
+" | VolCapsule | √
+" | VolCone | X
+" | VolEllipsoid | √
+" | VolExtrusion | X
+" | Heart | X
+" | GDF | X
+" | VolPlane | √
+" | VolPolyhedron | √
+" | VolSphere | √
+" | VolTorus | √
