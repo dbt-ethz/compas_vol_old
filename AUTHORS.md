@@ -2,7 +2,7 @@
 
 ## Project Lead
 
-* Mathias Bernhard <<bernhard@arch.ethz.ch>>
+* Mathias Bernhard <<mathbern@design.upenn.edu>>
 
 ## Contributors
 

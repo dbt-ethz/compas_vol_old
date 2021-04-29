@@ -11,6 +11,20 @@ volumetric modelling with signed distance functions
 - Then install `compas_vol` directly from source, running `pip install git+https://github.com/dbt-ethz/compas_vol`
 - The example notebooks use [ipyvolume](https://ipyvolume.readthedocs.io/en/latest/index.html) for isosurfacing and mesh display. Install it with `conda install -c conda-forge ipyvolume`
 
+## Example
+
+```python
+from compas.geometry import Box, Frame, Point
+from compas_vol.primitives import VolBox
+import numpy as np
+
+box = Box(Frame(Point(0, 0, 0), [1, 0.2, 0], [-0.1, 1, 0]), 20, 15, 15)
+vb = VolBox(box, 3.0)
+
+x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
+d = vb.get_distance_numpy(x, y, z)
+```
+
 ## Functionality
 
 All the objects have a `get_distance` function, a lot of them also have a faster `get_distance_numpy` function. The following table gives an overview:
@@ -42,3 +56,7 @@ Modifications | Blur | √
 " | Transformation | √
 " | Twist | √
 Microstructure | Lattice | √
+" | TPMS | √
+" | Voronoi | X
+Meshing | Octree | X
+Analysis | Gradient | √
