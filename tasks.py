@@ -194,7 +194,7 @@ def build_ghuser_components(ctx, gh_io_folder=None, ironpython=None):
     """Build Grasshopper user objects from source"""
     with chdir(BASE_FOLDER):
         with tempfile.TemporaryDirectory('actions.ghcomponentizer') as action_dir:
-            target_dir = source_dir = os.path.abspath('src/compas_ghpython/components')
+            target_dir = source_dir = os.path.abspath('src/compas_vol/ghpython/components')
             ctx.run('git clone https://github.com/compas-dev/compas-actions.ghpython_components.git {}'.format(action_dir))
             if not gh_io_folder:
                 import compas_ghpython
