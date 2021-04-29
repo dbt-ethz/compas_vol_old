@@ -104,7 +104,7 @@ class TPMSPolar(object):
                  math.cos(2*py) * math.sin(pz) * math.cos(px) +
                  math.cos(2*pz) * math.sin(px) * math.cos(py))
         return d
-    
+
 
     def get_distance_numpy(self, x, y, z):
         """
@@ -143,18 +143,3 @@ class TPMSPolar(object):
                  np.cos(2*py) * np.sin(pz) * np.cos(px) +
                  np.cos(2*pz) * np.sin(px) * np.cos(py))
         return d - self.thickness/2.0
-        
-
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    tpmsPol = TPMSPolar(1, 4.0,3.0, 10.0)
-
-    x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-    m = tpmsPol.get_distance_numpy(x, y, z)
-    # print(m)
-    plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()

@@ -16,4 +16,7 @@ compas_vol.analysis
 from .gradient import Gradient
 from .curvature import Curvature
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [
+    'Gradient',
+    'Curvature'
+]
