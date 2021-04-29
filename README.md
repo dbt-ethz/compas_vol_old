@@ -28,3 +28,17 @@ Primitives | VolBox | √
 " | VolPolyhedron | √
 " | VolSphere | √
 " | VolTorus | √
+Combinations | Intersection | √
+" | Subtraction | √
+" | Union | √
+" | Morph | √
+" | SmoothIntersection | √
+" | SmoothSubtraction | √
+" | SmoothUnion | √
+Modifications | Blur | √
+" | Overlay | √ (but missing import)
+" | MultiShell | √
+" | Shell | √
+" | Transformation | √
+" | Twist | √
+Microstructure | Lattice | √
