@@ -6,9 +6,6 @@ from compas.geometry import matrix_inverse
 from compas import PRECISION
 
 
-__all__ = ['VolEllipsoid']
-
-
 class VolEllipsoid(object):
     """A volumetric ellipsoid is defined by three radii along its axes x, y and z.
 
@@ -27,6 +24,7 @@ class VolEllipsoid(object):
     --------
     >>> TODO
     """
+
     def __init__(self, radiusX=3, radiusY=2, radiusZ=1, frame=Frame.worldXY()):
         self.radiusX = radiusX
         self.radiusY = radiusY
@@ -89,25 +87,25 @@ class VolEllipsoid(object):
         return out
 
 
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
+# if __name__ == "__main__":
+#     # import numpy as np
+#     # import matplotlib.pyplot as plt
 
-    e = VolEllipsoid(14, 10, 6)
-    print(e)
+#     e = VolEllipsoid(14, 10, 6)
+#     print(e)
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = e.get_distance(Point(x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+#     for y in range(-15, 15):
+#         s = ''
+#         for x in range(-30, 30):
+#             d = e.get_distance(Point(x * 0.5, -y, 0))
+#             if d < 0:
+#                 s += 'x'
+#             else:
+#                 s += '.'
+#         print(s)
 
-    # x, y, z = np.ogrid[-15:15:61j, -15:15:61j, -15:15:61j]
-    # d = e.get_distance_numpy(x, y, z)
-    # plt.imshow(d[:, :, 30]<0, cmap='RdBu')
-    # plt.axis('equal')
-    # plt.show()
+#     # x, y, z = np.ogrid[-15:15:61j, -15:15:61j, -15:15:61j]
+#     # d = e.get_distance_numpy(x, y, z)
+#     # plt.imshow(d[:, :, 30]<0, cmap='RdBu')
+#     # plt.axis('equal')
+#     # plt.show()

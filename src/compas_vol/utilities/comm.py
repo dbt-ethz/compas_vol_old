@@ -1,8 +1,8 @@
-from compas.geometry import *
-from compas_vol.primitives import *
-from compas_vol.modifications import *
-from compas_vol.combinations import *
-from compas_vol.microstructures import *
+from compas.geometry import *  # noqa: F401 F403
+from compas_vol.primitives import *  # noqa: F401 F403
+from compas_vol.modifications import *  # noqa: F401 F403
+from compas_vol.combinations import *  # noqa: F401 F403
+from compas_vol.microstructures import *  # noqa: F401 F403
 
 import numpy as np
 from skimage.measure import marching_cubes_lewiner
@@ -10,7 +10,7 @@ from skimage.measure import marching_cubes_lewiner
 
 __all__ = [
     'get_vfs_from_tree'
-    ]
+]
 
 
 def get_vfs_from_tree(tree, bounds, res):
@@ -32,10 +32,10 @@ def get_vfs_from_tree(tree, bounds, res):
     return (verts, faces)
 
 
-if __name__ == "__main__":
-    s = VolSphere(Sphere((1, 2, 3), 4))
-    b = VolBox(Box(Frame.worldXY(), 2,3,4), 0.7)
-    u = Union(s,b)
-    print(u)
-    n = eval(str(u))
-    print(n.get_distance((5,4,3)))
+# if __name__ == "__main__":
+#     s = VolSphere(Sphere((1, 2, 3), 4))
+#     b = VolBox(Box(Frame.worldXY(), 2,3,4), 0.7)
+#     u = Union(s,b)
+#     print(u)
+#     n = eval(str(u))
+#     print(n.get_distance((5,4,3)))

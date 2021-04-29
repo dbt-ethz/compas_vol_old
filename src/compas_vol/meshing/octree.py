@@ -23,10 +23,10 @@ class Octree(object):
 
 
 class OctNode(object):
-    def __init__(self, x, y, z, e, l):
+    def __init__(self, x, y, z, e, level):
         self._p = Point(x, y, z)
         self._el = e
-        self._l = l
+        self._l = level
         self._branches = None
 
     @property
@@ -34,8 +34,8 @@ class OctNode(object):
         return self._l
 
     @level.setter
-    def level(self, l):
-        self._l = float(l)
+    def level(self, level):
+        self._l = float(level)
 
     def divide_node(self):
         self._branches = []

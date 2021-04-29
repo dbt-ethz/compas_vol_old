@@ -1,7 +1,5 @@
 from compas.geometry import Vector
 
-__all__ = ['GDF']
-
 
 class GDF(object):
     """
@@ -62,11 +60,7 @@ class GDF(object):
     def get_distance(self, x, y, z):
         return self.gdfvecs[0]
 
-# ==============================================================================
-# Main
-# ==============================================================================
 
-
-if __name__ == "__main__":
-    gdf = GDF()
-    print(gdf.get_distance(1, 2, 3))
+# if __name__ == "__main__":
+#     gdf = GDF()
+#     print(gdf.get_distance(1, 2, 3))

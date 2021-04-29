@@ -16,4 +16,7 @@ compas_vol.meshing
 from .octree import OctNode
 from .octree import Octree
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [
+    'Octree',
+    'OctNode'
+]

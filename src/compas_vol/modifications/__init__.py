@@ -14,10 +14,16 @@ compas_vol.modifications
     Twist
 
 """
-from .blur import *
-from .multishell import *
-from .overlay import *
-from .shell import *
-from .twist import *
+from .blur import Blur
+from .multishell import MultiShell
+from .overlay import Overlay
+from .shell import Shell
+from .twist import Twist
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [
+    'Blur',
+    'MultiShell',
+    'Shell',
+    'Overlay',
+    'Twist'
+]

@@ -16,6 +16,7 @@ class TPMS(object):
     --------
     >>> a = TPMS(tpmstype='Gyroid', wavelength=5.0)
     """
+
     def __init__(self, tpmstype=0, wavelength=1.0):
         self.tpmstypes = ['gyroid', 'schwartzp', 'diamond', 'neovius', 'lidinoid', 'fischerkoch']
         self._tpmstype = None
@@ -71,26 +72,26 @@ class TPMS(object):
         d = 0
         if self.tpmstype == 0:  # 'Gyroid':
             d = sin(px)*cos(py) + sin(py)*cos(pz) + sin(pz)*cos(px)
-        elif self.tpmstype == 1:  #  'SchwartzP':
+        elif self.tpmstype == 1:  # 'SchwartzP':
             d = cos(px) + cos(py) + cos(pz)
-        elif self.tpmstype == 2:  #  'Diamond':
+        elif self.tpmstype == 2:  # 'Diamond':
             d = (
                 sin(px) * sin(py) * sin(pz) +
                 sin(px) * cos(py) * cos(pz) +
                 cos(px) * sin(py) * cos(pz) +
                 cos(px) * cos(py) * sin(pz)
             )
-        elif self.tpmstype == 3:  #  'Neovius':
+        elif self.tpmstype == 3:  # 'Neovius':
             d = (3 * cos(px) + cos(py) + cos(pz) +
                  4 * cos(px) * cos(py) * cos(pz))
-        elif self.tpmstype == 4:  #  'Lidinoid':
+        elif self.tpmstype == 4:  # 'Lidinoid':
             d = (0.5 * (sin(2*px) * cos(py) * sin(pz) +
                  sin(2*py) * cos(py) * sin(px) +
                  sin(2*pz) * cos(px) * sin(pz)) -
                  0.5 * (cos(2*px) * cos(2*py) +
                  cos(2*py) * cos(2*pz) +
                  cos(2*pz) * cos(2*px)) + 0.15)
-        elif self.tpmstype == 5:  #  'FischerKoch':
+        elif self.tpmstype == 5:  # 'FischerKoch':
             d = (cos(2*px) * sin(py) * cos(pz) +
                  cos(2*py) * sin(pz) * cos(px) +
                  cos(2*pz) * sin(px) * cos(py))

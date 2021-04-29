@@ -17,6 +17,7 @@ class Voronoi(object):
     --------
     >>> a = TPMS(tpmstype='Gyroid', wavelength=5.0)
     """
+
     def __init__(self, points=None, thickness=1.0, walls=True):
         self.thickness = thickness
         self.points = points
@@ -61,7 +62,7 @@ class Voronoi(object):
         d2 = v1.dot(v2)
 
         return abs(min(d1, d2)) - self.thickness/2
-        #return -1 * v1.dot(v2) - self.thickness/2
+        # return -1 * v1.dot(v2) - self.thickness/2
 
     def get_distance_numpy(self, x, y, z):
         """

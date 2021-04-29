@@ -11,7 +11,7 @@ __all__ = [
     'get_random_vector_3D',
     'get_iso_mesh',
     'get_iso_vfs'
-    ]
+]
 
 
 def get_iso_mesh(distobj, bounds):
@@ -25,7 +25,7 @@ def get_iso_mesh(distobj, bounds):
     by = bounds[1]
     bz = bounds[2]
     x, y, z = np.ogrid[bx[0]:bx[1]:bx[2]*1j, by[0]:by[1]:by[2]*1j, bz[0]:bz[1]:bz[2]*1j]
-    #x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
+    # x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
     # spacing: (max-min)/num (or num-1?)
     sx = (bx[1]-bx[0])/(bx[2]-1)
     sy = (by[1]-by[0])/(by[2]-1)
@@ -36,10 +36,10 @@ def get_iso_mesh(distobj, bounds):
     dm = vb.get_distance_numpy(x, y, z)
     verts, faces, norms, vals = marching_cubes_lewiner(dm, 0.0, spacing=(sx, sy, sz))
     mesh = get_compas_mesh(verts, faces)
-    #return str(mesh.number_of_vertices())
+    # return str(mesh.number_of_vertices())
     return str(mesh.to_data())
-    #return mesh.to_json()
-    #return verts, faces
+    # return mesh.to_json()
+    # return verts, faces
 
 
 def get_iso_vfs(distobj, bounds):
@@ -52,7 +52,7 @@ def get_iso_vfs(distobj, bounds):
     by = bounds[1]
     bz = bounds[2]
     x, y, z = np.ogrid[bx[0]:bx[1]:bx[2]*1j, by[0]:by[1]:by[2]*1j, bz[0]:bz[1]:bz[2]*1j]
-    #x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
+    # x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
     # spacing: (max-min)/num (or num-1?)
     sx = (bx[1]-bx[0])/(bx[2]-1)
     sy = (by[1]-by[0])/(by[2]-1)
@@ -197,11 +197,11 @@ def export_layer(distfield, resolution, level, filename='layerimage.png'):
     return d
 
 
-if __name__ == "__main__":
-    from compas_vol.primitives import VolBox
-    from compas.geometry import Box, Frame
+# if __name__ == "__main__":
+#     from compas_vol.primitives import VolBox
+#     from compas.geometry import Box, Frame
 
-    cb = Box(Frame((0, 0, 0), (1, 0.2, 0.1), (-0.1, 1, 0.2)), 16, 12, 8)
-    vb = VolBox(cb, 1.5)
-    o = export_layer(vb, 100, 0)
-    print(type(o))
+#     cb = Box(Frame((0, 0, 0), (1, 0.2, 0.1), (-0.1, 1, 0.2)), 16, 12, 8)
+#     vb = VolBox(cb, 1.5)
+#     o = export_layer(vb, 100, 0)
+#     print(type(o))

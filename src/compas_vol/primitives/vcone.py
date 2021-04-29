@@ -1,16 +1,12 @@
 from math import cos
 from math import sin
 
-from compas.geometry import Circle
 from compas.geometry import Cone
 from compas.geometry import Frame
-from compas.geometry import Plane
 from compas.geometry import Point
 from compas.geometry import length_vector_xy
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
-
-__all__ = ['VolCone']
 
 
 class VolCone(object):
@@ -30,6 +26,7 @@ class VolCone(object):
     >>> cone = Cone(circle, 7)
     >>> vcone = VolCone(cone)
     """
+
     def __init__(self, cone):
         self.cone = cone
 
@@ -43,7 +40,7 @@ class VolCone(object):
     @data.setter
     def data(self, data):
         self.cone = Cone.from_data(data)
-    
+
     @classmethod
     def from_data(cls, data):
         cone = Cone.from_data(data)
@@ -81,17 +78,17 @@ class VolCone(object):
         raise NotImplementedError
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    c = Cone(Circle(Plane((0, 0, -1), (0, 1, 1)), 12.), 20.)
-    vc = VolCone(c)
+#     c = Cone(Circle(Plane((0, 0, -1), (0, 1, 1)), 12.), 20.)
+#     vc = VolCone(c)
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = vc.get_distance(Point(x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+#     for y in range(-15, 15):
+#         s = ''
+#         for x in range(-30, 30):
+#             d = vc.get_distance(Point(x * 0.5, -y, 0))
+#             if d < 0:
+#                 s += 'x'
+#             else:
+#                 s += '.'
+#         print(s)

@@ -2,8 +2,6 @@ from compas.geometry import Point
 from compas.geometry import closest_point_on_segment
 from compas import PRECISION
 
-#__all__ = ['VolCapsule']
-
 
 class VolCapsule(object):
     """A volumetric capsule is defined by a line segment and a radius.
@@ -22,6 +20,7 @@ class VolCapsule(object):
     >>> segment = (sp, ep)
     >>> capsule = VolCapsule(segment, 3.0)
     """
+
     def __init__(self, segment, radius):
         self.segment = segment
         self.radius = radius
@@ -84,29 +83,29 @@ class VolCapsule(object):
         # return norm(cross(B-A, pnt-A), axis=-1)/norm(B-A) - self.radius
 
 
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
+# if __name__ == "__main__":
+#     import numpy as np
+#     import matplotlib.pyplot as plt
 
-    s = ((-9, -6, 0), (6, 9, 0))
-    capsule = VolCapsule(s, 5.0)
-    print(capsule)
+#     s = ((-9, -6, 0), (6, 9, 0))
+#     capsule = VolCapsule(s, 5.0)
+#     print(capsule)
 
-    x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
+#     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 
-    m = capsule.get_distance_numpy(x, y, z)
-    print(m.shape)
-    plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
+#     m = capsule.get_distance_numpy(x, y, z)
+#     print(m.shape)
+#     plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+#     plt.colorbar()
+#     plt.axis('equal')
+#     plt.show()
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = capsule.get_distance((x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+#     for y in range(-15, 15):
+#         s = ''
+#         for x in range(-30, 30):
+#             d = capsule.get_distance((x * 0.5, -y, 0))
+#             if d < 0:
+#                 s += 'x'
+#             else:
+#                 s += '.'
+#         print(s)

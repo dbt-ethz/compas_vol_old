@@ -1,10 +1,8 @@
 from compas.geometry import Frame
 from compas.geometry import Plane
-from compas_vol.primitives import VolPlane
 from compas.geometry import distance_point_plane_signed
 from compas.geometry import rotate_points
 from compas.geometry import matrix_from_axis_and_angle
-from compas_vol.primitives import VolPlane
 
 
 class Twist(object):
@@ -44,21 +42,21 @@ class Twist(object):
         return self.obj.get_distance_numpy(xt, yt, zt)
 
 
-if __name__ == "__main__":
-    from compas_vol.primitives import VolBox
-    from compas.geometry import Box
+# if __name__ == "__main__":
+#     from compas_vol.primitives import VolBox
+#     from compas.geometry import Box
 
-    bx = Box(Frame.worldXY(), 20, 15, 10)
-    vb = VolBox(bx, 1.5)
+#     bx = Box(Frame.worldXY(), 20, 15, 10)
+#     vb = VolBox(bx, 1.5)
 
-    t = Twist(vb, Frame((0, 0, 0), (1, 0, 0), (0, 0, 1)), 15)
+#     t = Twist(vb, Frame((0, 0, 0), (1, 0, 0), (0, 0, 1)), 15)
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = t.get_distance((x*0.5, y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+#     for y in range(-15, 15):
+#         s = ''
+#         for x in range(-30, 30):
+#             d = t.get_distance((x*0.5, y, 0))
+#             if d < 0:
+#                 s += 'x'
+#             else:
+#                 s += '.'
+#         print(s)

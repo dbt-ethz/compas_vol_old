@@ -29,17 +29,30 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from .gdf import *
-from .heart import *
-from .vbox import *
+from .gdf import GDF
+from .heart import Heart
+from .vbox import VolBox
 from .vcapsule import VolCapsule
-from .vcone import *
-from .vcylinder import *
-from .vellipsoid import *
-from .vextrusion import *
-from .vplane import *
-from .vpolyhedron import *
-from .vsphere import *
-from .vtorus import *
+from .vcone import VolCone
+from .vcylinder import VolCylinder
+from .vellipsoid import VolEllipsoid
+from .vextrusion import VolExtrusion
+from .vplane import VolPlane
+from .vpolyhedron import VolPolyhedron
+from .vsphere import VolSphere
+from .vtorus import VolTorus
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [
+    'GDF',
+    'Heart',
+    'VolBox',
+    'VolCapsule',
+    'VolCone',
+    'VolCylinder',
+    'VolEllipsoid',
+    'VolExtrusion',
+    'VolPlane',
+    'VolPolyhedron',
+    'VolSphere',
+    'VolTorus'
+]
