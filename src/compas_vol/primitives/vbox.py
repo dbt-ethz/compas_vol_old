@@ -7,8 +7,6 @@ from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
 from compas import PRECISION
 
-__all__ = ['VolBox']
-
 
 class VolBox(object):
     """A volumetric box is defined by a base box from `compas.geometry` and an optional fillet radius.
