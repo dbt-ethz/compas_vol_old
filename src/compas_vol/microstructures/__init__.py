@@ -11,6 +11,9 @@ compas_vol.microstructures
 
     Lattice
     TPMS
+    LatticePolar
+    TPMSPolar
+    Voronoi
 
 """
 from .lattice import Lattice
