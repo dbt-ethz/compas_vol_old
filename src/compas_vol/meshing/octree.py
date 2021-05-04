@@ -12,7 +12,7 @@ class Octree(object):
         self._ml = 4      # max levels
         self._rn = OctNode(0, 0, 0, self._ws, 0)
         self._o = None
-    
+
     def divide(self, node):
         if node.level < self._ml:
             d = self._o.get_distance(node.pos.x, node.pos.y, node.pos.z)
@@ -23,20 +23,20 @@ class Octree(object):
 
 
 class OctNode(object):
-    def __init__(self, x, y, z, e, l):
+    def __init__(self, x, y, z, e, level):
         self._p = Point(x, y, z)
         self._el = e
-        self._l = l
+        self._l = level
         self._branches = None
-    
+
     @property
     def level(self):
         return self._l
 
     @level.setter
-    def level(self, l):
-        self._l = float(l)
-    
+    def level(self, level):
+        self._l = float(level)
+
     def divide_node(self):
         self._branches = []
         qs = self._el/4.0
@@ -49,11 +49,3 @@ class OctNode(object):
         self._branches.append(OctNode(self._p.x+qs, self._p.y-qs, self._p.z+qs, qs*2, nl))
         self._branches.append(OctNode(self._p.x-qs, self._p.y+qs, self._p.z+qs, qs*2, nl))
         self._branches.append(OctNode(self._p.x+qs, self._p.y+qs, self._p.z+qs, qs*2, nl))
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

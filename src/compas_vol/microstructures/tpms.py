@@ -16,6 +16,7 @@ class TPMS(object):
     --------
     >>> a = TPMS(tpmstype='Gyroid', wavelength=5.0)
     """
+
     def __init__(self, tpmstype=0, wavelength=1.0):
         self.tpmstypes = ['gyroid', 'schwartzp', 'diamond', 'neovius', 'lidinoid', 'fischerkoch']
         self._tpmstype = None
@@ -71,26 +72,26 @@ class TPMS(object):
         d = 0
         if self.tpmstype == 0:  # 'Gyroid':
             d = sin(px)*cos(py) + sin(py)*cos(pz) + sin(pz)*cos(px)
-        elif self.tpmstype == 1:  #  'SchwartzP':
+        elif self.tpmstype == 1:  # 'SchwartzP':
             d = cos(px) + cos(py) + cos(pz)
-        elif self.tpmstype == 2:  #  'Diamond':
+        elif self.tpmstype == 2:  # 'Diamond':
             d = (
                 sin(px) * sin(py) * sin(pz) +
                 sin(px) * cos(py) * cos(pz) +
                 cos(px) * sin(py) * cos(pz) +
                 cos(px) * cos(py) * sin(pz)
             )
-        elif self.tpmstype == 3:  #  'Neovius':
+        elif self.tpmstype == 3:  # 'Neovius':
             d = (3 * cos(px) + cos(py) + cos(pz) +
                  4 * cos(px) * cos(py) * cos(pz))
-        elif self.tpmstype == 4:  #  'Lidinoid':
+        elif self.tpmstype == 4:  # 'Lidinoid':
             d = (0.5 * (sin(2*px) * cos(py) * sin(pz) +
                  sin(2*py) * cos(py) * sin(px) +
                  sin(2*pz) * cos(px) * sin(pz)) -
                  0.5 * (cos(2*px) * cos(2*py) +
                  cos(2*py) * cos(2*pz) +
                  cos(2*pz) * cos(2*px)) + 0.15)
-        elif self.tpmstype == 5:  #  'FischerKoch':
+        elif self.tpmstype == 5:  # 'FischerKoch':
             d = (cos(2*px) * sin(py) * cos(pz) +
                  cos(2*py) * sin(pz) * cos(px) +
                  cos(2*pz) * sin(px) * cos(py))
@@ -139,33 +140,4 @@ class TPMS(object):
                  np.cos(2*py) * np.sin(pz) * np.cos(px) +
                  np.cos(2*pz) * np.sin(px) * np.cos(py))
         # IWP?
-
         return d
-
-
-if __name__ == "__main__":
-    # from compas.geometry import Point
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    b = TPMS(tpmstype='schwartzP', wavelength=5)
-    print(b)
-
-    x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-
-    m = b.get_distance_numpy(x, y, z)
-
-    plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = b.get_distance(Point(x*0.5, y, 1.))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '.'
-    #     print(s)

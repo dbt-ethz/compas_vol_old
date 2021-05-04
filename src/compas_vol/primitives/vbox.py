@@ -2,13 +2,10 @@ from math import pi
 from math import sqrt
 
 from compas.geometry import Box
-from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
 from compas import PRECISION
-
-__all__ = ['VolBox']
 
 
 class VolBox(object):
@@ -32,6 +29,7 @@ class VolBox(object):
     >>> box = Box(Frame.worldXY(), 1.0, 2.0, 3.0)
     >>> vbx = VolBox(box, 0.3)
     """
+
     def __init__(self, box, radius=0.0):
         self._box = None
         self.inversetransform = None
@@ -114,7 +112,7 @@ class VolBox(object):
 
         Examples
         --------
-        >>> 
+        >>>
 
         """
         box = Box.from_data(data['box'])
@@ -189,29 +187,29 @@ class VolBox(object):
         return out
 
 
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
+# if __name__ == "__main__":
+#     import numpy as np
+#     import matplotlib.pyplot as plt
 
-    box = Box(Frame(Point(0, 0, 0), [1, 0.2, 0], [-0.1, 1, 0]), 20, 15, 15)
-    vb = VolBox(box, 3.0)
-    # print(vb.to_data())
-    # print(vb)
+#     box = Box(Frame(Point(0, 0, 0), [1, 0.2, 0], [-0.1, 1, 0]), 20, 15, 15)
+#     vb = VolBox(box, 3.0)
+#     # print(vb.to_data())
+#     # print(vb)
 
-    x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
-    d = vb.get_distance_numpy(x, y, z)
-    m = np.tanh(d[:, :, 25].T)
-    plt.imshow(m, cmap='Greys', interpolation='nearest')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    # plt.colorbar()
-    plt.axis('equal')
-    plt.show()
+#     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
+#     d = vb.get_distance_numpy(x, y, z)
+#     m = np.tanh(d[:, :, 25].T)
+#     plt.imshow(m, cmap='Greys', interpolation='nearest')  # transpose because numpy indexing is 1)row 2) column instead of x y
+#     # plt.colorbar()
+#     plt.axis('equal')
+#     plt.show()
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = vb.get_distance((x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+#     for y in range(-15, 15):
+#         s = ''
+#         for x in range(-30, 30):
+#             d = vb.get_distance((x * 0.5, -y, 0))
+#             if d < 0:
+#                 s += 'x'
+#             else:
+#                 s += '.'
+#         print(s)

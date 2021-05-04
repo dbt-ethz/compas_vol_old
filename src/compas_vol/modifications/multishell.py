@@ -32,32 +32,32 @@ class MultiShell(object):
         return d - self.thickness / 2
 
 
-if __name__ == "__main__":
-    from compas_vol.combinations import Union
-    from compas_vol.primitives import VolSphere, VolBox
-    from compas.geometry import Box, Frame, Point, Sphere
-    import numpy as np
-    import matplotlib.pyplot as plt
+# if __name__ == "__main__":
+#     from compas_vol.combinations import Union
+#     from compas_vol.primitives import VolSphere, VolBox
+#     from compas.geometry import Box, Frame, Point, Sphere
+#     import numpy as np
+#     import matplotlib.pyplot as plt
 
-    s = Sphere(Point(5, 6, 0), 7)
-    b = Box(Frame.worldXY(), 15, 10, 10)
-    vs = VolSphere(s)
-    vb = VolBox(b, 2.5)
+#     s = Sphere(Point(5, 6, 0), 7)
+#     b = Box(Frame.worldXY(), 15, 10, 10)
+#     vs = VolSphere(s)
+#     vb = VolBox(b, 2.5)
 
-    u = Union(vs, vb)
-    sh = MultiShell(u, 1.0, 2.5)
+#     u = Union(vs, vb)
+#     sh = MultiShell(u, 1.0, 2.5)
 
-    x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
-    dm = sh.get_distance_numpy(x, y, z)
-    plt.imshow(dm[:, :, 20], cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    plt.show()
+#     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
+#     dm = sh.get_distance_numpy(x, y, z)
+#     plt.imshow(dm[:, :, 20], cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+#     plt.show()
 
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = sh.get_distance(Point(x*0.5, y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '.'
-    #     print(s)
+#     # for y in range(-15, 15):
+#     #     s = ''
+#     #     for x in range(-30, 30):
+#     #         d = sh.get_distance(Point(x*0.5, y, 0))
+#     #         if d < 0:
+#     #             s += 'x'
+#     #         else:
+#     #             s += '.'
+#     #     print(s)

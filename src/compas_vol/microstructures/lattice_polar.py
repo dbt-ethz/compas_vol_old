@@ -27,6 +27,7 @@ class LatticePolar(object):
     >>> lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
     """
+
     def __init__(self, ltype=0, unitcell=1.0, thickness=0.1, polarnumber=6, frame=Frame.worldXY()):
         self.pointlist = self.create_points()
         self.ltypes = self.create_types()
@@ -85,18 +86,18 @@ class LatticePolar(object):
 
         points = []
 
-        points.append((v2, v1, v1))  #  1
-        points.append((v2, v2, v1))  #  2
-        points.append((v1, v1, v1))  #  0
-        points.append((v1, v2, v1))  #  3
+        points.append((v2, v1, v1))  # 1
+        points.append((v2, v2, v1))  # 2
+        points.append((v1, v1, v1))  # 0
+        points.append((v1, v2, v1))  # 3
 
-        points.append((v1, v1, v2))  #  4
-        points.append((v2, v1, v2))  #  5
-        points.append((v2, v2, v2))  #  6
-        points.append((v1, v2, v2))  #  7
+        points.append((v1, v1, v2))  # 4
+        points.append((v2, v1, v2))  # 5
+        points.append((v2, v2, v2))  # 6
+        points.append((v1, v2, v2))  # 7
 
-        points.append((v3, v1, v1))  #  8
-        points.append((v2, v3, v1))  #  9
+        points.append((v3, v1, v1))  # 8
+        points.append((v2, v3, v1))  # 9
         points.append((v3, v2, v1))  # 10
         points.append((v1, v3, v1))  # 11
 
@@ -160,9 +161,9 @@ class LatticePolar(object):
         up = [polx, poly, polz]
 
         dmin = 9999999.
-        for l in self.ltypes[self.ltype]:
-            sp = [self.pointlist[l[0]][i] * self.unitcell for i in range(3)]
-            ep = [self.pointlist[l[1]][i] * self.unitcell for i in range(3)]
+        for ltype in self.ltypes[self.ltype]:
+            sp = [self.pointlist[ltype[0]][i] * self.unitcell for i in range(3)]
+            ep = [self.pointlist[ltype[1]][i] * self.unitcell for i in range(3)]
             v = [ep[i]-sp[i] for i in range(3)]
             d = [up[i]-sp[i] for i in range(3)]
             # dot products
@@ -192,37 +193,9 @@ class LatticePolar(object):
         mg = np.stack(([polx, poly, polz]), axis=-1)
 
         distances = []
-        for l in self.ltypes[self.ltype]:
-            A = np.array([self.pointlist[l[0]][i] * self.unitcell for i in range(3)])
-            B = np.array([self.pointlist[l[1]][i] * self.unitcell for i in range(3)])
+        for ltype in self.ltypes[self.ltype]:
+            A = np.array([self.pointlist[ltype[0]][i] * self.unitcell for i in range(3)])
+            B = np.array([self.pointlist[ltype[1]][i] * self.unitcell for i in range(3)])
             d = np.linalg.norm(np.cross(B-A, mg-A), axis=-1)/np.linalg.norm(B-A)
             distances.append(d)
         return np.asarray(distances).min(axis=0) - self.thickness/2.0
-
-
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
-    # from compas.geometry import Vector, Frame
-
-    lat = LatticePolar(1, 7.0, 2.5, 8)
-
-    x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-    m = lat.get_distance_numpy(x, y, z)
-    plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-
-    # print(lat.ltype)
-    # #lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = lat.get_distance(Point(x*0.5, y, 2))
-    #         #print(d)
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '.'
-    #     print(s)

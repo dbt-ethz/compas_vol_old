@@ -5,8 +5,6 @@ from compas.geometry import length_vector_xy
 from compas.geometry import matrix_inverse
 from compas.geometry import matrix_from_frame
 
-__all__ = ['VolCylinder']
-
 
 class VolCylinder(object):
     """A volumetric cylinder is defined by a base cylinder from `compas.geometry`.
@@ -84,31 +82,27 @@ class VolCylinder(object):
         return out
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
+# if __name__ == "__main__":
+#     import numpy as np
+#     from compas.geometry import Circle, Plane
+#     import matplotlib.pyplot as plt
 
-if __name__ == "__main__":
-    import numpy as np
-    from compas.geometry import Circle, Plane
-    import matplotlib.pyplot as plt
+#     o = VolCylinder(Cylinder(Circle(Plane([1, 2, 3], [0.3, 0.4, 1.]), 5.0), 7.0))
+#     print(o)
 
-    o = VolCylinder(Cylinder(Circle(Plane([1, 2, 3], [0.3, 0.4, 1.]), 5.0), 7.0))
-    print(o)
+#     x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
+#     d = o.get_distance_numpy(x, y, z)
+#     plt.imshow(abs(d[:, :, 30].T), cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+#     # plt.colorbar()
+#     plt.axis('equal')
+#     plt.show()
 
-    x, y, z = np.ogrid[-15:15:60j, -15:15:60j, -15:15:60j]
-    d = o.get_distance_numpy(x, y, z)
-    plt.imshow(abs(d[:, :, 30].T), cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-    # plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = o.get_distance(Point(x * 0.5, -y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '.'
-    #     print(s)
+#     # for y in range(-15, 15):
+#     #     s = ''
+#     #     for x in range(-30, 30):
+#     #         d = o.get_distance(Point(x * 0.5, -y, 0))
+#     #         if d < 0:
+#     #             s += 'x'
+#     #         else:
+#     #             s += '.'
+#     #     print(s)

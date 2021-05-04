@@ -20,7 +20,6 @@ compas_vol
 from __future__ import print_function
 
 import os
-import sys
 
 
 __author__ = ['Mathias Bernhard <bernhard@arch.ethz.ch>']

@@ -11,9 +11,22 @@ compas_vol.microstructures
 
     Lattice
     TPMS
+    LatticePolar
+    TPMSPolar
+    Voronoi
 
 """
-from .lattice import *
-from .tpms import *
+from .lattice import Lattice
+from .lattice_polar import LatticePolar
+from .tpms import TPMS
+from .tpms_polar import TPMSPolar
+from .voronoi import Voronoi
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+
+__all__ = [
+    'Lattice',
+    'TPMS',
+    'LatticePolar',
+    'TPMSPolar',
+    'Voronoi'
+]

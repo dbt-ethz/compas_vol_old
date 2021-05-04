@@ -9,7 +9,14 @@ compas_vol.meshing
     :toctree: generated/
     :nosignatures:
 
-"""
-from .octree import *
+    OctNode
+    Octree
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+"""
+from .octree import OctNode
+from .octree import Octree
+
+__all__ = [
+    'Octree',
+    'OctNode'
+]

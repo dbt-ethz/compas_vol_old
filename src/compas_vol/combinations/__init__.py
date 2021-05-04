@@ -15,14 +15,23 @@ compas_vol.combinations
     SmoothUnion
     SmoothIntersection
     SmoothSubtraction
+    Morph
 
 """
-from .intersection import *
-from .smoothintersection import *
-from .smoothsubtraction import *
-from .smoothunion import *
-from .subtraction import *
-from .union import *
-from .morph import *
+from .intersection import Intersection
+from .smoothintersection import SmoothIntersection
+from .smoothsubtraction import SmoothSubtraction
+from .smoothunion import SmoothUnion
+from .subtraction import Subtraction
+from .union import Union
+from .morph import Morph
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [
+    'Intersection',
+    'SmoothIntersection',
+    'SmoothSubtraction',
+    'SmoothUnion',
+    'Subtraction',
+    'Union',
+    'Morph'
+]

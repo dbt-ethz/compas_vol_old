@@ -1,8 +1,5 @@
 from compas.geometry import Point
 from compas.geometry import Sphere
-from compas import PRECISION
-
-__all__ = ['VolSphere']
 
 
 class VolSphere(object):
@@ -21,6 +18,7 @@ class VolSphere(object):
     >>> cs = Sphere(Point(1, 1, 1), 5)
     >>> vs = VolSphere(cs)
     """
+
     def __init__(self, sphere):
         self._sphere = None
         self.sphere = sphere
@@ -65,17 +63,17 @@ class VolSphere(object):
         return d
 
 
-if __name__ == "__main__":
-    o = VolSphere(Sphere(Point(4, 2, 0), 8.5))
+# if __name__ == "__main__":
+#     o = VolSphere(Sphere(Point(4, 2, 0), 8.5))
 
-    print(str(o))
+#     print(str(o))
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = o.get_distance(Point(x * 0.5, 0, -y))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        # print(s)
+#     for y in range(-15, 15):
+#         s = ''
+#         for x in range(-30, 30):
+#             d = o.get_distance(Point(x * 0.5, 0, -y))
+#             if d < 0:
+#                 s += 'x'
+#             else:
+#                 s += '.'
+#         # print(s)

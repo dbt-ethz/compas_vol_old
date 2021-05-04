@@ -3,8 +3,6 @@ from compas.geometry import Point
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
 
-__all__ = ['VolTransformation']
-
 
 class VolTransformation(object):
     def __init__(self, distobj=None, frame=Frame.worldXY()):
@@ -56,18 +54,17 @@ class VolTransformation(object):
         return self.distobj.get_distance_numpy(xt, yt, zt)
 
 
-if __name__ == "__main__":
-    from compas_vol.microstructures import TPMS
+# from compas_vol.microstructures import TPMS
 
-    t = TPMS(wavelength=4)
-    tr = VolTransformation(t, Frame((1, 2, 3), (1, 0.3, 0.2), (-0.1, 1, -0.1)))
+# t = TPMS(wavelength=4)
+# tr = VolTransformation(t, Frame((1, 2, 3), (1, 0.3, 0.2), (-0.1, 1, -0.1)))
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = tr.get_distance((x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+# for y in range(-15, 15):
+#     s = ''
+#     for x in range(-30, 30):
+#         d = tr.get_distance((x * 0.5, -y, 0))
+#         if d < 0:
+#             s += 'x'
+#         else:
+#             s += '.'
+#     print(s)

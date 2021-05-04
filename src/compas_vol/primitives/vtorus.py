@@ -7,8 +7,6 @@ from compas.geometry import length_vector_xy
 from compas.geometry import matrix_inverse
 from compas.geometry import matrix_from_frame
 
-__all__ = ['VolTorus']
-
 
 class VolTorus(object):
     """A volumetric torus is defined by a base torus from `compas.geometry`.
@@ -26,6 +24,7 @@ class VolTorus(object):
     >>> ctorus = Torus(Plane.worldXY(), 5., 2.)
     >>> vtorus = VolTorus(ct)
     """
+
     def __init__(self, torus):
         self.torus = torus
         frame = Frame.from_plane(self.torus.plane)
@@ -82,25 +81,25 @@ class VolTorus(object):
         return d2 - self.torus.radius_pipe
 
 
-if __name__ == "__main__":
-    from compas.geometry import Plane
-    import matplotlib.pyplot as plt
-    import numpy as np
+# if __name__ == "__main__":
+#     from compas.geometry import Plane
+#     import matplotlib.pyplot as plt
+#     import numpy as np
 
-    o = VolTorus(Torus(Plane((2, 3, 0), (0.3, 0.2, 1)), 7.0, 4.0))
-    print(o)
+#     o = VolTorus(Torus(Plane((2, 3, 0), (0.3, 0.2, 1)), 7.0, 4.0))
+#     print(o)
 
-    x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
-    d = o.get_distance_numpy(x, y, z)
-    plt.imshow(d[:, :, 30], cmap='RdBu')
-    plt.show()
+#     x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
+#     d = o.get_distance_numpy(x, y, z)
+#     plt.imshow(d[:, :, 30], cmap='RdBu')
+#     plt.show()
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = o.get_distance(Point(x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+#     for y in range(-15, 15):
+#         s = ''
+#         for x in range(-30, 30):
+#             d = o.get_distance(Point(x * 0.5, -y, 0))
+#             if d < 0:
+#                 s += 'x'
+#             else:
+#                 s += '.'
+#         print(s)

@@ -29,7 +29,7 @@ class Gradient(object):
         """
         import warnings
         warnings.warn("get_gradient_regular is deprecated and might/will be removed in the future", DeprecationWarning, 2)
-        
+
         dx = self.o.get_distance(point + self.ex) - self.o.get_distance(
             point + self.ex * -1
         )
@@ -82,25 +82,3 @@ class Gradient(object):
         d3 = self.o.get_distance_numpy(x + self.e, y + self.e, z + self.e)
         dx, dy, dz = (d0 - d1 - d2 + d3, -d0 - d1 + d2 + d3, -d0 + d1 - d2 + d3)
         return np.array([dx, dy, dz]).T
-
-
-if __name__ == "__main__":
-
-    from compas_vol.primitives import VolSphere
-    from compas.geometry import Sphere
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    s = Sphere(Point(1, 2, 3), 4)
-    vs = VolSphere(s)
-
-    g = Gradient(vs)
-    print(vs.get_distance(Point(4, 5, 6)))
-    print(g.get_gradient(Point(5, 2, 3)))
-
-    x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
-    d = g.get_gradient_numpy(x, y, z)
-
-    plt.quiver(x, y, d[:, :, 0, 1], d[:, :, 0, 2])
-    plt.axis('equal')
-    plt.show()
