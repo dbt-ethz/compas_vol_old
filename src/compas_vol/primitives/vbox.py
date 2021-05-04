@@ -168,12 +168,9 @@ class VolBox(object):
         """
         import numpy as np
 
-        p = np.array([x, y, z, 1])
+        p = np.array([x, y, z, 1], dtype=object)
         xt, yt, zt, _ = np.dot(self.inversetransform, p)
 
-        # dx = np.abs(xt - self.box.frame.point.x) - (self.box.xsize / 2.0 - self.radius)
-        # dy = np.abs(yt - self.box.frame.point.y) - (self.box.ysize / 2.0 - self.radius)
-        # dz = np.abs(zt - self.box.frame.point.z) - (self.box.zsize / 2.0 - self.radius)
         dx = np.abs(xt) - (self.box.xsize / 2.0 - self.radius)
         dy = np.abs(yt) - (self.box.ysize / 2.0 - self.radius)
         dz = np.abs(zt) - (self.box.zsize / 2.0 - self.radius)
