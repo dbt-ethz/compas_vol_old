@@ -13,25 +13,28 @@ compas_vol.combinations
     Intersection
     Subtraction
     SmoothUnion
+    SmoothUnionList
     SmoothIntersection
     SmoothSubtraction
     Morph
 
 """
+from .union import Union
 from .intersection import Intersection
+from .subtraction import Subtraction
+from .smoothunion import SmoothUnion
+from .smoothunionlist import SmoothUnionList
 from .smoothintersection import SmoothIntersection
 from .smoothsubtraction import SmoothSubtraction
-from .smoothunion import SmoothUnion
-from .subtraction import Subtraction
-from .union import Union
 from .morph import Morph
 
 __all__ = [
+    'Union',
     'Intersection',
+    'Subtraction',
+    'SmoothUnion',
+    'SmoothUnionList'
     'SmoothIntersection',
     'SmoothSubtraction',
-    'SmoothUnion',
-    'Subtraction',
-    'Union',
     'Morph'
 ]

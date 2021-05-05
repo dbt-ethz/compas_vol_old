@@ -26,12 +26,12 @@ optional_requirements = {}
 setup(
     name='compas_vol',
     version='0.1.0',
-    description='volumetric modelling with function representations',
+    description='volumetric modelling with signed distance functions',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/dbt-ethz/compas_vol',
     author='Mathias Bernhard',
-    author_email='bernhard@arch.ethz.ch',
+    author_email='mathbern@design.upenn.edu',
     license='MIT license',
     classifiers=[
         'Development Status :: 4 - Beta',

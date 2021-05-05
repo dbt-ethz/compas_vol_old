@@ -29,7 +29,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from .gdf import GDF
+#from .gdf import GDF
 from .heart import Heart
 from .vbox import VolBox
 from .vcapsule import VolCapsule
@@ -43,7 +43,7 @@ from .vsphere import VolSphere
 from .vtorus import VolTorus
 
 __all__ = [
-    'GDF',
+ #   'GDF',
     'Heart',
     'VolBox',
     'VolCapsule',

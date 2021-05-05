@@ -22,10 +22,10 @@ from __future__ import print_function
 import os
 
 
-__author__ = ['Mathias Bernhard <bernhard@arch.ethz.ch>']
+__author__ = ['Mathias Bernhard <mathbern@design.upenn.edu>']
 __copyright__ = 'Digital Building Technologies - ETH Zurich'
 __license__ = 'MIT License'
-__email__ = 'bernhard@arch.ethz.ch'
+__email__ = 'mathbern@design.upenn.edu'
 __version__ = '0.1.0'
 
 
