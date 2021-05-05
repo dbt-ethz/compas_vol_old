@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   
-  <title>compas_vol - SmoothIntersection</title>
+  <title>compas_vol - SmoothUnionList.get_distance</title>
   
 
   <meta charset="utf-8" />
@@ -19,11 +19,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="SmoothIntersection.get_distance" href="compas_vol.combinations.SmoothIntersection.get_distance.html" />
+    <link rel="next" title="SmoothIntersection" href="compas_vol.combinations.SmoothIntersection.html" />
   
 
   
-    <link rel="prev" title="SmoothUnionList.get_distance" href="compas_vol.combinations.SmoothUnionList.get_distance.html" />
+    <link rel="prev" title="SmoothUnionList" href="compas_vol.combinations.SmoothUnionList.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -88,52 +88,21 @@
             
               <li class="breadcrumb-item"><a href="../compas_vol.combinations.html">compas_vol.combinations</a></li>
             
-            <li class="breadcrumb-item active" aria-current="page">SmoothIntersection</li>
+              <li class="breadcrumb-item"><a href="compas_vol.combinations.SmoothUnionList.html">SmoothUnionList</a></li>
+            
+            <li class="breadcrumb-item active" aria-current="page">SmoothUnionList.get_distance</li>
           </ol>
         </nav>
         
 
         
         
-        <div class="detail section" id="smoothintersection">
-<h1>SmoothIntersection</h1>
-<dl class="py class">
-<dt id="compas_vol.combinations.SmoothIntersection">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compas_vol.combinations.</span></code><code class="sig-name descname"><span class="pre">SmoothIntersection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/dbt-ethz/compas_vol/blob/main/src/compas_vol/combinations/smoothintersection.py#L4"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>The smooth union between two volumetric objects.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>volumetric object</em>) – First object to intersect.</p></li>
-<li><p><strong>b</strong> (<em>volumetric object</em>) – Second object to intersect.</p></li>
-<li><p><strong>r</strong> (<em>float</em>) – Intensity factor, the higher the number, the smoother the result. Default value <cite>1.0</cite></p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Sphere</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">9</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">Frame</span><span class="o">.</span><span class="n">worldXY</span><span class="p">(),</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vs</span> <span class="o">=</span> <span class="n">VolSphere</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vb</span> <span class="o">=</span> <span class="n">VolBox</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">SmoothIntersection</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="n">vb</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-</code></pre></div>
-</div>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.combinations.SmoothIntersection.get_distance.html#compas_vol.combinations.SmoothIntersection.get_distance" title="compas_vol.combinations.SmoothIntersection.get_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance</span></code></a>(point)</p></td>
-<td><p>single point distance function</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_vol.combinations.SmoothIntersection.get_distance_numpy.html#compas_vol.combinations.SmoothIntersection.get_distance_numpy" title="compas_vol.combinations.SmoothIntersection.get_distance_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance_numpy</span></code></a>(x, y, z)</p></td>
-<td><p>vectorized distance function</p></td>
-</tr>
-</tbody>
-</table>
+        <div class="detail section" id="smoothunionlist-get-distance">
+<h1>SmoothUnionList.get_distance</h1>
+<dl class="py method">
+<dt id="compas_vol.combinations.SmoothUnionList.get_distance">
+<code class="sig-prename descclassname"><span class="pre">SmoothUnionList.</span></code><code class="sig-name descname"><span class="pre">get_distance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/dbt-ethz/compas_vol/blob/main/src/compas_vol/combinations/smoothunionlist.py#L24"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>single point distance function</p>
 </dd></dl>
 
 </div>
@@ -180,7 +149,7 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">SmoothIntersection</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">SmoothUnionList.get_distance</a></li>
 </ul>
 
       </div>
@@ -192,20 +161,20 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-        <a href="compas_vol.combinations.SmoothUnionList.get_distance.html" title="SmoothUnionList.get_distance" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <a href="compas_vol.combinations.SmoothUnionList.html" title="SmoothUnionList" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
           <div class="nav-title flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Previous</div>
-            SmoothUnionList.get_distance
+            SmoothUnionList
           </div>
         </a>
       
 
       
-        <a href="compas_vol.combinations.SmoothIntersection.get_distance.html" title="SmoothIntersection.get_distance" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_vol.combinations.SmoothIntersection.html" title="SmoothIntersection" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            SmoothIntersection.get_distance
+            SmoothIntersection
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>
