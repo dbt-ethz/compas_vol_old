@@ -68,6 +68,6 @@ class Voronoi(object):
         """
         vectorized distance function
         """
-        alldistances = [((x - p[0])**2 + (y - p[1])**2 + (z - p[2])**2) for p in self.points]
+        #alldistances = [((x - p[0])**2 + (y - p[1])**2 + (z - p[2])**2) for p in self.points]
 
-        print(len(alldistances), type(alldistances[0]))
+        raise NotImplementedError

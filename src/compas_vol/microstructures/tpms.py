@@ -18,7 +18,8 @@ class TPMS(object):
     """
 
     def __init__(self, tpmstype=0, wavelength=1.0):
-        self.tpmstypes = ['gyroid', 'schwartzp', 'diamond', 'neovius', 'lidinoid', 'fischerkoch']
+        self.tpmstypes = ['Gyroid', 'SchwartzP', 'Diamond', 'Neovius', 'Lidinoid', 'FischerKoch']
+        self.tpmstypesl = [s.lower() for s in self.tpmstypes]
         self._tpmstype = None
         self.tpmstype = tpmstype
         self._wavelength = None
@@ -36,8 +37,8 @@ class TPMS(object):
     @tpmstype.setter
     def tpmstype(self, tpmstype):
         if type(tpmstype) == str:
-            if tpmstype.lower() in self.tpmstypes:
-                self._tpmstype = self.tpmstypes.index(tpmstype.lower())
+            if tpmstype.lower() in self.tpmstypesl:
+                self._tpmstype = self.tpmstypesl.index(tpmstype.lower())
             else:
                 self._tpmstype = 0
         elif type(tpmstype) == int:

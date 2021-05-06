@@ -16,7 +16,8 @@ class TPMSPolar(object):
 
     def __init__(self, TPMStype=0, waveLength=1.0, thickness=0.1, polar=1.0):
         self.TPMStype = TPMStype
-        self.tpmstypes = ['gyroid', 'schwartzp', 'diamond', 'neovius', 'lidinoid', 'fischerkoch']
+        self.tpmstypes = ['Gyroid', 'SchwartzP', 'Diamond', 'Neovius', 'Lidinoid', 'FischerKoch']
+        self.tpmstypesl = [s.lower() for s in self.tpmstypes]
         self._tpmstype = None
         self.waveLength = waveLength
         self._waveLength = None
@@ -39,8 +40,8 @@ class TPMSPolar(object):
     @tpmstype.setter
     def tpmstype(self, tpmstype):
         if type(tpmstype) == str:
-            if tpmstype.lower() in self.tpmstypes:
-                self._tpmstype = self.tpmstypes.index(tpmstype.lower())
+            if tpmstype.lower() in self.tpmstypesl:
+                self._tpmstype = self.tpmstypesl.index(tpmstype.lower())
             else:
                 self._tpmstype = 0
         elif type(tpmstype) == int:

@@ -8,7 +8,7 @@ class SmoothUnionList(object):
     ----------
     a: list of volumetric objects
     k: float
-        Intensity factor
+        Intensity factor. The smaller the number, the stronger the smoothing.
 
     Examples
     --------
@@ -36,6 +36,10 @@ class SmoothUnionList(object):
             res += pow(2, -self.k * d)
         return -log(res, 2) / self.k
 
+    def get_distance_numpy(self, x, y, z):
+        raise NotImplementedError
+
+
 if __name__ == "__main__":
     from compas.geometry import Point, Sphere
     from compas_vol.primitives import VolSphere
@@ -50,7 +54,7 @@ if __name__ == "__main__":
         vs = VolSphere(s)
         spheres.append(vs)
     
-    sul = SmoothUnionList(spheres, 0.5)
+    sul = SmoothUnionList(spheres, 0.8)
 
     for y in range(-15, 15):
         s = ''
