@@ -58,7 +58,7 @@ class GDF(object):
     # ==========================================================================
 
     def get_distance(self, x, y, z):
-        return self.gdfvecs[0]
+        raise NotImplementedError
 
 
 # if __name__ == "__main__":

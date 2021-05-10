@@ -30,34 +30,35 @@ d = vb.get_distance_numpy(x, y, z)
 
 All the objects have a `get_distance` function, a lot of them also have a faster `get_distance_numpy` function. The following table gives an overview:
 
-Folder | Class | Numpy available
---- | --- | ---
-Primitives | VolBox | √
-" | VolCapsule | √
-" | VolCone | X
-" | VolEllipsoid | √
-" | VolExtrusion | X
-" | Heart | X
-" | GDF | X
-" | VolPlane | √
-" | VolPolyhedron | √
-" | VolSphere | √
-" | VolTorus | √
-Combinations | Intersection | √
-" | Subtraction | √
-" | Union | √
-" | Morph | √
-" | SmoothIntersection | √
-" | SmoothSubtraction | √
-" | SmoothUnion | √
-Modifications | Blur | √
-" | Overlay | √ (but missing import)
-" | MultiShell | √
-" | Shell | √
-" | Transformation | √
-" | Twist | √
-Microstructure | Lattice | √
-" | TPMS | √
-" | Voronoi | X
-Meshing | Octree | X
-Analysis | Gradient | √
+Folder | Class | Single point distance | Numpy available
+--- | --- | --- | ---
+Primitives | VolBox | √ | √
+" | VolCapsule | √ | √
+" | VolCone | √ | X
+" | VolEllipsoid | √ | √
+" | VolExtrusion | √ | X
+" | Heart | √ | X
+" | GDF | X | X
+" | VolPlane | √ | √
+" | VolPolyhedron | √ | √
+" | VolSphere | √ | √
+" | VolTorus | √ | √
+Combinations | Intersection | √ | √
+" | Subtraction | √ | √
+" | Union | √ | √
+" | Morph | √ | √
+" | SmoothIntersection | √ | √
+" | SmoothSubtraction | √ | √
+" | SmoothUnion | √ | √
+Modifications | Blur | X | √
+" | Overlay | √ | √ (but missing import)
+" | MultiShell | √ | √
+" | Shell | √ | √
+" | Transformation | √ | √
+" | Twist | √ | √
+Microstructure | Lattice | √ | √
+" | TPMS | √ | √
+" | TPMSPolar | √ | √
+" | Voronoi | √ | X
+Meshing | Octree | √ | X
+Analysis | Gradient | √ | √
