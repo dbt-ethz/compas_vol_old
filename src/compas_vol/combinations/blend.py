@@ -25,3 +25,9 @@ class Blend(object):
         else:
             f = dc / self.r + 0.5
             return (1 - f) * da + f * db
+    
+    def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
+        """
+        raise NotImplementedError
