@@ -22,6 +22,10 @@ class Gradient(object):
         self.ex = Point(e, 0, 0)
         self.ey = Point(0, e, 0)
         self.ez = Point(0, 0, e)
+        self.k0 = Vector(1, -1, -1)
+        self.k1 = Vector(-1, -1, 1)
+        self.k2 = Vector(-1, 1, -1)
+        self.k3 = Vector( 1, 1,  1)
 
     def get_gradient_regular(self, point):
         """
@@ -76,9 +80,16 @@ class Gradient(object):
         vectorized tetrahedron difference method for gradient
         """
         import numpy as np
+
+        k0 = np.array(self.k0)
+        k1 = np.array(self.k1)
+        k2 = np.array(self.k2)
+        k3 = np.array(self.k3)
+
         d0 = self.o.get_distance_numpy(x + self.e, y - self.e, z - self.e)
         d1 = self.o.get_distance_numpy(x - self.e, y - self.e, z + self.e)
         d2 = self.o.get_distance_numpy(x - self.e, y + self.e, z - self.e)
         d3 = self.o.get_distance_numpy(x + self.e, y + self.e, z + self.e)
-        dx, dy, dz = (d0 - d1 - d2 + d3, -d0 - d1 + d2 + d3, -d0 + d1 - d2 + d3)
-        return np.array([dx, dy, dz]).T
+        #dx, dy, dz = (d0 - d1 - d2 + d3, -d0 - d1 + d2 + d3, -d0 + d1 - d2 + d3)
+        v = k0 * d0 + k1 * d1 + k2 * d2 + k3 * d3
+        return v #np.array([dx, dy, dz]).T
