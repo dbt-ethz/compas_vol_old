@@ -110,17 +110,17 @@ if __name__ == "__main__":
     plt.axis('equal')
     plt.show()
 
-    m = np.empty((60, 30))
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = ve.get_distance(Point(x * 0.5, -y, 0))
-            m[x + 30, y + 15] = d
-            if d < 0:
-                s += 'O'
-            else:
-                s += '.'
-        print(s)
-    plt.imshow(m, cmap='RdBu')
-    plt.colorbar()
-    plt.show()
+    # m = np.empty((60, 30))
+    # for y in range(-15, 15):
+    #     s = ''
+    #     for x in range(-30, 30):
+    #         d = ve.get_distance(Point(x * 0.5, -y, 0))
+    #         m[x + 30, y + 15] = d
+    #         if d < 0:
+    #             s += 'O'
+    #         else:
+    #             s += '.'
+    #     print(s)
+    # plt.imshow(m, cmap='RdBu')
+    # plt.colorbar()
+    # plt.show()
