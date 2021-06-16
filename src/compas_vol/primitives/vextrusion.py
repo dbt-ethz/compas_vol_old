@@ -89,7 +89,6 @@ if __name__ == "__main__":
     import math
     import matplotlib.pyplot as plt
     import numpy as np
-    import time
 
     polyline = []
     a = math.pi*2/10
@@ -107,27 +106,24 @@ if __name__ == "__main__":
 
     x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
 
-    start = time.time()
     d = ve.get_distance_numpy(x, y, z)
-    end = time.time()
-    print(end-start)
     m = np.tanh(d[:, :, 50].T)
     plt.imshow(m, cmap='Greys', interpolation='nearest')
     plt.colorbar()
     plt.axis('equal')
     plt.show()
 
-    # m = np.empty((60, 30))
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = ve.get_distance(Point(x * 0.5, -y, 0))
-    #         m[x + 30, y + 15] = d
-    #         if d < 0:
-    #             s += 'O'
-    #         else:
-    #             s += '.'
-    #     print(s)
-    # plt.imshow(m, cmap='RdBu')
-    # plt.colorbar()
-    # plt.show()
+    m = np.empty((60, 30))
+    for y in range(-15, 15):
+        s = ''
+        for x in range(-30, 30):
+            d = ve.get_distance(Point(x * 0.5, -y, 0))
+            m[x + 30, y + 15] = d
+            if d < 0:
+                s += 'O'
+            else:
+                s += '.'
+        print(s)
+    plt.imshow(m, cmap='RdBu')
+    plt.colorbar()
+    plt.show()
