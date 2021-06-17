@@ -4,6 +4,8 @@ from math import sin
 from compas.geometry import Cone
 from compas.geometry import Frame
 from compas.geometry import Point
+from compas.geometry import Circle
+from compas.geometry import Plane
 from compas.geometry import length_vector_xy
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
@@ -29,6 +31,9 @@ class VolCone(object):
 
     def __init__(self, cone):
         self.cone = cone
+        self.frame = Frame.from_plane(self.cone.plane)
+        self.matrix = matrix_from_frame(self.frame)
+        self.inversedmatrix = matrix_inverse(self.matrix)
 
     @property
     def data(self):
@@ -50,45 +55,67 @@ class VolCone(object):
     def get_distance(self, point):
         """
         single point distance function
+
+        Parameters
+        ----------
+        point: :class:`compas.geometry.Point`
+            The point in R<sup>3</sup> space to query for it's distance.
+        Returns
+        -------
+        float
+            The distance from the query point to the surface of the object.
         """
         if not isinstance(point, Point):
             point = Point(*point)
 
-        frame = Frame.from_plane(self.cone.plane)
-        m = matrix_from_frame(frame)
-        mi = matrix_inverse(m)
-        point.transform(mi)
+        point.transform(self.inversedmatrix)
 
         dxy = length_vector_xy(point)
         a = 1.1
         c = [sin(a), cos(a)]
-        # dot product
-        d = sum([i*j for (i, j) in zip(c, [dxy, point.z - self.cone.height])])
+        d =  sum([i*j for (i, j) in zip(c, [dxy, point.z - self.cone.height])])
         return d
 
-        # IQ : https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm
-        # float sdCone( in vec3 p, in vec2 c )
-        # {
-        #     // c is the sin/cos of the angle
-        #     float q = length(p.xy);
-        #     return dot(c,vec2(q,p.z));
-        # }
 
     def get_distance_numpy(self, x, y, z):
-        raise NotImplementedError
+
+        import numpy as np
+        
+        p = np.array([x, y, z, 1], dtype=object)
+        xt, yt, zt, _ = np.dot(self.inversedmatrix, p)
+
+        dxy = np.empty((*xt.shape,2))
+        dxy[:,:,:,0], dxy[:,:,:,1] = np.sqrt(xt**2 + yt**2), zt - self.cone.height
+        print(self.cone.height)
+
+        return np.sum(np.full((*xt.shape,2), [np.sin(1.1), np.cos(1.1)]) * dxy, axis=3)
 
 
-# if __name__ == "__main__":
 
-#     c = Cone(Circle(Plane((0, 0, -1), (0, 1, 1)), 12.), 20.)
-#     vc = VolCone(c)
+if __name__ == "__main__":
 
-#     for y in range(-15, 15):
-#         s = ''
-#         for x in range(-30, 30):
-#             d = vc.get_distance(Point(x * 0.5, -y, 0))
-#             if d < 0:
-#                 s += 'x'
-#             else:
-#                 s += '.'
-#         print(s)
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    c = Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 10.), 2.)
+    vc = VolCone(c)
+
+    x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
+
+    d = vc.get_distance_numpy(x, y, z)
+
+    m = np.tanh(d[:, :, 30].T)
+    plt.imshow(m, cmap='Greys', interpolation='nearest')
+    plt.colorbar()
+    plt.axis('equal')
+    plt.show()
+
+    for y in range(-15, 15):
+        s = ''
+        for x in range(-30, 30):
+            d = vc.get_distance(Point(x * 0.5, -y, 0))
+            if d < 0:
+                s += 'x'
+            else:
+                s += '.'
+        print(s)
