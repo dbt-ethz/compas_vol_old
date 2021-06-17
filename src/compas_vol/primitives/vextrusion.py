@@ -27,6 +27,19 @@ class VolExtrusion(object):
 
 
     def get_distance(self, point):
+        """
+        single point distance function
+
+        Parameters
+        ----------
+        point: :class:`compas.geometry.Point`
+            The point in R<sup>3</sup> space to query for it's distance.
+        Returns
+        -------
+        float
+            The distance from the query point to the surface of the object.
+        """
+        
         if not isinstance(point, Point):
             point = Point(*point)
 
