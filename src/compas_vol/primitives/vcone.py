@@ -78,7 +78,19 @@ class VolCone(object):
 
 
     def get_distance_numpy(self, x, y, z):
+        """
+        vectorized distance function
 
+        Parameters
+        ----------
+        x,y,z: `numpy arrays, np.ogrid[]`
+            The coordinates of all the points in R:sup:`3` space to query for their distances.
+            The shapes are ``x: (nx, 1, 1), y: (1, ny, 1), z: (1, 1, nz)``
+        Returns
+        -------
+        numpy array of floats, shape (nx, ny, nz)
+            The distances from the query points to the surface of the object.
+        """
         import numpy as np
         
         p = np.array([x, y, z, 1], dtype=object)
@@ -89,15 +101,14 @@ class VolCone(object):
         print(self.cone.height)
 
         return np.sum(np.full((*xt.shape,2), [np.sin(1.1), np.cos(1.1)]) * dxy, axis=3)
-
-
+        
 
 if __name__ == "__main__":
 
     import numpy as np
     import matplotlib.pyplot as plt
 
-    c = Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 10.), 2.)
+    c = Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 10.), 10.)
     vc = VolCone(c)
 
     x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
