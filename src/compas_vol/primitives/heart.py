@@ -1,6 +1,28 @@
+from compas.geometry import Plane
+from compas.geometry import matrix_from_frame
+from compas.geometry import matrix_inverse
+
 class Heart(object):
-    def __init__(self, size):
+    """A volumetric heart is defined by its size and a compas.geometry frame
+
+    Parameters
+    ----------
+    size : float
+        Scale factor.
+    frame : :class:`compas.geometry.Frame`
+        The base frame.
+
+    Examples
+    --------
+    >>> from compas.geometry import Frame
+    >>> from compas_vol.primitives import Heart
+    >>> frame = 
+    """
+    
+    def __init__(self, size=3.0, frame=None):
         self.size = size
+        self.frame = frame or Frame.worldXY()
+        self.inversetransform = matrix_inverse(matrix_from_frame(self.frame))
 
     def get_distance(self, point):
         """
@@ -39,8 +61,11 @@ class Heart(object):
         """
 
         import numpy as np
+
+        p = np.array([x, y, z, 1], dtype=object)
+        xt, yt, zt, _ = np.dot(self.inversetransform, p)
         
-        sx, sy, sz = x / (self.size * 0.43), y / (self.size * 0.43), z / (self.size * 0.43)
+        sx, sy, sz = xt / (self.size * 0.43), yt / (self.size * 0.43), zt / (self.size * 0.43)
         return np.full((x.shape[0], y.shape[1], z.shape[2]), 320 * ((-sx**2 * sz**3 - 9*sy**2 * sz**3/80) + (sx**2 + 9*sy**2/4 + sz**2-1)**3))
 
 
@@ -49,8 +74,9 @@ if __name__ == "__main__":
 
     import numpy as np
     import matplotlib.pyplot as plt
+    from compas.geometry import Frame
 
-    h = Heart(30)
+    h = Heart(size=30, frame=Frame((0, 0, 0), (1, 0, 0), (0, 1, 0)))
 
     x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
 
