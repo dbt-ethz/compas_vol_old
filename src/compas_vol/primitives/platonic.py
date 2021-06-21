@@ -89,7 +89,7 @@ class PlatonicSolid(object):
         xt, yt, zt, _ = np.dot(self.inversetransform, p)
 
         if self.type == 0:
-            return (np.maximum(np.abs(xt + yt) - z, np.abs(xt - yt) + zt) - self.radius) / self.sqrt3
+            return (np.maximum(np.abs(xt + yt) - zt, np.abs(xt - yt) + zt) - self.radius) / self.sqrt3
         
         elif self.type == 1:
             return ((np.abs(xt) + np.abs(yt) + np.abs(zt)) - self.radius) * self.tan30
@@ -121,7 +121,7 @@ if __name__=="__main__":
     import numpy as np
     import time
 
-    p = PlatonicSolid(10.0, 3, frame=Frame((1, 2, 3), (1, 0.3, 0.1), (-0.4, 1, 0.3)))
+    p = PlatonicSolid(10.0, 0, frame=Frame((1, 2, 3), (1, 0.3, 0.1), (-0.4, 1, 0.3)))
 
     x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
     start = time.time()
