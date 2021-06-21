@@ -16,7 +16,8 @@ class Heart(object):
     --------
     >>> from compas.geometry import Frame
     >>> from compas_vol.primitives import Heart
-    >>> frame = 
+    >>> frame = Frame((1, 2, 3), (1, 0, 0), (0, 1, 0))))
+    >>> heart = Heart(size=4, frame)
     """
     
     def __init__(self, size=3.0, frame=None):
