@@ -57,7 +57,20 @@ class PlatonicSolid(object):
         
         # Icosahedron
         elif self.type == 3:
-            return 0
+            r = self.radius * 0.8506507174597755
+            v = Vector((sqrt(5) + 3)/2, 1, 0)
+            v.unitize()
+            w = sqrt(3)/3
+            px = abs(x / self.radius)
+            py = abs(y / self.radius)
+            pz = abs(z / self.radius)
+            p = Vector(px, py, pz)
+            a = p.dot(v)
+            b = p.dot(Vector(v.z, v.x, v.y))
+            c = p.dot(Vector(v.y, v.z, v.x))
+            d = p.dot([w,w,w]) - v.x
+            q = max(max(max(a, b), c) - v.x, d) * self.radius
+            return q
         
         else:
             return 0
@@ -67,7 +80,7 @@ class PlatonicSolid(object):
         return 0
 
 if __name__=="__main__":
-    p = PlatonicSolid(10.0, 0)
+    p = PlatonicSolid(10.0,0)
     for y in range(-15, 15):
         s = ''
         for x in range(-30, 30):
