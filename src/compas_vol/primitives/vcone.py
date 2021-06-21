@@ -21,8 +21,8 @@ class VolCone(object):
 
     Examples
     --------
-    >>> from compas.geometry import Plane
-    >>> from compas.geometry import Cylinder
+    >>> from compas.geometry import Plane, Circle, Cone
+    >>> from compas_vol.primitives import VolCone
     >>> plane = Plane([0, 0, 0], [0, 0, 1])
     >>> circle = Circle(plane, 5)
     >>> cone = Cone(circle, 7)
