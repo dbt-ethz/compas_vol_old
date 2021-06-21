@@ -109,11 +109,8 @@ class PlatonicSolid(object):
             w = np.full((*xt.shape,3), np.sqrt(3)/3)
             p = np.empty((*xt.shape, 3))
             p[:,:,:,0], p[:,:,:,1], p[:,:,:,2] = np.abs(xt/r), np.abs(yt/r), np.abs(zt/r)
-            a = np.sum(p * v, axis=3)
-            b = np.sum(p * np.roll(v, 1, axis=3), axis=3)
-            c = np.sum(p * np.roll(v, 2, axis=3), axis=3)
-            d = np.sum(p * w, axis=3) - v[:,:,:,0]
-            return np.maximum(np.maximum(np.maximum(a, b), c) - v[:,:,:,0], d) * r
+            return np.maximum(np.maximum(np.maximum(np.sum(p * v, axis=3), np.sum(p * np.roll(v, 1, axis=3), axis=3)),
+                   np.sum(p * np.roll(v, 2, axis=3), axis=3)) - v[:,:,:,0], np.sum(p * w, axis=3) - v[:,:,:,0]) * r
         
         else:
             return np.zeros((*xt.shape,))
@@ -124,12 +121,11 @@ if __name__=="__main__":
     import numpy as np
     import time
 
-    p = PlatonicSolid(16.0, 3, frame=Frame((1, 2, 3), (1, 0.3, 0.1), (-0.4, 1, 0.3)))
+    p = PlatonicSolid(10.0, 3, frame=Frame((1, 2, 3), (1, 0.3, 0.1), (-0.4, 1, 0.3)))
 
     x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
     start = time.time()
     d = p.get_distance_numpy(x,y,z)
-    print(d)
     end = time.time()
     print(end-start)
     m = np.tanh(d[:, :, 30].T)
