@@ -112,6 +112,7 @@ if __name__ == "__main__":
     import math
     import matplotlib.pyplot as plt
     import numpy as np
+    import time
 
     polyline = []
     a = math.pi*2/10
@@ -129,7 +130,10 @@ if __name__ == "__main__":
 
     x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
 
+    start = time.time()
     d = ve.get_distance_numpy(x, y, z)
+    end = time.time()
+    print(end-start)
     m = np.tanh(d[:, :, 50].T)
     plt.imshow(m, cmap='Greys', interpolation='nearest')
     plt.colorbar()
