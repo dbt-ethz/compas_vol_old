@@ -119,10 +119,6 @@ class PlatonicSolid(object):
             return np.zeros((*xt.shape,))
 
 
-
-
-        # return 0
-
 if __name__=="__main__":
     import matplotlib.pyplot as plt
     import numpy as np
