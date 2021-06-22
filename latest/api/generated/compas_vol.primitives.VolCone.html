@@ -99,7 +99,7 @@
 <h1>VolCone</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_vol.primitives.VolCone">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compas_vol.primitives.</span></span><span class="sig-name descname"><span class="pre">VolCone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cone</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/dbt-ethz/compas_vol/blob/main/src/compas_vol/primitives/vcone.py#L12"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compas_vol.primitives.</span></span><span class="sig-name descname"><span class="pre">VolCone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cone</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/dbt-ethz/compas_vol/blob/main/src/compas_vol/primitives/vcone.py#L14"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A volumetric cone is defined by a base cone from <cite>compas.geometry</cite>.</p>
 <dl class="field-list simple">
@@ -108,8 +108,8 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Plane</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Cylinder</span>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Plane</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Cone</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas_vol.primitives</span> <span class="kn">import</span> <span class="n">VolCone</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span> <span class="o">=</span> <span class="n">Plane</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">circle</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cone</span> <span class="o">=</span> <span class="n">Cone</span><span class="p">(</span><span class="n">circle</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
@@ -130,7 +130,7 @@
 <td><p>single point distance function</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.primitives.VolCone.get_distance_numpy.html#compas_vol.primitives.VolCone.get_distance_numpy" title="compas_vol.primitives.VolCone.get_distance_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance_numpy</span></code></a>(x, y, z)</p></td>
-<td><p></p></td>
+<td><p>vectorized distance function</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_vol.primitives.VolCone.to_data.html#compas_vol.primitives.VolCone.to_data" title="compas_vol.primitives.VolCone.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
 <td><p></p></td>

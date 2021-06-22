@@ -101,8 +101,18 @@
 <h1>VolCone.get_distance_numpy</h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="compas_vol.primitives.VolCone.get_distance_numpy">
-<span class="sig-prename descclassname"><span class="pre">VolCone.</span></span><span class="sig-name descname"><span class="pre">get_distance_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/dbt-ethz/compas_vol/blob/main/src/compas_vol/primitives/vcone.py#L77"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">VolCone.</span></span><span class="sig-name descname"><span class="pre">get_distance_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/dbt-ethz/compas_vol/blob/main/src/compas_vol/primitives/vcone.py#L80"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>vectorized distance function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x,y,z</strong> (<cite>numpy arrays, np.ogrid[]</cite>) – The coordinates of all the points in R:sup:<cite>3</cite> space to query for their distances.
+The shapes are <code class="docutils literal notranslate"><span class="pre">x:</span> <span class="pre">(nx,</span> <span class="pre">1,</span> <span class="pre">1),</span> <span class="pre">y:</span> <span class="pre">(1,</span> <span class="pre">ny,</span> <span class="pre">1),</span> <span class="pre">z:</span> <span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">nz)</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>numpy array of floats, shape (nx, ny, nz)</em> – The distances from the query points to the surface of the object.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
