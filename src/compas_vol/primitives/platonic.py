@@ -71,6 +71,7 @@ class PlatonicSolid(object):
             px = abs(x / r)
             py = abs(y / r)
             pz = abs(z / r)
+
             p = Vector(px, py, pz)
             a = p.dot(v)
             b = p.dot(Vector(v.z, v.x, v.y))
@@ -125,7 +126,7 @@ if __name__=="__main__":
 
     x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
     start = time.time()
-    d = p.get_distance_numpy(x,y,z)
+    d = p.get_distance_numpy(x, y, z)
     end = time.time()
     print(end-start)
     m = np.tanh(d[:, :, 30].T)
@@ -134,6 +135,7 @@ if __name__=="__main__":
     plt.axis('equal')
     plt.show()
 
+    # p = PlatonicSolid(10.0, 3)
     for y in range(-15, 15):
         s = ''
         for x in range(-30, 30):
