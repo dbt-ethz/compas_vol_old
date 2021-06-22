@@ -31,6 +31,7 @@ from __future__ import print_function
 
 #from .gdf import GDF
 from .heart import Heart
+from .platonic import PlatonicSolid
 from .vbox import VolBox
 from .vcapsule import VolCapsule
 from .vcone import VolCone
@@ -45,6 +46,7 @@ from .vtorus import VolTorus
 __all__ = [
  #   'GDF',
     'Heart',
+    'PlatonicSolid',
     'VolBox',
     'VolCapsule',
     'VolCone',
