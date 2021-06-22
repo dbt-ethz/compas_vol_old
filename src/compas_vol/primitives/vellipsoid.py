@@ -17,7 +17,7 @@ class VolEllipsoid(object):
         The radius along the Y axis
     radiusZ : float
         The radius along the Z axis
-    frame : :class:`compas.geometry.Fame`
+    frame : :class:`compas.geometry.Frame`
         The base frame.
 
     Examples

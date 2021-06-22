@@ -59,6 +59,9 @@ class GDF(object):
 
     def get_distance(self, x, y, z):
         raise NotImplementedError
+    
+    def get_distance_numpy(self, x, y, z):
+        raise NotImplementedError
 
 
 # if __name__ == "__main__":
