@@ -5,6 +5,7 @@ from compas.geometry import matrix_inverse
 from compas.geometry import closest_point_on_polyline_xy
 from compas.geometry import is_point_in_polygon_xy
 from matplotlib.pyplot import axis
+from numpy.core.numeric import argwhere
 
 class VolExtrusion(object):
     """A volumetric extrusion is defined by a polyline from `compas.geometry` and a height.
@@ -77,35 +78,24 @@ class VolExtrusion(object):
         _xyt = np.empty((*xt.shape, l, 2))
         _xyt[:,:,:,:,0], _xyt[:,:,:,:,1] = np.reshape(np.repeat(xt, l), (*xt.shape, l)), np.reshape(np.repeat(yt, l), (*yt.shape, l))
 
-        v2D = np.empty((l, 2, 2))
+        v2D = np.empty((l, 3, 2))
         for i in range(l):
             v2D[i,0] = self.polyline[i][0], self.polyline[i][1]
             v2D[i,1] = self.polyline[i+1][0], self.polyline[i+1][1]
-        v2D = np.reshape(np.tile(v2D, (xt.size, 1, 1)), (*xt.shape, l, 2, 2))
+            v2D[i,2,0], v2D[i,2,1] = self.polyline[i+1][0] - self.polyline[i][0], self.polyline[i+1][1] - self.polyline[i][1]
+        v2D = np.reshape(np.tile(v2D, (xt.size, 1, 1)), (*xt.shape, l, 3, 2))
 
-        cond0 = _xyt[:,:,:,:,1] > np.minimum(v2D[:,:,:,:,0,1], v2D[:,:,:,:,1,1])
-        cond1 = _xyt[:,:,:,:,1] <= np.maximum(v2D[:,:,:,:,0,1], v2D[:,:,:,:,1,1])
-        cond2 = _xyt[:,:,:,:,0] <= np.maximum(v2D[:,:,:,:,0,0], v2D[:,:,:,:,1,0])
-        cond3 = v2D[:,:,:,:,0,1] != v2D[:,:,:,:,1,1]
-        cond4 = _xyt[:,:,:,:,0] <= (_xyt[:,:,:,:,1] - v2D[:,:,:,:,0,1]) * (v2D[:,:,:,:,1,0] - v2D[:,:,:,:,0,0]) / (v2D[:,:,:,:,1,1] - v2D[:,:,:,:,0,1]) + v2D[:,:,:,:,0,0]
-        cond5 = v2D[:,:,:,:,0,0] == v2D[:,:,:,:,1,0]
+        w = np.empty((*xt.shape,l,2))
+        w[:,:,:,:,0], w[:,:,:,:,1] = _xyt[:,:,:,:,0] - v2D[:,:,:,:,0,0], _xyt[:,:,:,:,1] - v2D[:,:,:,:,0,1]
+        b = w - v2D[:,:,:,:,2] * np.clip(np.sum(w * v2D[:,:,:,:,2], axis=4) / np.sum(v2D[:,:,:,:,2]**2, axis=4), 0, 1)[..., np.newaxis]
 
-        f = np.where(np.sum(np.where(cond0*cond1*cond2*cond3*cond5 + cond0*cond1*cond2*cond3*cond4, 1, np.zeros((*xt.shape, l), dtype=int)), axis=3) %2 != 0, -1, np.ones((xt.shape)))
+        cond = np.empty((*xt.shape,l,3), dtype=bool)
+        cond[:,:,:,:,0] = _xyt[:,:,:,:,1] >= v2D[:,:,:,:,0,1]  
+        cond[:,:,:,:,1] = _xyt[:,:,:,:,1] < v2D[:,:,:,:,1,1]
+        cond[:,:,:,:,2] = v2D[:,:,:,:,2,0] * w[:,:,:,:,1] > v2D[:,:,:,:,2,1] * w[:,:,:,:,0]
+        s = np.where(np.sum(np.all(cond, axis=4) | np.all(~cond, axis=4), axis=3) %2 != 0, -1, np.ones((xt.shape)))
 
-        cond6 = (v2D[:,:,:,:,0] == _xyt).all(axis=4) + (v2D[:,:,:,:,1] == _xyt).all(axis=4)
-        cond7 = (v2D[:,:,:,:,0] == v2D[:,:,:,:,1]).all(axis=4)
-        cond8 = np.arccos(np.sum((_xyt - v2D[:,:,:,:,0]) / np.linalg.norm(_xyt - v2D[:,:,:,:,0]) *
-                                 (v2D[:,:,:,:,1] - v2D[:,:,:,:,0]) / np.linalg.norm(v2D[:,:,:,:,1] - v2D[:,:,:,:,0]), axis=4)) > np.pi/2
-        cond9 = np.arccos(np.sum((_xyt - v2D[:,:,:,:,1]) / np.linalg.norm(_xyt - v2D[:,:,:,:,1]) *
-                                 (v2D[:,:,:,:,0] - v2D[:,:,:,:,1]) / np.linalg.norm(v2D[:,:,:,:,0] - v2D[:,:,:,:,1]), axis=4)) > np.pi/2
-
-        d = np.linalg.norm(np.reshape(np.cross(v2D[:,:,:,:,0] - v2D[:,:,:,:,1], v2D[:,:,:,:,0] - _xyt), (*xt.shape,l,1)), axis=4) / np.linalg.norm(v2D[:,:,:,:,1] - v2D[:,:,:,:,0], axis=4)
-        d[cond6] = 0
-        d[cond7] = np.linalg.norm(v2D[:,:,:,:,0] - _xyt, axis=4)[cond7]
-        d[cond8] = np.linalg.norm(_xyt - v2D[:,:,:,:,0], axis=4)[cond8]
-        d[cond9] = np.linalg.norm(_xyt - v2D[:,:,:,:,1], axis=4)[cond9]
-
-        return np.maximum(np.amin(d, axis=3) * f, np.abs(zt) - self.height / 2.0)
+        return s * np.sqrt(np.min(np.sum(b**2, axis=4), axis=3))
 
 
 if __name__ == "__main__":
