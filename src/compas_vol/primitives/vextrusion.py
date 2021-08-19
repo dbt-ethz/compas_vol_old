@@ -95,7 +95,7 @@ class VolExtrusion(object):
         cond[:,:,:,:,2] = v2D[:,:,:,:,2,0] * w[:,:,:,:,1] > v2D[:,:,:,:,2,1] * w[:,:,:,:,0]
         s = np.where(np.sum(np.all(cond, axis=4) | np.all(~cond, axis=4), axis=3) %2 != 0, -1, np.ones((xt.shape)))
 
-        return s * np.sqrt(np.min(np.sum(b**2, axis=4), axis=3)) - self.height / 2.0
+        return np.maximum(s * np.sqrt(np.min(np.sum(b**2, axis=4), axis=3)), np.abs(zt) - self.height / 2.0)
 
 
 if __name__ == "__main__":
