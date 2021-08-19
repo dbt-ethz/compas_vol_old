@@ -78,7 +78,6 @@ class Voronoi(object):
         coords = np.reshape(np.tile(np.array([[p.x, p.y, p.z] for p in self.points]), (x.size * y.size * z.size, 1)),
                  (x.shape[0], y.shape[1], z.shape[2], len(self.points), 3))
         coords = np.concatenate((coords, np.linalg.norm(p - coords, axis=4, keepdims=True)), axis=4)
-
         closestPts = np.take_along_axis(coords, coords[:,:,:,:,-1].argsort()[..., None], axis=3)[:,:,:,:2,:3]
 
         d1 = np.sum(closestPts[:,:,:,0]**2, axis=3)
@@ -100,7 +99,7 @@ if __name__=="__main__":
 
     v = Voronoi(pts)
 
-    x, y, z = np.ogrid[-30:30:60j, -30:30:80j, -30:30:40j]
+    x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
 
     start = time.time()
     d = v.get_distance_numpy(x,y,z)
@@ -111,7 +110,7 @@ if __name__=="__main__":
     plt.colorbar()
     plt.axis('equal')
     plt.show()
-
+    
     # for y in range(-15, 15):
     #     s = ''
     #     for x in range(-30, 30):
