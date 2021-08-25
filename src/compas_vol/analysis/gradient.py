@@ -59,23 +59,7 @@ class Gradient(object):
         v.unitize()
         return v
 
-    def get_gradient_numpy_regular(self, x, y, z):
-        import warnings
-        warnings.warn("get_gradient_numpy_regular is deprecated and might/will be removed in the future", DeprecationWarning, 2)
-
-        import numpy as np
-        dx = self.o.get_distance_numpy(x + self.e, y, z) - self.o.get_distance_numpy(
-            x - self.e, y, z
-        )
-        dy = self.o.get_distance_numpy(x, y + self.e, z) - self.o.get_distance_numpy(
-            x, y - self.e, z
-        )
-        dz = self.o.get_distance_numpy(x, y, z + self.e) - self.o.get_distance_numpy(
-            x, y, z - self.e
-        )
-        return np.array([dx, dy, dz]).T
-
-    def get_gradient_numpy(self, x, y, z):
+    def get_distance_numpy(self, x, y, z):
         """
         vectorized tetrahedron difference method for gradient
         """
@@ -90,6 +74,5 @@ class Gradient(object):
         d1 = self.o.get_distance_numpy(x - self.e, y - self.e, z + self.e)
         d2 = self.o.get_distance_numpy(x - self.e, y + self.e, z - self.e)
         d3 = self.o.get_distance_numpy(x + self.e, y + self.e, z + self.e)
-        #dx, dy, dz = (d0 - d1 - d2 + d3, -d0 - d1 + d2 + d3, -d0 + d1 - d2 + d3)
         v = k0 * d0 + k1 * d1 + k2 * d2 + k3 * d3
-        return v #np.array([dx, dy, dz]).T
+        return v
