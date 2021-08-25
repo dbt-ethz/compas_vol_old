@@ -1,26 +1,24 @@
+#imports
 import numpy as np
-import matplotlib.pyplot as plt
+import meshplot as mp
+from skimage.measure import marching_cubes
 from compas_vol.microstructures import LatticePolar
-# from compas.geometry import Vector, Frame
 
-lat = LatticePolar(1, 7.0, 2.5, 8)
-
+#workspace initialization
 x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-m = lat.get_distance_numpy(x, y, z)
-plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-plt.colorbar()
-plt.axis('equal')
-plt.show()
+#voxel dimensions
+gx = 28/112
+gy = 24/96
+gz = 20/80
 
-# print(lat.ltype)
-# #lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
-# for y in range(-15, 15):
-#     s = ''
-#     for x in range(-30, 30):
-#         d = lat.get_distance(Point(x*0.5, y, 2))
-#         #print(d)
-#         if d < 0:
-#             s += 'x'
-#         else:
-#             s += '.'
-#     print(s)
+#VM object
+lat = LatticePolar(1, 8.0, 1.2, 8)
+
+#sampling
+m = lat.get_distance_numpy(x, y, z)
+
+#generate isosurface
+v, f, n, l = marching_cubes(m, 0, spacing=(gx, gy, gz))
+
+#display mesh
+mp.plot(v, f, c=np.array([0,0.57,1.0]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
