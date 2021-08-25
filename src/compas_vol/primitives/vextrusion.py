@@ -4,8 +4,6 @@ from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
 from compas.geometry import closest_point_on_polyline_xy
 from compas.geometry import is_point_in_polygon_xy
-from matplotlib.pyplot import axis
-from numpy.core.numeric import argwhere
 
 class VolExtrusion(object):
     """A volumetric extrusion is defined by a polyline from `compas.geometry` and a height.
@@ -96,51 +94,3 @@ class VolExtrusion(object):
         s = np.where(np.sum(np.all(cond, axis=4) | np.all(~cond, axis=4), axis=3) %2 != 0, -1, np.ones((xt.shape)))
 
         return np.maximum(s * np.sqrt(np.min(np.sum(b**2, axis=4), axis=3)), np.abs(zt) - self.height / 2.0)
-
-
-if __name__ == "__main__":
-    import math
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import time
-
-    polyline = []
-    a = math.pi*2/10
-    r = 10
-    for i in range(10):
-        tr = r
-        if i % 2:
-            tr = 5
-        x = tr*math.cos(i*a)
-        y = tr*math.sin(i*a)
-        polyline.append((x, y, 0))
-    polyline.append(polyline[0])
-
-    ve = VolExtrusion(polyline, height=20, frame=Frame((1, 2, 3), (1, 0.3, 0.1), (-0.4, 1, 0.3)))
-
-    x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
-
-    start = time.time()
-    d = ve.get_distance_numpy(x, y, z)
-    end = time.time()
-    print(end-start)
-    m = np.tanh(d[:, :, 50].T)
-    plt.imshow(m, cmap='Greys', interpolation='nearest')
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-
-    # m = np.empty((60, 30))
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = ve.get_distance(Point(x * 0.5, -y, 0))
-    #         m[x + 30, y + 15] = d
-    #         if d < 0:
-    #             s += 'O'
-    #         else:
-    #             s += '.'
-    #     print(s)
-    # plt.imshow(m, cmap='RdBu')
-    # plt.colorbar()
-    # plt.show()
