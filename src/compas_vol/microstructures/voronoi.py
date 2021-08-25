@@ -86,37 +86,3 @@ class Voronoi(object):
         d2 = np.sum(v1 * v2, axis=3)
 
         return np.abs(np.minimum(d1, d2)) - self.thickness / 2
-
-
-if __name__=="__main__":
-    from compas.geometry import Point
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import time
-    
-    coordinates = np.random.uniform(-30, 30, (25,3))
-    pts = [Point(px,py,pz) for (px,py,pz) in coordinates]
-
-    v = Voronoi(pts)
-
-    x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
-
-    start = time.time()
-    d = v.get_distance_numpy(x,y,z)
-    end = time.time()
-    print(end-start)
-    m = np.tanh(d[:, :, 30].T)
-    plt.imshow(m, cmap='Greys', interpolation='nearest')
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-    
-    # for y in range(-15, 15):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = v.get_distance((x * 0.5, -y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '.'
-    #     print(s)
