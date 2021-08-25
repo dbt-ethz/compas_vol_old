@@ -59,7 +59,7 @@ class Gradient(object):
         v.unitize()
         return v
 
-    def get_distance_numpy(self, x, y, z):
+    def get_gradient_numpy(self, x, y, z):
         """
         vectorized tetrahedron difference method for gradient
         """
