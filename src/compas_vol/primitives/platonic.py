@@ -129,8 +129,10 @@ if __name__=="__main__":
     d = p.get_distance_numpy(x, y, z)
     end = time.time()
     print(end-start)
-    m = np.tanh(d[:, :, 30].T)
-    plt.imshow(m, cmap='Greys', interpolation='nearest')
+    #m = np.tanh(d[:, :, 30].T)
+    m = d[:, :, 30].T
+    #plt.imshow(m, cmap='Greys', interpolation='nearest')
+    plt.imshow(m)
     plt.colorbar()
     plt.axis('equal')
     plt.show()
