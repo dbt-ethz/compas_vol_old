@@ -71,13 +71,13 @@ class Gradient(object):
         k2 = np.array(self.k2)
         k3 = np.array(self.k3)
 
-        d0 = self.o.get_distance_numpy(x + self.e, y - self.e, z - self.e)[...,newaxis]
-        d1 = self.o.get_distance_numpy(x - self.e, y - self.e, z + self.e)[...,newaxis]
-        d2 = self.o.get_distance_numpy(x - self.e, y + self.e, z - self.e)[...,newaxis]
-        d3 = self.o.get_distance_numpy(x + self.e, y + self.e, z + self.e)[...,newaxis]
+        d0 = self.o.get_distance_numpy(x + self.e, y - self.e, z - self.e)[..., newaxis]
+        d1 = self.o.get_distance_numpy(x - self.e, y - self.e, z + self.e)[..., newaxis]
+        d2 = self.o.get_distance_numpy(x - self.e, y + self.e, z - self.e)[..., newaxis]
+        d3 = self.o.get_distance_numpy(x + self.e, y + self.e, z + self.e)[..., newaxis]
 
         v = k0 * d0 + k1 * d1 + k2 * d2 + k3 * d3
-        return v / np.linalg.norm(v, axis=3)[...,newaxis]
+        return v / np.linalg.norm(v, axis=3)[..., newaxis]
 
 # if __name__ == "__main__":
 #     import numpy as np
