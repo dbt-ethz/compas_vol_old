@@ -78,8 +78,8 @@ class Gradient(object):
 
         v = k0 * d0 + k1 * d1 + k2 * d2 + k3 * d3
 
-        # return v / np.linalg.norm(v, axis=3)[..., newaxis]
-        return v
+        return v / np.linalg.norm(v, axis=3)[..., newaxis]
+        # return v
 
 
 if __name__ == "__main__":
@@ -97,8 +97,9 @@ if __name__ == "__main__":
 
     x, y, z = np.ogrid[-10:10:21j, -10:10:21j, -10:10:21j]
     d = g.get_gradient_numpy(x, y, z)
+    print(d)
 
-    print(d[-1,-1,-1])
+    # print(d[-1,-1,-1])
 
     vals = []
 
@@ -109,7 +110,7 @@ if __name__ == "__main__":
                 d = g.get_gradient(p)
                 vals.append(d)
 
-    print(vals[-1])
+    # print(vals[-1])
     # print(vals[2])
     # plt.quiver(x, y, d[:, :, 0, 1], d[:, :, 0, 2])
     # plt.axis('equal')
