@@ -57,7 +57,7 @@ class Gradient(object):
         d2 = self.o.get_distance(Point(point.x - self.e, point.y + self.e, point.z - self.e))
         d3 = self.o.get_distance(Point(point.x + self.e, point.y + self.e, point.z + self.e))
         v = Vector(d0 - d1 - d2 + d3, -d0 - d1 + d2 + d3, -d0 + d1 - d2 + d3)
-        # v.unitize()
+        v.unitize()
         return v
 
     def get_gradient_numpy(self, x, y, z):
@@ -79,39 +79,3 @@ class Gradient(object):
         v = k0 * d0 + k1 * d1 + k2 * d2 + k3 * d3
 
         return v / np.linalg.norm(v, axis=3)[..., newaxis]
-        # return v
-
-
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    from compas_vol.primitives import VolSphere
-    from compas_vol.analysis import Gradient
-    from compas.geometry import Point, Sphere
-
-    s = Sphere(Point(1, 2, 3), 4)
-    vs = VolSphere(s)
-
-    g = Gradient(vs)
-
-    x, y, z = np.ogrid[-10:10:21j, -10:10:21j, -10:10:21j]
-    d = g.get_gradient_numpy(x, y, z)
-    print(d)
-
-    # print(d[-1,-1,-1])
-
-    vals = []
-
-    for i in range(-10,11):
-        for j in range(-10,11):
-            for k in range(-10,10,11):
-                p = Point(i,j,k)
-                d = g.get_gradient(p)
-                vals.append(d)
-
-    # print(vals[-1])
-    # print(vals[2])
-    # plt.quiver(x, y, d[:, :, 0, 1], d[:, :, 0, 2])
-    # plt.axis('equal')
-    # plt.show()
