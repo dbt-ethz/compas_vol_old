@@ -66,6 +66,8 @@ class Gradient(object):
         """
         import numpy as np
 
+        v = np.empty((x.shape[0], y.shape[1], z.shape[2], 3))
+
         k0 = np.array(self.k0)
         k1 = np.array(self.k1)
         k2 = np.array(self.k2)
@@ -77,22 +79,27 @@ class Gradient(object):
         d3 = self.o.get_distance_numpy(x + self.e, y + self.e, z + self.e)[..., newaxis]
 
         v = k0 * d0 + k1 * d1 + k2 * d2 + k3 * d3
-        return v / np.linalg.norm(v, axis=3)[..., newaxis]
 
-# if __name__ == "__main__":
-#     import numpy as np
-
-#     from compas_vol.primitives import VolSphere
-#     from compas_vol.analysis import Gradient
-#     from compas.geometry import Point, Sphere
-
-#     s = Sphere(Point(1, 2, 3), 4)
-#     vs = VolSphere(s)
-#     g = Gradient(vs)
-
-#     x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
-#     d = g.get_gradient_numpy(x, y, z)
-#     print(d)
+        # return v / np.linalg.norm(v, axis=3)[..., newaxis]
+        return v
 
 
-        
+if __name__ == "__main__":
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    from compas_vol.primitives import VolSphere
+    from compas_vol.analysis import Gradient
+    from compas.geometry import Point, Sphere
+
+    s = Sphere(Point(1, 2, 3), 4)
+    vs = VolSphere(s)
+
+    g = Gradient(vs)
+
+    x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
+    d = g.get_gradient_numpy(x, y, z)
+
+    # plt.quiver(x, y, d[:, :, 0, 1], d[:, :, 0, 2])
+    # plt.axis('equal')
+    # plt.show()
