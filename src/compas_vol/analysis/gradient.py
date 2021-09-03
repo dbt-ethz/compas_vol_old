@@ -57,7 +57,7 @@ class Gradient(object):
         d2 = self.o.get_distance(Point(point.x - self.e, point.y + self.e, point.z - self.e))
         d3 = self.o.get_distance(Point(point.x + self.e, point.y + self.e, point.z + self.e))
         v = Vector(d0 - d1 - d2 + d3, -d0 - d1 + d2 + d3, -d0 + d1 - d2 + d3)
-        v.unitize()
+        # v.unitize()
         return v
 
     def get_gradient_numpy(self, x, y, z):
@@ -65,8 +65,6 @@ class Gradient(object):
         vectorized tetrahedron difference method for gradient
         """
         import numpy as np
-
-        v = np.empty((x.shape[0], y.shape[1], z.shape[2], 3))
 
         k0 = np.array(self.k0)
         k1 = np.array(self.k1)
@@ -97,9 +95,22 @@ if __name__ == "__main__":
 
     g = Gradient(vs)
 
-    x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
+    x, y, z = np.ogrid[-10:10:21j, -10:10:21j, -10:10:21j]
     d = g.get_gradient_numpy(x, y, z)
 
+    print(d[-1,-1,-1])
+
+    vals = []
+
+    for i in range(-10,11):
+        for j in range(-10,11):
+            for k in range(-10,10,11):
+                p = Point(i,j,k)
+                d = g.get_gradient(p)
+                vals.append(d)
+
+    print(vals[-1])
+    # print(vals[2])
     # plt.quiver(x, y, d[:, :, 0, 1], d[:, :, 0, 2])
     # plt.axis('equal')
     # plt.show()
