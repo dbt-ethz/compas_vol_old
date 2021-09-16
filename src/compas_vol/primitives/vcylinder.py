@@ -74,7 +74,7 @@ class VolCylinder(object):
         """
         import numpy as np
 
-        p = np.array([x, y, z, 1])
+        p = np.array([x, y, z, 1], dtype=object)
         xt, yt, zt, _ = np.dot(self.inversetransform, p)
 
         d = np.sqrt(xt**2 + yt**2) - self.cylinder.radius

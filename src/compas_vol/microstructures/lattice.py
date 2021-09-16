@@ -172,7 +172,7 @@ class Lattice(object):
         """
         import numpy as np
 
-        p = np.array([x, y, z, 1])
+        p = np.array([x, y, z, 1], dtype=object)
         md = np.dot(self.inversetransform, p)
         mg = np.stack(([md[0], md[1], md[2]]), axis=-1)
         mg = abs((mg % self.unitcell) - self.unitcell/2)
