@@ -39,6 +39,7 @@ class Blend(object):
 
         d = np.empty((x.shape[0], y.shape[1], z.shape[2]))
         f = np.empty((x.shape[0], y.shape[1], z.shape[2]))
+        qf = np.empty((x.shape[0], y.shape[1], z.shape[2]))
 
         da = self.a.get_distance_numpy(x, y, z)
         db = self.b.get_distance_numpy(x, y, z)
@@ -49,34 +50,29 @@ class Blend(object):
 
         d[cond1] = da[cond1]
         d[cond2] = db[cond2]
-
         if self.t == 0:
             f[cond3] = dc[cond3] / self.r + 0.5
             d[cond3] = (1 - f[cond3]) * da[cond3] + f[cond3] * db[cond3]
 
         return d
 
-        # # if self.t == 0:
 
-  
-        # raise NotImplementedError
+# if __name__ == "__main__":
+#     import numpy as np
 
-if __name__ == "__main__":
-    import numpy as np
+#     from compas.geometry import Point, Plane, Circle, Sphere, Cone
+#     from compas_vol.primitives import VolSphere, VolCone
+#     from compas_vol.microstructures import Lattice
 
-    from compas.geometry import Point, Plane, Circle, Sphere, Cone
-    from compas_vol.primitives import VolSphere, VolCone
-    from compas_vol.microstructures import Lattice
+#     x, y, z = np.ogrid[-30:30:60j,-30:30:60j,-30:30:60j]
 
-    x, y, z = np.ogrid[-30:30:60j,-30:30:60j,-30:30:60j]
+#     c = VolCone(Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 20.), 10.))
+#     s = VolSphere(Sphere(Point(0,0,0), 6.5))
+#     l = Lattice(1, 10, 0.5)
 
-    c = VolCone(Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 20.), 10.))
-    s = VolSphere(Sphere(Point(0,0,0), 6.5))
-    l = Lattice(1, 10, 0.5)
+#     b = Blend(c, s, l)
 
-    b = Blend(c, s, l)
-
-    d = b.get_distance_numpy(x, y, z)
+#     d = b.get_distance_numpy(x, y, z)
 
     # spheres = []
     # for i in range(10):
