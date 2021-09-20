@@ -98,7 +98,6 @@ class VolCone(object):
 
         dxy = np.empty((*xt.shape,2))
         dxy[:,:,:,0], dxy[:,:,:,1] = np.sqrt(xt**2 + yt**2), zt - self.cone.height
-        print(self.cone.height)
 
         return np.sum(np.full((*xt.shape,2), [np.sin(1.1), np.cos(1.1)]) * dxy, axis=3)
         
