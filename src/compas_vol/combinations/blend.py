@@ -38,56 +38,45 @@ class Blend(object):
         import numpy as np
 
         d = np.empty((x.shape[0], y.shape[1], z.shape[2]))
-        f = np.empty((x.shape[0], y.shape[1], z.shape[2]))
-        qf = np.empty((x.shape[0], y.shape[1], z.shape[2]))
 
         da = self.a.get_distance_numpy(x, y, z)
         db = self.b.get_distance_numpy(x, y, z)
         dc = self.c.get_distance_numpy(x, y, z)
+        f = dc / self.r + 0.5
+
         cond1 = dc < -self.r/2
         cond2 = dc > self.r/2
         cond3 = ~cond1 * ~cond2
+        cond4 = f < 0.5
 
         d[cond1] = da[cond1]
         d[cond2] = db[cond2]
         if self.t == 0:
-            f[cond3] = dc[cond3] / self.r + 0.5
             d[cond3] = (1 - f[cond3]) * da[cond3] + f[cond3] * db[cond3]
         elif self.t == 1:
-            f[cond3] = dc[cond3] / self.r + 0.5
-            cond4 = f[cond3] < 0.5
-            qf[cond3 * cond4] = 2 * f[cond3]**2
-            qf[cond3 * ~cond4] = 1 - ((-2 * f[cond3] + 2)**2)/2
+            qf = np.empty((x.shape[0], y.shape[1], z.shape[2]))
+            qf[cond3*cond4] = 2 * f[cond3*cond4]**2
+            qf[cond3*~cond4] = 1 - ((-2 * f[cond3*~cond4] + 2)**2)/2
             d[cond3] = (1 - qf[cond3]) * da[cond3] + qf[cond3] * db[cond3]
         return d
 
 
-# if __name__ == "__main__":
-#     import numpy as np
+if __name__ == "__main__":
+    import numpy as np
 
-#     from compas.geometry import Point, Plane, Circle, Sphere, Cone
-#     from compas_vol.primitives import VolSphere, VolCone
-#     from compas_vol.microstructures import Lattice
+    from compas.geometry import Point, Plane, Circle, Sphere, Cone
+    from compas_vol.primitives import VolSphere, VolCone
+    from compas_vol.microstructures import Lattice
 
-#     x, y, z = np.ogrid[-30:30:60j,-30:30:60j,-30:30:60j]
+    x, y, z = np.ogrid[-30:30:60j,-30:30:60j,-30:30:60j]
 
-#     c = VolCone(Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 20.), 10.))
-#     s = VolSphere(Sphere(Point(0,0,0), 6.5))
-#     l = Lattice(1, 10, 0.5)
+    c = VolCone(Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 20.), 10.))
+    s = VolSphere(Sphere(Point(0,0,0), 6.5))
+    l = Lattice(1, 10, 0.5)
 
-#     b = Blend(c, s, l)
+    b = Blend(c, s, l, t=1)
 
-#     d = b.get_distance_numpy(x, y, z)
 
-    # spheres = []
-    # for i in range(10):
-    #     x = 10-random.random()*20
-    #     y = 10-random.random()*20
-    #     r = 3-random.random()*2
-    #     s = Sphere(Point(x, y, 0), r)
-    #     vs = VolSphere(s)
-    #     spheres.append(vs)
-    
-    # sul = SmoothUnionList(spheres, 0.8)
+    d = b.get_distance_numpy(x, y, z)
 
 
