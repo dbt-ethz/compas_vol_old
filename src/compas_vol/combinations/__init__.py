@@ -10,6 +10,7 @@ compas_vol.combinations
     :nosignatures:
 
     Union
+    Blend
     Intersection
     Subtraction
     SmoothUnion
