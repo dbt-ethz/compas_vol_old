@@ -20,6 +20,7 @@ compas_vol.combinations
 
 """
 from .union import Union
+from .blend import Blend
 from .intersection import Intersection
 from .subtraction import Subtraction
 from .smoothunion import SmoothUnion
@@ -30,6 +31,7 @@ from .morph import Morph
 
 __all__ = [
     'Union',
+    'Blend',
     'Intersection',
     'Subtraction',
     'SmoothUnion',
