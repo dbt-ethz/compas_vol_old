@@ -53,7 +53,12 @@ class Blend(object):
         if self.t == 0:
             f[cond3] = dc[cond3] / self.r + 0.5
             d[cond3] = (1 - f[cond3]) * da[cond3] + f[cond3] * db[cond3]
-
+        elif self.t == 1:
+            f[cond3] = dc[cond3] / self.r + 0.5
+            cond4 = f[cond3] < 0.5
+            qf[cond3 * cond4] = 2 * f[cond3]**2
+            qf[cond3 * ~cond4] = 1 - ((-2 * f[cond3] + 2)**2)/2
+            d[cond3] = (1 - qf[cond3]) * da[cond3] + qf[cond3] * db[cond3]
         return d
 
 
