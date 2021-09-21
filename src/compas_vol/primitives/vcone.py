@@ -101,33 +101,3 @@ class VolCone(object):
         dxy = np.sqrt(xt**2 + yt**2) - temprad
 
         return np.maximum(dxy, np.abs(zt) - self.cone.height / 2)
-
-
-
-if __name__ == "__main__":
-
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    c = Cone(Circle(Plane((0, 10, 0), (0, 1, 0)), 10.), 5.)
-    vc = VolCone(c)
-
-    x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
-
-    d = vc.get_distance_numpy(x, y, z)
-
-    m = np.tanh(d[:, :, 30].T)
-    plt.imshow(m, cmap='Greys', interpolation='nearest')
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-
-    # for y in range(-30, 30):
-    #     s = ''
-    #     for x in range(-30, 30):
-    #         d = vc.get_distance(Point(x, -y, 0))
-    #         if d < 0:
-    #             s += 'x'
-    #         else:
-    #             s += '.'
-    #     print(s)
