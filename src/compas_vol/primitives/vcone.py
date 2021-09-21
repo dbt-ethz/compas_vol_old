@@ -96,23 +96,44 @@ class VolCone(object):
         p = np.array([x, y, z, 1], dtype=object)
         xt, yt, zt, _ = np.dot(self.inversedmatrix, p)
 
-        dxy = np.empty((*xt.shape,2))
-        dxy[:,:,:,0], dxy[:,:,:,1] = np.sqrt(xt**2 + yt**2), zt - self.cone.height
+        f = (zt + self.cone.height / 2) / self.cone.height
+        temprad = self.cone.radius + f * -self.cone.radius
+        dxy = np.sqrt(xt**2 + yt**2) - temprad
+        d = np.maximum(dxy, np.abs(zt) - self.cone.height / 2)
 
-        return np.sum(np.full((*xt.shape,2), [np.sin(1.1), np.cos(1.1)]) * dxy, axis=3)
-        
+        return d
+        # c = np.full((*xt.shape, 2), [np.sin(1.1), np.cos(1.1)])
+        # h = (zt - self.cone.height) * np.sin(1.1)
+        # print(h)
+
+        # double f = (point.Z + this.height / 2) / this.height;
+        # double temprad = this.radiusa + f * (this.radiusb - this.radiusa);
+        # double dxy = Math.Sqrt(point.X * point.X + point.Y * point.Y) - temprad;
+        # double dist = Math.Max(dxy, Math.Abs(point.Z) - height / 2.0);
+
+
+
+
+        # dxy = np.empty((*xt.shape,2))
+        # dxy[:,:,:,0], dxy[:,:,:,1] = np.sqrt(xt**2 + yt**2), zt - self.cone.height
+
+        # return np.sum(np.full((*xt.shape,2), [np.sin(1.1), np.cos(1.1)]) * dxy, axis=3)
+
 
 if __name__ == "__main__":
 
     import numpy as np
     import matplotlib.pyplot as plt
 
-    c = Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 10.), 10.)
+    c = Cone(Circle(Plane((0, 10, 0), (0, 1, 0)), 10.), 5.)
     vc = VolCone(c)
 
     x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
 
     d = vc.get_distance_numpy(x, y, z)
+
+
+
 
     m = np.tanh(d[:, :, 30].T)
     plt.imshow(m, cmap='Greys', interpolation='nearest')
@@ -120,12 +141,12 @@ if __name__ == "__main__":
     plt.axis('equal')
     plt.show()
 
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = vc.get_distance(Point(x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+    # for y in range(-30, 30):
+    #     s = ''
+    #     for x in range(-30, 30):
+    #         d = vc.get_distance(Point(x, -y, 0))
+    #         if d < 0:
+    #             s += 'x'
+    #         else:
+    #             s += '.'
+    #     print(s)
