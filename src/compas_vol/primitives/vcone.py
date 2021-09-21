@@ -70,11 +70,11 @@ class VolCone(object):
 
         point.transform(self.inversedmatrix)
 
-        dxy = length_vector_xy(point)
-        a = 1.1
-        c = [sin(a), cos(a)]
-        d =  sum([i*j for (i, j) in zip(c, [dxy, point.z - self.cone.height])])
-        return d
+        f = (point.z + self.cone.height / 2) / self.cone.height
+        temprad = self.cone.radius - f * self.cone.radius
+        dxy = length_vector_xy(point) - temprad
+
+        return max(dxy, abs(point.z) - self.cone.height / 2)
 
 
     def get_distance_numpy(self, x, y, z):
@@ -97,27 +97,11 @@ class VolCone(object):
         xt, yt, zt, _ = np.dot(self.inversedmatrix, p)
 
         f = (zt + self.cone.height / 2) / self.cone.height
-        temprad = self.cone.radius + f * -self.cone.radius
+        temprad = self.cone.radius - f * self.cone.radius
         dxy = np.sqrt(xt**2 + yt**2) - temprad
-        d = np.maximum(dxy, np.abs(zt) - self.cone.height / 2)
 
-        return d
-        # c = np.full((*xt.shape, 2), [np.sin(1.1), np.cos(1.1)])
-        # h = (zt - self.cone.height) * np.sin(1.1)
-        # print(h)
+        return np.maximum(dxy, np.abs(zt) - self.cone.height / 2)
 
-        # double f = (point.Z + this.height / 2) / this.height;
-        # double temprad = this.radiusa + f * (this.radiusb - this.radiusa);
-        # double dxy = Math.Sqrt(point.X * point.X + point.Y * point.Y) - temprad;
-        # double dist = Math.Max(dxy, Math.Abs(point.Z) - height / 2.0);
-
-
-
-
-        # dxy = np.empty((*xt.shape,2))
-        # dxy[:,:,:,0], dxy[:,:,:,1] = np.sqrt(xt**2 + yt**2), zt - self.cone.height
-
-        # return np.sum(np.full((*xt.shape,2), [np.sin(1.1), np.cos(1.1)]) * dxy, axis=3)
 
 
 if __name__ == "__main__":
@@ -131,9 +115,6 @@ if __name__ == "__main__":
     x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
 
     d = vc.get_distance_numpy(x, y, z)
-
-
-
 
     m = np.tanh(d[:, :, 30].T)
     plt.imshow(m, cmap='Greys', interpolation='nearest')
