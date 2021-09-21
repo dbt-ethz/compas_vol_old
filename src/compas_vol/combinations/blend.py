@@ -59,24 +59,3 @@ class Blend(object):
             qf[cond3*~cond4] = 1 - ((-2 * f[cond3*~cond4] + 2)**2)/2
             d[cond3] = (1 - qf[cond3]) * da[cond3] + qf[cond3] * db[cond3]
         return d
-
-
-if __name__ == "__main__":
-    import numpy as np
-
-    from compas.geometry import Point, Plane, Circle, Sphere, Cone
-    from compas_vol.primitives import VolSphere, VolCone
-    from compas_vol.microstructures import Lattice
-
-    x, y, z = np.ogrid[-30:30:60j,-30:30:60j,-30:30:60j]
-
-    c = VolCone(Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 20.), 10.))
-    s = VolSphere(Sphere(Point(0,0,0), 6.5))
-    l = Lattice(1, 10, 0.5)
-
-    b = Blend(c, s, l, t=1)
-
-
-    d = b.get_distance_numpy(x, y, z)
-
-
