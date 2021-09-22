@@ -13,6 +13,7 @@ Classes
     :nosignatures:
 
     VolBox
+    VolEgg
     VolSphere
     VolCylinder
     VolTorus
@@ -36,6 +37,7 @@ from .vbox import VolBox
 from .vcapsule import VolCapsule
 from .vcone import VolCone
 from .vcylinder import VolCylinder
+from .vegg import VolEgg
 from .vellipsoid import VolEllipsoid
 from .vextrusion import VolExtrusion
 from .vplane import VolPlane
@@ -51,6 +53,7 @@ __all__ = [
     'VolCapsule',
     'VolCone',
     'VolCylinder',
+    'VolEgg',
     'VolEllipsoid',
     'VolExtrusion',
     'VolPlane',
