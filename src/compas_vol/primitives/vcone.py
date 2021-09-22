@@ -1,11 +1,6 @@
-from math import cos
-from math import sin
-
 from compas.geometry import Cone
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import Circle
-from compas.geometry import Plane
 from compas.geometry import length_vector_xy
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
@@ -97,7 +92,8 @@ class VolCone(object):
         xt, yt, zt, _ = np.dot(self.inversedmatrix, p)
 
         f = (zt + self.cone.height / 2) / self.cone.height
+
         temprad = self.cone.radius - f * self.cone.radius
-        dxy = np.sqrt(xt**2 + yt**2) - temprad
+        dxy = np.sqrt(xt * xt + yt * yt) - temprad
 
         return np.maximum(dxy, np.abs(zt) - self.cone.height / 2)
