@@ -77,6 +77,6 @@ class VolCylinder(object):
         p = np.array([x, y, z, 1], dtype=object)
         xt, yt, zt, _ = np.dot(self.inversetransform, p)
 
-        d = np.sqrt(xt**2 + yt**2) - self.cylinder.radius
+        d = np.sqrt(xt * xt + yt * yt) - self.cylinder.radius
         out = np.maximum(d, np.abs(zt) - self.cylinder.height / 2.0)
         return out
