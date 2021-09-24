@@ -125,7 +125,7 @@
 <td><p>A volumetric plane is defined by a base plane from <cite>compas.geometry</cite>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.primitives.VolExtrusion.html#compas_vol.primitives.VolExtrusion" title="compas_vol.primitives.VolExtrusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VolExtrusion</span></code></a></p></td>
-<td><p>A volumetric extrusion is defined by a polyline from <cite>compas.geometry</cite> and a height. :Parameters: * <strong>polyline</strong> (<em>sequence</em>) – A a sequence of (x,y,z) points describing the base polyline. * <strong>height</strong> (<em>float</em>) – The height of the extrusion.</p></td>
+<td><p>A volumetric extrusion is defined by a polyline from <cite>compas.geometry</cite> and a height. :Parameters: * <strong>polyline</strong> (<em>sequence</em>) -- A a sequence of (x,y,z) points describing the base polyline. * <strong>height</strong> (<em>float</em>) -- The height of the extrusion.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.primitives.VolPolyhedron.html#compas_vol.primitives.VolPolyhedron" title="compas_vol.primitives.VolPolyhedron"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VolPolyhedron</span></code></a></p></td>
 <td><p>Class for convex polyhedra delimited by a list of planes.</p></td>
@@ -282,10 +282,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -298,6 +294,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

@@ -102,19 +102,26 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.microstructures.Lattice.html#compas_vol.microstructures.Lattice" title="compas_vol.microstructures.Lattice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Lattice</span></code></a></p></td>
-<td><p>A lattice is defined by it’s type, size of a unit cell and its strut diameter.</p></td>
+<td><p>A lattice is defined by it's type, size of a unit cell and its strut diameter.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.microstructures.TPMS.html#compas_vol.microstructures.TPMS" title="compas_vol.microstructures.TPMS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TPMS</span></code></a></p></td>
 <td><p>A triply periodic minimal surface (TPMS) is defined by a type and a wavelength.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.microstructures.LatticePolar.html#compas_vol.microstructures.LatticePolar" title="compas_vol.microstructures.LatticePolar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LatticePolar</span></code></a></p></td>
-<td><p>A lattice is defined by it’s type, size of a unit cell and its strut diameter.</p></td>
+<td><p>A lattice is defined by it's type, size of a unit cell and its strut diameter.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.microstructures.TPMSPolar.html#compas_vol.microstructures.TPMSPolar" title="compas_vol.microstructures.TPMSPolar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TPMSPolar</span></code></a></p></td>
-<td><p>–&gt; To fill in</p></td>
+<td><p>--&gt; To fill in
+
+:2: (WARNING/2) Title underline too short.
+
+--&gt; To fill in
+--------
+
+Examples</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.microstructures.Voronoi.html#compas_vol.microstructures.Voronoi" title="compas_vol.microstructures.Voronoi"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Voronoi</span></code></a></p></td>
-<td><p>A Voronoi….</p></td>
+<td><p>A Voronoi....</p></td>
 </tr>
 </tbody>
 </table>
@@ -261,10 +268,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -277,6 +280,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>
