@@ -6,6 +6,11 @@ from compas.geometry import Frame
 from compas_vol.microstructures import Lattice
 
 #workspace initialization
+lat = Lattice(7, 5.0, 0.5)
+lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
+
+print(lat.typenames, lat.lattice_type)
+
 x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
 #voxel dimensions
 gx = 28/112
@@ -23,3 +28,8 @@ v, f, n, l = marching_cubes(m, 0, spacing=(gx, gy, gz))
 
 #display mesh
 mp.plot(v, f, c=np.array([0, 0.57, 1.0]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
+
+#plt.imshow(m[:, :, 21].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+#plt.colorbar()
+#plt.axis('equal')
+#plt.show()
