@@ -1,6 +1,6 @@
 import math
 import random
-
+#import numpy as np
 
 __all__ = [
     'export_ski_mesh',
@@ -10,7 +10,8 @@ __all__ = [
     'get_random_vector_2D',
     'get_random_vector_3D',
     'get_iso_mesh',
-    'get_iso_vfs'
+    'get_iso_vfs',
+    'add_cube'
 ]
 
 
@@ -196,6 +197,22 @@ def export_layer(distfield, resolution, level, filename='layerimage.png'):
     io.imsave(filename, m)
     return d
 
+# to visualize bounds with meshplot
+# example: p.add_lines(*add_cube(lbx,ubx,lby,uby,lbz,ubz))
+def add_cube(a,b,c,d,e,f):
+    v1 = [a,b,c]
+    v2 = [d,b,c]
+    v3 = [d,e,c]
+    v4 = [a,e,c]
+    v5 = [a,b,f]
+    v6 = [d,b,f]
+    v7 = [d,e,f]
+    v8 = [a,e,f]
+    vs = [v1,v2,v3,v4,v1,v2,v3,v4,v5,v6,v7,v8]
+    ve = [v2,v3,v4,v1,v5,v6,v7,v8,v6,v7,v8,v5]
+    #vs = np.array(vs)
+    #ve = np.array(ve)
+    return vs, ve
 
 # if __name__ == "__main__":
 #     from compas_vol.primitives import VolBox

@@ -20,6 +20,7 @@ from __future__ import division
 from __future__ import print_function
 
 from .utils import (
+    add_cube,
     export_ski_mesh,
     export_ipv_mesh,
     get_compas_mesh,
@@ -27,9 +28,11 @@ from .utils import (
     get_random_vector_2D,
     get_random_vector_3D,
     get_iso_mesh,
-    get_iso_vfs
+    get_iso_vfs,
+    add_cube
 )
-from .comm import get_vfs_from_tree
+
+#from .comm import get_vfs_from_tree
 
 
 __all__ = [
@@ -41,5 +44,6 @@ __all__ = [
     'get_random_vector_3D',
     'get_iso_mesh',
     'get_iso_vfs',
-    'get_vfs_from_tree'
+    #'get_vfs_from_tree',
+    'add_cube'
 ]
