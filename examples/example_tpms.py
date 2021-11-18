@@ -1,26 +1,24 @@
-# from compas.geometry import Point
+#imports
 import numpy as np
-import matplotlib.pyplot as plt
+import meshplot as mp
+from skimage.measure import marching_cubes
 from compas_vol.microstructures import TPMS
 
-b = TPMS(tpmstype='schwartzP', wavelength=5)
-print(b)
-
+#workspace initialization
 x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
+#voxel dimensions
+gx = 28/112
+gy = 24/96
+gz = 20/80
 
-m = b.get_distance_numpy(x, y, z)
+#VM object
+b = TPMS(tpmstype='schwartzP', wavelength=5)
 
-plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-plt.colorbar()
-plt.axis('equal')
-plt.show()
+#sampling
+dm = b.get_distance_numpy(x, y, z)
 
-# for y in range(-15, 15):
-#     s = ''
-#     for x in range(-30, 30):
-#         d = b.get_distance(Point(x*0.5, y, 1.))
-#         if d < 0:
-#             s += 'x'
-#         else:
-#             s += '.'
-#     print(s)
+#generate isosurface
+v, f, n, l = marching_cubes(dm, 0, spacing=(gx, gy, gz))
+
+#display mesh
+mp.plot(v, f, c=np.array([0,0.57,0.82]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})

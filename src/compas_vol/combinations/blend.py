@@ -35,4 +35,27 @@ class Blend(object):
         """
         vectorized distance function
         """
-        raise NotImplementedError
+        import numpy as np
+
+        d = np.empty((x.shape[0], y.shape[1], z.shape[2]))
+
+        da = self.a.get_distance_numpy(x, y, z)
+        db = self.b.get_distance_numpy(x, y, z)
+        dc = self.c.get_distance_numpy(x, y, z)
+        f = dc / self.r + 0.5
+
+        cond1 = dc < -self.r/2
+        cond2 = dc > self.r/2
+        cond3 = ~cond1 * ~cond2
+        cond4 = f < 0.5
+
+        d[cond1] = da[cond1]
+        d[cond2] = db[cond2]
+        if self.t == 0:
+            d[cond3] = (1 - f[cond3]) * da[cond3] + f[cond3] * db[cond3]
+        elif self.t == 1:
+            qf = np.empty((x.shape[0], y.shape[1], z.shape[2]))
+            qf[cond3*cond4] = 2 * f[cond3*cond4]**2
+            qf[cond3*~cond4] = 1 - ((-2 * f[cond3*~cond4] + 2)**2)/2
+            d[cond3] = (1 - qf[cond3]) * da[cond3] + qf[cond3] * db[cond3]
+        return d

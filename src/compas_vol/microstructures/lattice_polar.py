@@ -181,7 +181,7 @@ class LatticePolar(object):
         """
         import numpy as np
 
-        p = np.array([x, y, z, 1])
+        p = np.array([x, y, z, 1], dtype=object)
         md = np.dot(self.inversetransform, p)
 
         radius = np.sqrt(md[0]**2 + md[1]**2)

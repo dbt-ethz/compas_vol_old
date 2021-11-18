@@ -1,4 +1,4 @@
-from compas.geometry import Plane
+from compas.geometry import Frame
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
 

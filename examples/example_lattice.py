@@ -1,26 +1,35 @@
+#imports
 import numpy as np
-import matplotlib.pyplot as plt
-from compas.geometry import Point, Vector, Frame
+import meshplot as mp
+from skimage.measure import marching_cubes
+from compas.geometry import Frame
 from compas_vol.microstructures import Lattice
 
+#workspace initialization
 lat = Lattice(7, 5.0, 0.5)
 lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
 
 print(lat.typenames, lat.lattice_type)
-#print(lat)
-#lat2 = eval(str(lat))
 
 x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
+#voxel dimensions
+gx = 28/112
+gy = 24/96
+gz = 20/80
 
+#VM object
+lat = Lattice(7, 5.0, 0.5, frame=Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2)))
+
+#sampling
 m = lat.get_distance_numpy(x, y, z)
 
-# num = 200
-# m = np.empty((num, num))
-# for r in range(num):
-#     for c in range(num):
-#         m[r, c] = lat.get_distance((c, r, 10))
+#generate isosurface
+v, f, n, l = marching_cubes(m, 0, spacing=(gx, gy, gz))
 
-plt.imshow(m[:, :, 21].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-plt.colorbar()
-plt.axis('equal')
-plt.show()
+#display mesh
+mp.plot(v, f, c=np.array([0, 0.57, 1.0]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
+
+#plt.imshow(m[:, :, 21].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
+#plt.colorbar()
+#plt.axis('equal')
+#plt.show()

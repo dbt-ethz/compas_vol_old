@@ -47,7 +47,6 @@ class VolEgg (object):
 
         d = ((point.z * point.z) / (self.rb * self.rb)) + ((point.y *point.y) / (self.ra * self.ra)) + ((point.x * point.x) / (self.ra * self.ra)) * (1 + self.k * point.z) - 1
         return d
-        Frame()
 
 
     def get_distance_numpy(self, x, y, z):

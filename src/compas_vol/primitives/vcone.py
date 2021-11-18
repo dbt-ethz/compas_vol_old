@@ -1,11 +1,6 @@
-from math import cos
-from math import sin
-
 from compas.geometry import Cone
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import Circle
-from compas.geometry import Plane
 from compas.geometry import length_vector_xy
 from compas.geometry import matrix_from_frame
 from compas.geometry import matrix_inverse
@@ -70,11 +65,11 @@ class VolCone(object):
 
         point.transform(self.inversedmatrix)
 
-        dxy = length_vector_xy(point)
-        a = 1.1
-        c = [sin(a), cos(a)]
-        d =  sum([i*j for (i, j) in zip(c, [dxy, point.z - self.cone.height])])
-        return d
+        f = (point.z + self.cone.height / 2) / self.cone.height
+        temprad = self.cone.radius - f * self.cone.radius
+        dxy = length_vector_xy(point) - temprad
+
+        return max(dxy, abs(point.z) - self.cone.height / 2)
 
 
     def get_distance_numpy(self, x, y, z):
@@ -96,37 +91,9 @@ class VolCone(object):
         p = np.array([x, y, z, 1], dtype=object)
         xt, yt, zt, _ = np.dot(self.inversedmatrix, p)
 
-        dxy = np.empty((*xt.shape,2))
-        dxy[:,:,:,0], dxy[:,:,:,1] = np.sqrt(xt**2 + yt**2), zt - self.cone.height
-        print(self.cone.height)
+        f = (zt + self.cone.height / 2) / self.cone.height
 
-        return np.sum(np.full((*xt.shape,2), [np.sin(1.1), np.cos(1.1)]) * dxy, axis=3)
-        
+        temprad = self.cone.radius - f * self.cone.radius
+        dxy = np.sqrt(xt * xt + yt * yt) - temprad
 
-if __name__ == "__main__":
-
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    c = Cone(Circle(Plane((0, 0, 0), (0, 1, 0)), 10.), 10.)
-    vc = VolCone(c)
-
-    x, y, z = np.ogrid[-30:30:60j, -15:15:60j, -15:15:60j]
-
-    d = vc.get_distance_numpy(x, y, z)
-
-    m = np.tanh(d[:, :, 30].T)
-    plt.imshow(m, cmap='Greys', interpolation='nearest')
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = vc.get_distance(Point(x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+        return np.maximum(dxy, np.abs(zt) - self.cone.height / 2)

@@ -1,35 +1,30 @@
-# from compas.geometry import Point
+#imports
 import numpy as np
-import matplotlib.pyplot as plt
-from compas.geometry import Pointcloud, Point
+import meshplot as mp
+from skimage.measure import marching_cubes
+from compas.geometry import Point
 from compas_vol.microstructures import Voronoi
 
-dim = 300
-points = Pointcloud.from_bounds(dim, dim, 0, 66)
-b = Voronoi(points=points, thickness=2.5)
+#workspace initialization
+x, y, z = np.ogrid[-30:30:100j, -30:30:100j, -30:30:100j]
+#voxel dimensions
+gx = 60/100
+gy = 60/100
+gz = 60/100
 
-# b.get_distance((2,3,4))
-#x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
+#pts generation
+nbr_pts = 16
+coordinates = np.random.uniform(-30, 30, (nbr_pts,3))
+pts = [Point(px,py,pz) for (px,py,pz) in coordinates]
 
-#m = b.get_distance_numpy(x, y, z)
+#VM object
+v = Voronoi(pts, thickness=2.0)
 
-# plt.imshow(m[:, :, 25].T, cmap='RdBu')
-# plt.colorbar()
-# plt.axis('equal')
-# plt.show()
+#sampling
+dm = v.get_distance_numpy(x, y, z)
 
-m = np.empty((dim, dim))
-for y in range(dim):
-    s = ''
-    for x in range(dim):
-        d = b.get_distance(Point(x, y, 0))
-        m[y, x] = min(d, 25)
-        #print(d)
-    #     if d < 0:
-    #         s += 'x'
-    #     else:
-    #         s += '.'
-    # print(s)
-# print(m.min(), m.max())
-plt.imshow(m, cmap='gnuplot2')
-plt.show()
+#generate isosurface
+v, f, n, l = marching_cubes(dm, 0, spacing=(gx, gy, gz))
+
+#display mesh
+mp.plot(v, f, c=np.array([0,0.57,0.82]), shading={"flat":True, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
