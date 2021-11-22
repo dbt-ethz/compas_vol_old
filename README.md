@@ -2,7 +2,7 @@
 
 ## Volumetric Modelling
 
-volumetric modelling with signed distance functions
+volumetric modeling with signed distance functions
 
 ## Installation Instructions
 
@@ -10,7 +10,8 @@ volumetric modelling with signed distance functions
 - To get started, I recommend you create a separate environment in an Anaconda Python 3.7 installation. The details are described here: https://compas-dev.github.io/main/gettingstarted/installation.html
 - With the newly created environment active, make sure you have git installed. If not, in the terminal (Mac) or Anaconda Prompt (Win) run `conda install git`.
 - Then install `compas_vol` directly from source, running `pip install git+https://github.com/dbt-ethz/compas_vol`
-- The example notebooks use [ipyvolume](https://ipyvolume.readthedocs.io/en/latest/index.html) for isosurfacing and mesh display. Install it with `conda install -c conda-forge ipyvolume`
+- The example notebooks use [meshplot](https://skoch9.github.io/meshplot/) for isosurfacing and mesh display. Install it with `conda install meshplot`
+- Some also use [ipyvolume](https://ipyvolume.readthedocs.io/en/latest/index.html). Install it with `conda install -c conda-forge ipyvolume`
 
 ## Example
 
