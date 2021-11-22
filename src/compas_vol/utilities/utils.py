@@ -200,14 +200,14 @@ def export_layer(distfield, resolution, level, filename='layerimage.png'):
 # to visualize bounds with meshplot
 # example: p.add_lines(*add_cube(lbx,ubx,lby,uby,lbz,ubz))
 def add_cube(a,b,c,d,e,f):
-    v1 = [a,b,c]
-    v2 = [d,b,c]
-    v3 = [d,e,c]
-    v4 = [a,e,c]
-    v5 = [a,b,f]
-    v6 = [d,b,f]
-    v7 = [d,e,f]
-    v8 = [a,e,f]
+    v1 = [a,c,e]
+    v2 = [b,c,e]
+    v3 = [b,d,e]
+    v4 = [a,d,e]
+    v5 = [a,c,f]
+    v6 = [b,c,f]
+    v7 = [b,d,f]
+    v8 = [a,d,f]
     vs = [v1,v2,v3,v4,v1,v2,v3,v4,v5,v6,v7,v8]
     ve = [v2,v3,v4,v1,v5,v6,v7,v8,v6,v7,v8,v5]
     #vs = np.array(vs)
