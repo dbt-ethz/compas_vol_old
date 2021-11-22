@@ -11,7 +11,7 @@ __all__ = [
     'get_random_vector_3D',
     'get_iso_mesh',
     'get_iso_vfs',
-    'add_cube'
+    'bbox_edges'
 ]
 
 
@@ -198,8 +198,8 @@ def export_layer(distfield, resolution, level, filename='layerimage.png'):
     return d
 
 # to visualize bounds with meshplot
-# example: p.add_lines(*add_cube(lbx,ubx,lby,uby,lbz,ubz))
-def add_cube(a,b,c,d,e,f):
+# example: p.add_lines(*bbox_edges(lbx,ubx,lby,uby,lbz,ubz))
+def bbox_edges(a,b,c,d,e,f):
     v1 = [a,c,e]
     v2 = [b,c,e]
     v3 = [b,d,e]

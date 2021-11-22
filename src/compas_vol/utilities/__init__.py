@@ -29,7 +29,7 @@ from .utils import (
     get_random_vector_3D,
     get_iso_mesh,
     get_iso_vfs,
-    add_cube
+    bbox_edges
 )
 
 #from .comm import get_vfs_from_tree
@@ -45,5 +45,5 @@ __all__ = [
     'get_iso_mesh',
     'get_iso_vfs',
     #'get_vfs_from_tree',
-    'add_cube'
+    'bbox_edges'
 ]
