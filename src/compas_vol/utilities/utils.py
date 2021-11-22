@@ -111,12 +111,12 @@ def get_random_vector_2D():
     return (vx, vy)
 
 
-def get_random_vector_3D():
+def get_random_vector_3D(r=1.0):
     angle = random.random() * math.pi * 2
     vz = random.random() * 2 - 1
     vx = math.sqrt(1 - vz**2) * math.cos(angle)
     vy = math.sqrt(1 - vz**2) * math.sin(angle)
-    return (vx, vy, vz)
+    return (r*vx, r*vy, r*vz)
 
 
 def get_compas_mesh(v, f):

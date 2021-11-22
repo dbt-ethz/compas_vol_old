@@ -20,7 +20,6 @@ from __future__ import division
 from __future__ import print_function
 
 from .utils import (
-    add_cube,
     export_ski_mesh,
     export_ipv_mesh,
     get_compas_mesh,
