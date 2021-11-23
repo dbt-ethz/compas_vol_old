@@ -1,5 +1,6 @@
 from compas import PRECISION
 from math import log
+from compas.geometry import Point
 
 class SmoothUnionList(object):
     """The smooth union of a list of volumetric objects.
@@ -42,3 +43,29 @@ class SmoothUnionList(object):
         distances = np.array([o.get_distance_numpy(x, y, z) for o in self.distance_objects]).T
         res = np.sum(np.power(2, np.full((distances.shape), -self.k) * distances), axis=3)
         return -np.log2(res)/self.k
+
+
+# if __name__ == "__main__":
+#     from compas.geometry import Point, Sphere
+#     from compas_vol.primitives import VolSphere
+#     import matplotlib.pyplot as plt
+#     import random
+#     import numpy as np
+
+#     spheres = []
+#     for i in range(10):
+#         x = 10-random.random()*20
+#         y = 10-random.random()*20
+#         r = 3-random.random()*2
+#         s = Sphere(Point(x, y, 0), r)
+#         vs = VolSphere(s)
+#         spheres.append(vs)
+    
+#     sul = SmoothUnionList(spheres, 2)
+
+#     x, y, z = np.ogrid[-15:15:61j, -15:15:61j, -15:15:61j]
+#     d = sul.get_distance_numpy(x, y, z)
+#     print (d)
+#     plt.imshow(d[:, :, 0], cmap='RdBu')
+#     plt.axis('equal')
+#     plt.show()
