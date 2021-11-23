@@ -29,6 +29,9 @@ from .smoothunionlist import SmoothUnionList
 from .smoothintersection import SmoothIntersection
 from .smoothsubtraction import SmoothSubtraction
 from .morph import Morph
+from .addition import Addition
+from .multiplication import Multiplication
+from .division import Division
 
 __all__ = [
     'Union',
@@ -39,5 +42,8 @@ __all__ = [
     'SmoothUnionList'
     'SmoothIntersection',
     'SmoothSubtraction',
-    'Morph'
+    'Morph',
+    'Addition',
+    'Multiplication',
+    'Division'
 ]

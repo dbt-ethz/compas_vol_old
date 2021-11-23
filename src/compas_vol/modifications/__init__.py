@@ -19,11 +19,13 @@ from .multishell import MultiShell
 from .overlay import Overlay
 from .shell import Shell
 from .twist import Twist
+from .factor import Factor
 
 __all__ = [
     'Blur',
     'MultiShell',
     'Shell',
     'Overlay',
-    'Twist'
+    'Twist',
+    'Factor'
 ]
