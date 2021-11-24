@@ -20,6 +20,7 @@ from .overlay import Overlay
 from .shell import Shell
 from .twist import Twist
 from .factor import Factor
+from .sine import Sine
 
 __all__ = [
     'Blur',
@@ -27,5 +28,6 @@ __all__ = [
     'Shell',
     'Overlay',
     'Twist',
-    'Factor'
+    'Factor',
+    'Sine'
 ]
